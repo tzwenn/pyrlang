@@ -20,11 +20,11 @@
 # THE SOFTWARE.
 #
 
-from pybeam.beam_construct import beam
+from beam_construct import beam
 
 class BeamFile(object):
 	def __init__(self, filename):
-		self._tree = beam.parse(open(filename,"rb").read())
+		self._tree = beam.parse(file(filename,"r").read())
 
 	def selectChunkByName(self, name):
 		for c in self._tree.chunk:
@@ -34,37 +34,37 @@ class BeamFile(object):
 
 	@property
 	def atoms(self):
-		return self.selectChunkByName(b"Atom").payload
+		return self.selectChunkByName("Atom").payload
 
 	@property
 	def attributes(self):
-		attr = self.selectChunkByName(b"Attr")
+		attr = self.selectChunkByName("Attr")
 		# convert from proplist to dict
 		return dict(attr.payload)
 
 	@property
 	def code(self):
-		code = self.selectChunkByName(b"Code").payload
+		code = self.selectChunkByName("Code").payload
 		return (code.set, code.opcode_max, code.labels, code.functions, code.code)
 
 	@property
 	def compileinfo(self):
-		cinf = self.selectChunkByName(b"CInf")
+		cinf = self.selectChunkByName("CInf")
 		return dict(cinf.payload)
 
 	@property
 	def exports(self):
-		expt = self.selectChunkByName(b"ExpT")
+		expt = self.selectChunkByName("ExpT")
 		atoms = self.atoms
 		return [(atoms[e.function-1], e.arity, e.label) for e in expt.payload.entry]
 
 	@property
 	def literals(self):
-		return [e.term for e in self.selectChunkByName(b"LitT").payload.data.entry]
+		return [e.term for e in self.selectChunkByName("LitT").payload.data.entry]
 
 	@property
 	def imports(self):
-		impt = self.selectChunkByName(b"ImpT")
+		impt = self.selectChunkByName("ImpT")
 		atoms = self.atoms
 		return [(atoms[e.module-1], atoms[e.function-1], e.arity) for e in impt.payload.entry]
 
@@ -74,5 +74,5 @@ class BeamFile(object):
 
 	@property
 	def strings(self):
-		strt = self.selectChunkByName(b"StrT")
+		strt = self.selectChunkByName("StrT")
 		return strt.payload

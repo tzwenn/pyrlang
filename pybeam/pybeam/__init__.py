@@ -20,7 +20,7 @@
 # THE SOFTWARE.
 #
 
-from pybeam.beam_file import BeamFile
+from beam_file import BeamFile
 
 __all__ = ["BeamFile"]
 
