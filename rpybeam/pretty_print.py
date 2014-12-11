@@ -1,3 +1,4 @@
+import sys
 from beam_file import *
 
 def print_ImpT(impt, atomTable):
@@ -22,3 +23,13 @@ def print_Root(root):
 	print "#"
 	print_ExpT(root.expTChunk, atoms)
 	print_ImpT(root.impTChunk, atoms)
+
+def print_labelTable(lt):
+	for i in range(0, len(lt)):
+		print "L%d: #%d"%(i+1, lt[i])
+
+def print_hex(s):
+	for i in range(0, len(s)):
+		sys.stdout.write('|')
+		sys.stdout.write(hex(ord(s[i])))
+	print ''

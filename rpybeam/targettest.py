@@ -3,12 +3,17 @@ sys.path.append('/Users/kiwakachen/src/python/pypy-zh/pypy')
 
 from beam_file import BeamRoot
 from pretty_print import *
+from beam_code import CodeParser
 
 def main(argv):
 	f = open(argv[1], "rb")
 	try:
 		s = BeamRoot(f)
 		print_Root(s)
+		code = s.getCode()
+		cp = CodeParser(code)
+		lt = cp.createLabelTable()
+		print_labelTable(lt)
 	finally:
 		f.close()
 	return 0

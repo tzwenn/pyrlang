@@ -1,4 +1,5 @@
 from rpython.rlib.rstruct.runpack import runpack
+#from beam_code import BeamInstr
 
 class BaseNode:
 	def __init__(self, stream):
@@ -40,6 +41,9 @@ class BeamRoot(BaseNode):
 		self.size = self.readInt4(stream)
 		assert(self.readString(stream) == 'BEAM')
 		self.dispatchChunk(stream)
+
+	def getCode(self):
+		return self.codeChunk.codes
 
 	def dispatchChunk(self, stream):
 		while(True):
