@@ -11,9 +11,11 @@ def main(argv):
 		s = BeamRoot(f)
 		print_Root(s)
 		code = s.getCode()
-		cp = CodeParser(code)
+		at = s.getAtomTable()
+		cp = CodeParser(code,at,"module_info")
 		lt = cp.createLabelTable()
 		print_labelTable(lt)
+		print cp.entry_addr
 	finally:
 		f.close()
 	return 0

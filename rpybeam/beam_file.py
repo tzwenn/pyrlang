@@ -45,6 +45,9 @@ class BeamRoot(BaseNode):
 	def getCode(self):
 		return self.codeChunk.codes
 
+	def getAtomTable(self):
+		return self.atomChunk.asList()
+
 	def dispatchChunk(self, stream):
 		while(True):
 			flag = self._readString(stream, 4)

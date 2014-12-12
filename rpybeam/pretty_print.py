@@ -1,4 +1,3 @@
-import sys
 from beam_file import *
 
 def print_ImpT(impt, atomTable):
@@ -30,6 +29,6 @@ def print_labelTable(lt):
 
 def print_hex(s):
 	for i in range(0, len(s)):
-		sys.stdout.write('|')
-		sys.stdout.write(hex(ord(s[i])))
+		print('|')
+		print(hex(ord(s[i])))
 	print ''
