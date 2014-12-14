@@ -59,6 +59,12 @@ class CodeParser:
 		assert(self._parseTag(first) < opcodes.TAGX_BASE)
 		return self._createInt(first)
 
+	def parseBaseReg(self):
+		first = self.parseOne()
+		tag = self._parseTag(first)
+		intval = self._parseInt(first)
+		return (tag, intval)
+
 	def _createInt(self, tag):
 		if tag & 0x08:
 			if tag & 0x10:
@@ -169,4 +175,5 @@ class CodeParser:
 						raise Exception("Unknown TAG: %d at position:%d"%(tag, self.offset-1))
 			if(self.offset >= len(self.str)):
 					break
+		self.offset = 0
 		return self.labelTable

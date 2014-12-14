@@ -133,11 +133,20 @@ class ImpTChunk(Chunk):
 			self.readlen += e.readlen
 			self.entries.append(e)
 
+	def asArray(self):
+		res = []
+		for i in range(0, len(self.entries)):
+			res.append(self.entries[i].asArray())
+		return res
+
 class ImpTEntry(BaseNode):
 	def parse(self, stream):
 		self.module = self.readInt4(stream)
 		self.function = self.readInt4(stream)
 		self.arity = self.readInt4(stream)
+
+	def asArray(self):
+		return (self.module, self.function, self.arity)
 
 class ExpTChunk(Chunk):
 	def parse(self, stream):
