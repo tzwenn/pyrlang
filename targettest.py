@@ -16,13 +16,15 @@ def main(argv):
 		at = s.getAtomTable()
 		cp = CodeParser(code,at,"module_info")
 		lt = cp.createLabelTable()
+		print s.litTChunk.term_list[0].floatval
+		print s.litTChunk.term_list[1].floatval
 		#print_labelTable(lt)
 		#print cp.entry_addr
-		brt = BeamRunTime(cp, at, s.impTChunk.asArray())
-		res = brt.func_list[0].invoke([W_IntObject(3),
-			W_IntObject(5)])
-		print "res in invoke: %d"%(res.intval)
-		print brt.func_list[1].invoke([W_FloatObject(0.1)]).floatval
+		#brt = BeamRunTime(cp, at, s.impTChunk.asArray())
+		#res = brt.func_list[0].invoke([W_IntObject(3),
+			#W_IntObject(5)])
+		#print "res in invoke: %d"%(res.intval)
+		#print brt.func_list[1].invoke([W_FloatObject(0.1)]).floatval
 	finally:
 		f.close()
 	return 0

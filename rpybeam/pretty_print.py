@@ -28,7 +28,7 @@ def print_labelTable(lt):
 		print "L%d: #%d"%(i+1, lt[i])
 
 def print_hex(s):
+	res = ''
 	for i in range(0, len(s)):
-		print('|')
-		print(hex(ord(s[i])))
-	print ''
+		res = "%s0x%x|"%(res, ord(s[i]))
+	print res

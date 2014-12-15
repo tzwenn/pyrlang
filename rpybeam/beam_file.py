@@ -1,4 +1,7 @@
+from rpython.rlib.rStringIO import RStringIO
+from rpython.rlib import rzlib
 from rpython.rlib.rstruct.runpack import runpack
+from pretty_print import *
 #from beam_code import BeamInstr
 
 class BaseNode:
@@ -33,7 +36,11 @@ class BaseNode:
 		return stream.read(length)
 
 class BeamRoot(BaseNode):
-	def __init__(self, stream):
+	def __init__(self, fstream):
+		# ugly!!!
+		stream = RStringIO()
+		stream.write(fstream.read())
+		stream.seek(0)
 		BaseNode.__init__(self, stream)
 
 	def parse(self, stream):
@@ -63,6 +70,8 @@ class BeamRoot(BaseNode):
 				self.expTChunk = ExpTChunk(stream)
 			elif flag == 'LocT':
 				self.locTChunk = LocTChunk(stream)
+			elif flag == 'LitT':
+				self.litTChunk = LitTChunk(stream)
 			else:
 				break
 		#else:
@@ -172,7 +181,48 @@ class LocTChunk(Chunk):
 			self.readlen += e.readlen
 			self.entries.append(e)
 
+class LitTChunk(Chunk):
+	def parse(self, stream):
+		self.len_uncompressed = self.readInt4(stream)
+
+		odata = self.readAny(stream, self.size - 4)
+		
+		# ugly
+		data = self.decompress(odata)
+		substream = RStringIO()
+		substream.write(data)
+		substream.seek(0)
+
+		self.count = self.readInt4(substream)
+		self.term_list = []
+		for i in range(0, self.count):
+			size = self.readInt4(substream)
+			assert(self.readUCInt(substream) == 0x83)
+			tag = self.readUCInt(substream)
+			if tag == 70: # new_float
+				self.term_list.append(NewFloatTerm(substream, size))
+		self.discardRemain(stream)
+
+	def decompress(self,s):
+		stream = rzlib.inflateInit()
+		bytes, finished, unused = rzlib.decompress(stream, s)
+		return bytes
+
 #class AttrChunk(Chunk):
 	#def parse(self, stream):
 		#self.
 
+class Term(BaseNode):
+	def __init__(self, stream, size):
+		self.readlen = 0
+		self.size = size
+		#print self.readUCInt(stream)
+		self.parse(stream)
+
+	def readBFloat(self, stream):
+		self.readlen += 8
+		return runpack(">d", stream.read(8))
+
+class NewFloatTerm(Term):
+	def parse(self, stream):
+		self.floatval = self.readBFloat(stream)

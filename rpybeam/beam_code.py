@@ -136,7 +136,7 @@ class CodeParser:
 		#print "entry_arity:%d"%(self.entry_arity)
 		while(True):
 			instr = self.parseInstr()
-			print "INSTR: %d"%(instr)
+			#print "INSTR: %d"%(instr)
 			if instr == opcodes.LABEL:
 				self.parseInt()
 				self.labelTable.append(self.offset)
