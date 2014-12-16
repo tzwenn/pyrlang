@@ -11,6 +11,19 @@ class CodeParser:
 		self.atoms = atomTable
 		self.entry_addr = -1
 		self.entry_arity = entry_arity
+		self.labelTable = self.createLabelTable()
+		if self.entry_addr != -1:
+			self.offset = self.entry_addr
+		else:
+			raise Exception("entry function %s/%d not found!"%(entry_func, entry_arity))
+
+	def jump_label(self, label):
+		#print "jump_label: %d" % (label)
+		self.jump_absolute(self.labelTable[label-1])
+
+	def jump_absolute(self, addr):
+		#print "jump_absolute: #%d" % (addr)
+		self.offset = addr
 
 	def _ord(self, s):
 		return ord(s[0])
@@ -59,7 +72,7 @@ class CodeParser:
 		assert(self._parseTag(first) < opcodes.TAGX_BASE)
 		return self._createInt(first)
 
-	def parseBaseReg(self):
+	def parseBase(self):
 		first = self.parseOne()
 		tag = self._parseTag(first)
 		intval = self._parseInt(first)
