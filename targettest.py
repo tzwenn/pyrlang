@@ -3,7 +3,7 @@ sys.path.append('/Users/kiwakachen/src/python/pypy-zh/pypy')
 sys.path.append('../')
 
 from rpybeam.beam_file import BeamRoot
-from rpybeam.pretty_print import *
+from pyrlang.rpybeam.pretty_print import *
 from rpybeam.beam_code import CodeParser
 from interpreter.interp import BeamRunTime
 from pyrlang.interpreter.datatypes.number import *
@@ -34,7 +34,7 @@ def main(argv):
 		brt = BeamRunTime(cp, at, s.impTChunk.asArray())
 		brt.init_entry_arguments(args)
 		res = brt.execute()
-		print res.intval
+		print_value(res)
 		#res = brt.func_list[0].invoke([W_IntObject(3),
 			#W_IntObject(5)])
 		#print "res in invoke: %d"%(res.intval)

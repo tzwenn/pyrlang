@@ -1,4 +1,6 @@
 from beam_file import *
+from pyrlang.interpreter.datatypes.number import W_IntObject, W_FloatObject
+from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject
 
 def print_ImpT(impt, atomTable):
 	impt_len = len(impt.entries)
@@ -32,3 +34,21 @@ def print_hex(s):
 	for i in range(0, len(s)):
 		res = "%s0x%x|"%(res, ord(s[i]))
 	print res
+
+def value_str(v):
+	if isinstance(v, W_IntObject):
+		return "%d"%(v.intval)
+	elif isinstance(v, W_FloatObject):
+		return "%f"%(v.floatval)
+	elif isinstance(v, W_NilObject):
+		return "Nil"
+	elif isinstance(v, W_ListObject):
+		s = []
+		while not isinstance(v.tail(), W_NilObject):
+			s.append(value_str(v.head()))
+			v = v.tail()
+		s.append(value_str(v.head()))
+		return "[%s]"%("|".join(s))
+
+def print_value(v):
+	print value_str(v)
