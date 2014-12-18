@@ -18,7 +18,7 @@ class W_IntObject(W_Root):
 
 	def lt(self, other): 
 		self._check_same(other)
-		return W_IntObject(self.intval < other.intval)
+		return self.intval < other.intval
 
 	def _check_same(self, some):
 		if not isinstance(some, W_IntObject):
@@ -47,7 +47,7 @@ class W_FloatObject(W_Root):
 	def lt(self, other): 
 		if not isinstance(other, W_FloatObject):
 			raise Exception("wrong type")
-		return W_IntObject(self.floatval < other.floatval)
+		return self.floatval < other.floatval
 
 	def str(self):
 		return str(self.floatval)

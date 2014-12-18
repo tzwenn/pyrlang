@@ -50,14 +50,15 @@ class CodeParser:
 		return self.parseOne()
 
 	def parseTag(self):
+		res = self._parseTag()
 		self.offset += 1
-		return self._parseTag()
+		return res
 
 	def _parseTag(self, tag = -1):
 		if tag == -1:
 			tag = ord(self.str[self.offset])
 		if tag & 0x07 == opcodes.TAG_EXTENDED:
-			return tag >> 4 + opcodes.TAGX_BASE
+			return (tag >> 4) + opcodes.TAGX_BASE
 		else:
 			return tag & 0x07
 
@@ -132,14 +133,17 @@ class CodeParser:
 		return res
 
 	def parse_selectlist(self):
+		#print "parse_selectlist:"
+		#pretty_print.print_hex(self.str[self.offset:-1])
+		#exit()
 		assert(self.parseTag() == opcodes.TAGX_SELECTLIST)
-		return self.parse_selectlist()
+		return self._parse_selectlist()
 
 	def _parse_selectlist(self):
 		length = self.parseInt()
 		res = []
-		# not support!
-		raise Exception("Selectlist is not supported!")
+		for i in range(0, length >> 1):
+			res.append((self.parseInt(), self.parseInt()))
 		return res
 
 	def createLabelTable(self):

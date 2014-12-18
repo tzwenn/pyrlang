@@ -44,10 +44,19 @@ def value_str(v):
 		return "Nil"
 	elif isinstance(v, W_ListObject):
 		s = []
+		i = 0
+		too_long = False
 		while not isinstance(v.tail(), W_NilObject):
 			s.append(value_str(v.head()))
 			v = v.tail()
-		s.append(value_str(v.head()))
+			i += 1
+			if(i >= 30):
+				too_long = True
+				break
+		if too_long:
+			s.append("...")
+		else:
+			s.append(value_str(v.head()))
 		return "[%s]"%("|".join(s))
 
 def print_value(v):

@@ -6,6 +6,7 @@ from register import X_Register, Y_Register
 from pyrlang.interpreter.datatypes.number import W_IntObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject
+from pyrlang.interpreter.datatypes.atom import W_AtomObject
 
 lib_module = ["erlang"]
 
@@ -37,6 +38,7 @@ class BeamRunTime:
 	def execute(self):
 		while(True):
 			instr = self.cp.parseInstr()
+			#print "execute instr: %s"%(opcodes.opnames[instr])
 			if instr == opcodes.CALL: # 4
 				self.call(self.cp.parseInt(), self.cp.parseInt())
 
@@ -64,6 +66,9 @@ class BeamRunTime:
 				else:
 					self.cp.jump_absolute(self.y_reg.pop().addrval)
 
+			elif instr == opcodes.IS_LT: # 39
+				self.is_lt(self.cp.parseInt(), self.cp.parseBase(), self.cp.parseBase())
+
 			elif instr == opcodes.IS_EQ_EXACT: # 43
 				next_addr = self.cp.parseInt()
 				test_reg = self.cp.parseBase()
@@ -71,11 +76,20 @@ class BeamRunTime:
 				value = self.cp.parseInt()
 				self.is_eq_exact_int(next_addr, test_reg, value)
 
+			elif instr == opcodes.IS_ATOM: # 48
+				self.is_atom(self.cp.parseInt(), self.cp.parseBase())
+
 			elif instr == opcodes.IS_NIL: # 52
 				self.is_nil(self.cp.parseInt(), self.cp.parseBase())
 
-			elif instr == opcodes.IS_NONEMPTY_LIST: #56
+			elif instr == opcodes.IS_NONEMPTY_LIST: # 56
 				self.is_nonempty_list(self.cp.parseInt(), self.cp.parseBase())
+				
+			elif instr == opcodes.SELECT_VAL: # 59
+				reg = self.cp.parseBase()  
+				label = self.cp.parseInt()
+				sl = self.cp.parse_selectlist()
+				self.select_val(reg, label, sl)
 
 			elif instr == opcodes.MOVE: # 64
 				self.move(self.cp.parseBase(), self.cp.parseBase())
@@ -107,8 +121,11 @@ class BeamRunTime:
 			return self.fetch_basereg(pair)
 		elif tag == opcodes.TAG_INTEGER:
 			return W_IntObject(value)
-		elif tag == opcodes.TAG_ATOM and value == 0:
-			return W_NilObject()
+		elif tag == opcodes.TAG_ATOM:
+			if value == 0:
+				return W_NilObject()
+			else:
+				return W_AtomObject(value)
 		else:
 			# TODO: take more care for else branch
 			return W_IntObject(value)
@@ -127,6 +144,11 @@ class BeamRunTime:
 			self.x_reg.store(val, res)
 		else:
 			self.y_reg.store(val, res)
+
+	def not_jump(self, label, test_v, class_name):
+		v = self.get_basic_value(test_v)
+		if not isinstance(v, class_name):
+			self.cp.jump_label(label)
 
 ########################################################################
 
@@ -156,20 +178,41 @@ class BeamRunTime:
 		for i in range(0, n):
 			self.y_reg.pop()
 		
+	def is_lt(self, label, v1, v2):
+		int_v1 = self.get_basic_value(v1)
+		int_v2 = self.get_basic_value(v2)
+		if not int_v1.lt(int_v2):
+			self.cp.jump_label(label)
+
 	def is_eq_exact_int(self, label, test_reg, value):
 		if self.fetch_basereg(test_reg).intval != value:
 			self.cp.jump_label(label)
 
+	def is_atom(self, label, test_v):
+		self.not_jump(label, test_v, W_AtomObject)
+
 	def is_nil(self, label, test_v):
-		value = self.get_basic_value(test_v)
-		if not isinstance(value, W_NilObject):
-			self.cp.jump_label(label)
+		self.not_jump(label, test_v, W_NilObject)
+		#value = self.get_basic_value(test_v)
+		#if not isinstance(value, W_NilObject):
+			#self.cp.jump_label(label)
 
 	def is_nonempty_list(self, label, test_v):
 		value = self.get_basic_value(test_v)
 		if isinstance(value, W_NilObject):
 			self.cp.jump_label(label)
 
+	def select_val(self, val_reg, label, slist):
+		val = self.fetch_basereg(val_reg)
+		#print "select_val:"
+		#print "atom: %d"%(val.index)
+		for i in range(0, len(slist)):
+			(v, l) = slist[i]
+			if v == val.indexval:
+				self.cp.jump_label(l)
+				return
+		self.cp.jump_label(label)
+		
 	def move(self, source, dst_reg):
 		self.store_basereg(dst_reg, self.get_basic_value(source))
 
