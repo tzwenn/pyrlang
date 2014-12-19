@@ -164,7 +164,7 @@ arity = [
 		3,3,3,3,3,0,1,1,7,1]
 
 """ Human readable opcode names """
-opnames = (
+opnames = [
 		"nop",
 		"label",
 		"func_info",
@@ -318,7 +318,7 @@ opnames = (
 		"recv_mark",
 		"recv_set",
 		"gc_bif3",
-		"line")
+		"line"]
 
 # Operand types
 TAG_LITERAL			= 0

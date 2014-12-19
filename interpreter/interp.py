@@ -7,8 +7,17 @@ from pyrlang.interpreter.datatypes.number import W_IntObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
+from rpython.rlib import jit
 
 lib_module = ["erlang"]
+
+def printable_loc(s_cp, s_atoms, s_func_list):
+	return str(s_cp.offset) + " " + opcodes.opnames[ord(s_cp.str[s_cp.offset-1])]
+
+driver = jit.JitDriver(greens = ['s_cp', 's_atoms', 's_func_list'],
+		reds = ['s_x_reg', 's_y_reg'],
+		virtualizables = ['s_x_reg', 's_y_reg'],
+		get_printable_location=printable_loc)
 
 class BeamRunTime:
 	def __init__(self, cp, atoms, impTs):
@@ -37,6 +46,11 @@ class BeamRunTime:
 
 	def execute(self):
 		while(True):
+			driver.jit_merge_point(s_cp = self.cp,
+					s_atoms = self.atoms,
+					s_func_list = self.func_list,
+					s_x_reg = self.x_reg,
+					s_y_reg = self.y_reg)
 			instr = self.cp.parseInstr()
 			#print "execute instr: %s"%(opcodes.opnames[instr])
 			if instr == opcodes.CALL: # 4
@@ -47,6 +61,11 @@ class BeamRunTime:
 
 			elif instr == opcodes.CALL_ONLY: # 6
 				self.call_only(self.cp.parseInt(), self.cp.parseInt())
+				driver.can_enter_jit(s_cp = self.cp,
+						s_atoms = self.atoms,
+						s_func_list = self.func_list,
+						s_x_reg = self.x_reg,
+						s_y_reg = self.y_reg)
 
 			elif instr == opcodes.ALLOCATE: # 12
 				self.allocate(self.cp.parseInt(), self.cp.parseInt())
