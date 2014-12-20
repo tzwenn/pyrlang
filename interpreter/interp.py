@@ -15,8 +15,8 @@ def printable_loc(s_cp):
 	return str(s_cp.offset) + " " + opcodes.opnames[ord(s_cp.str[s_cp.offset-1])]
 
 driver = jit.JitDriver(greens = ['s_cp'],
-		reds = ['s_current_line', 's_x_reg', 's_y_reg'],
-		virtualizables = ['s_y_reg'],
+		reds = ['s_current_line', 's_self', 's_atoms', 's_func_list', 's_x_reg', 's_y_reg'],
+		#virtualizables = ['s_y_reg'],
 		get_printable_location=printable_loc)
 
 class BeamRunTime:
@@ -48,8 +48,9 @@ class BeamRunTime:
 		while(True):
 			driver.jit_merge_point(s_cp = self.cp,
 					s_current_line = self.current_line,
-					#s_atoms = self.atoms,
-					#s_func_list = self.func_list,
+					s_atoms = self.atoms,
+					s_func_list = self.func_list,
+					s_self = self,
 					s_x_reg = self.x_reg,
 					s_y_reg = self.y_reg)
 			instr = self.cp.parseInstr()
@@ -64,8 +65,9 @@ class BeamRunTime:
 				self.call_only(self.cp.parseInt(), self.cp.parseInt())
 				driver.can_enter_jit(s_cp = self.cp,
 						s_current_line = self.current_line,
-						#s_atoms = self.atoms,
-						#s_func_list = self.func_list,
+						s_self = self, 
+						s_atoms = self.atoms,
+						s_func_list = self.func_list,
 						s_x_reg = self.x_reg,
 						s_y_reg = self.y_reg)
 

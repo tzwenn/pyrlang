@@ -7,8 +7,6 @@ class AbstractRegister:
 		pass
 
 class X_Register(AbstractRegister):
-	_virtualizable_ = ['regs[*]']
-
 	def __init__(self):
 		self.regs = []
 
@@ -23,7 +21,6 @@ class X_Register(AbstractRegister):
 		self.regs[n] = val
 
 class Y_Register(AbstractRegister):
-	_virtualizable_ = ['regs[*]']
 
 	def __init__(self):
 		self.regs = []
