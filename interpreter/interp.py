@@ -11,12 +11,12 @@ from rpython.rlib import jit
 
 lib_module = ["erlang"]
 
-def printable_loc(s_cp, s_atoms, s_func_list):
+def printable_loc(s_cp):
 	return str(s_cp.offset) + " " + opcodes.opnames[ord(s_cp.str[s_cp.offset-1])]
 
-driver = jit.JitDriver(greens = ['s_cp', 's_atoms', 's_func_list'],
-		reds = ['s_x_reg', 's_y_reg'],
-		virtualizables = ['s_x_reg', 's_y_reg'],
+driver = jit.JitDriver(greens = ['s_cp'],
+		reds = ['s_current_line', 's_x_reg', 's_y_reg'],
+		virtualizables = ['s_y_reg'],
 		get_printable_location=printable_loc)
 
 class BeamRunTime:
@@ -47,8 +47,9 @@ class BeamRunTime:
 	def execute(self):
 		while(True):
 			driver.jit_merge_point(s_cp = self.cp,
-					s_atoms = self.atoms,
-					s_func_list = self.func_list,
+					s_current_line = self.current_line,
+					#s_atoms = self.atoms,
+					#s_func_list = self.func_list,
 					s_x_reg = self.x_reg,
 					s_y_reg = self.y_reg)
 			instr = self.cp.parseInstr()
@@ -62,8 +63,9 @@ class BeamRunTime:
 			elif instr == opcodes.CALL_ONLY: # 6
 				self.call_only(self.cp.parseInt(), self.cp.parseInt())
 				driver.can_enter_jit(s_cp = self.cp,
-						s_atoms = self.atoms,
-						s_func_list = self.func_list,
+						s_current_line = self.current_line,
+						#s_atoms = self.atoms,
+						#s_func_list = self.func_list,
 						s_x_reg = self.x_reg,
 						s_y_reg = self.y_reg)
 
