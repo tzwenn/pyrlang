@@ -12,7 +12,8 @@ from rpython.rlib import jit
 lib_module = ["erlang"]
 
 def printable_loc(s_cp):
-	return str(s_cp.offset) + " " + opcodes.opnames[ord(s_cp.str[s_cp.offset-1])]
+	index = ord(s_cp.str[s_cp.offset])
+	return str(s_cp.offset) + " " + opcodes.opnames[index]
 
 driver = jit.JitDriver(greens = ['s_cp'],
 		reds = ['s_current_line', 's_self', 's_atoms', 's_func_list', 's_x_reg', 's_y_reg'],
@@ -53,6 +54,7 @@ class BeamRunTime:
 					s_self = self,
 					s_x_reg = self.x_reg,
 					s_y_reg = self.y_reg)
+			#print printable_loc(self.cp)
 			instr = self.cp.parseInstr()
 			#print "execute instr: %s"%(opcodes.opnames[instr])
 			if instr == opcodes.CALL: # 4

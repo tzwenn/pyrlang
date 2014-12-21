@@ -1,4 +1,5 @@
 from rpython.rlib.rstruct.runpack import runpack
+from rpython.rlib import jit
 import opcodes
 import pretty_print
 
@@ -25,9 +26,6 @@ class CodeParser:
 		#print "jump_absolute: #%d" % (addr)
 		self.offset = addr
 
-	def _ord(self, s):
-		return ord(s[0])
-
 	def _encode_hex(self, s):
 		unit = []
 		for i in range(0, len(s)):
@@ -36,15 +34,26 @@ class CodeParser:
 			unit.append(str(0x0f & hex_num))
 		return ''.join(unit)
 
+	@jit.unroll_safe
 	def _next(self, n=1):
-		tmp = []
-		for i in range(0, n):
-			tmp.append(self.str[i + self.offset])
+		if n == 1:
+			return self.parseOne()
+		from_index = self.offset
 		self.offset += n
-		return ''.join(tmp)
+		to_index = self.offset
+		assert(from_index >= 0)
+		assert(to_index >= 0)
+		return self.str[from_index:to_index]
+		#tmp = []
+		#for i in range(0, n):
+			#tmp.append(self.str[i + self.offset])
+		#self.offset += n
+		#return ''.join(tmp)
 
 	def parseOne(self):
-		return self._ord(self._next())
+		x = ord(self.str[self.offset])
+		self.offset += 1
+		return x
 
 	def parseInstr(self):
 		return self.parseOne()
@@ -88,7 +97,7 @@ class CodeParser:
 				else:
 					return self._decode_bignit(self._next(2+(tag >> 5)))
 			else:
-				w = self._ord(self._next())
+				w = self.parseOne()
 				return ((tag & 0xe0)<<3)|w
 		else:
 			return tag >> 4
