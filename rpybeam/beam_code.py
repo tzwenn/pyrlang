@@ -4,28 +4,24 @@ import opcodes
 import pretty_print
 
 class CodeParser:
+	_immutable_fields_ = ['str', 'atoms[*]', 'entry_arity', 'labelTable']
 	def __init__(self, s, atomTable, entry_func = "start", entry_arity = 0):
-		self.offset = 0
 		self.str = s
 		self.labelTable = []
 		self.entry_func = entry_func
 		self.atoms = atomTable
 		self.entry_addr = -1
 		self.entry_arity = entry_arity
-		self.labelTable = self.createLabelTable()
-		if self.entry_addr != -1:
-			self.offset = self.entry_addr
-		else:
+		self.labelTable = self.createLabelTable(0)
+		#pretty_print.print_labelTable(self.labelTable)
+		if self.entry_arity == -1:
 			raise Exception("entry function %s/%d not found!"%(entry_func, entry_arity))
 
-	def jump_label(self, label):
-		#print "jump_label: %d" % (label)
-		self.jump_absolute(self.labelTable[label-1])
+	def label_to_addr(self, label):
+		#print "jump to label: %d"%(label)
+		return self.labelTable[label-1]
 
-	def jump_absolute(self, addr):
-		#print "jump_absolute: #%d" % (addr)
-		self.offset = addr
-
+	@jit.unroll_safe
 	def _encode_hex(self, s):
 		unit = []
 		for i in range(0, len(s)):
@@ -35,72 +31,65 @@ class CodeParser:
 		return ''.join(unit)
 
 	@jit.unroll_safe
-	def _next(self, n=1):
-		if n == 1:
-			return self.parseOne()
-		from_index = self.offset
-		self.offset += n
-		to_index = self.offset
-		assert(from_index >= 0)
+	def _next(self, pc, n=1):
+		to_index = pc + n
+		assert(pc >= 0)
 		assert(to_index >= 0)
-		return self.str[from_index:to_index]
-		#tmp = []
-		#for i in range(0, n):
-			#tmp.append(self.str[i + self.offset])
-		#self.offset += n
-		#return ''.join(tmp)
+		return to_index, self.str[pc:to_index]
 
-	def parseOne(self):
-		x = ord(self.str[self.offset])
-		self.offset += 1
-		return x
+	def parseOne(self, pc):
+		x = ord(self.str[pc])
+		return pc+1, x
 
-	def parseInstr(self):
-		return self.parseOne()
+	def parseInstr(self, pc):
+		return self.parseOne(pc)
 
-	def parseTag(self):
-		res = self._parseTag()
-		self.offset += 1
-		return res
+	def parseTag(self, pc):
+		pc, res = self._parseTag(pc)
+		return pc+1, res
 
-	def _parseTag(self, tag = -1):
+	def _parseTag(self, pc, tag = -1):
 		if tag == -1:
-			tag = ord(self.str[self.offset])
+			tag = ord(self.str[pc])
 		if tag & 0x07 == opcodes.TAG_EXTENDED:
-			return (tag >> 4) + opcodes.TAGX_BASE
+			return pc, (tag >> 4) + opcodes.TAGX_BASE
 		else:
-			return tag & 0x07
+			return pc, tag & 0x07
 
 	def isBaseTag(self, tag):
 		return tag < opcodes.TAGX_BASE
 
-	def parseInt(self):
-		first = self.parseOne()
-		return self._parseInt(first)
+	def parseInt(self, pc):
+		pc, first = self.parseOne(pc)
+		return self._parseInt(pc, first)
 
-	def _parseInt(self,first):
-		assert(self._parseTag(first) < opcodes.TAGX_BASE)
-		return self._createInt(first)
+	def _parseInt(self, pc, first):
+		pc, tag = self._parseTag(pc, first)
+		assert(tag < opcodes.TAGX_BASE)
+		return self._createInt(pc, first)
 
-	def parseBase(self):
-		first = self.parseOne()
-		tag = self._parseTag(first)
-		intval = self._parseInt(first)
-		return (tag, intval)
+	def parseBase(self, pc):
+		pc, first = self.parseOne(pc)
+		pc, tag = self._parseTag(pc, first)
+		pc, intval = self._parseInt(pc, first)
+		return pc, (tag, intval)
 
-	def _createInt(self, tag):
+	def _createInt(self, pc, tag):
 		if tag & 0x08:
 			if tag & 0x10:
 				if tag & 0xe0 == 0xe0:
-					length = self._createInt(tag) + (tag >> 5) + 2
-					return self._decode_bignit(self._next(length))
+					pc, tmp = self._createInt(pc, tag)
+					length = tmp + (tag >> 5) + 2
+					pc, tmp2 = self._next(pc, length)
+					return pc, self._decode_bignit(tmp2)
 				else:
-					return self._decode_bignit(self._next(2+(tag >> 5)))
+					pc, tmp2 = self._next(pc, 2+(tag >> 5))
+					return pc, self._decode_bignit(tmp2)
 			else:
-				w = self.parseOne()
-				return ((tag & 0xe0)<<3)|w
+				pc, w = self.parseOne(pc)
+				return pc, ((tag & 0xe0)<<3)|w
 		else:
-			return tag >> 4
+			return pc, tag >> 4
 
 	def _decode_bignit(self, s):
 		v = int(self._encode_hex(s), 16)
@@ -109,97 +98,107 @@ class CodeParser:
 		else:
 			return v
 
-	def parse_float(self):
-		assert(self.parseTag() == opcodes.TAGX_FLOATLIT)
-		return self._parse_float()
+	def parse_float(self, pc):
+		pc, tag = self.parseTag(pc)
+		assert(tag == opcodes.TAGX_FLOATLIT)
+		return self._parse_float(pc)
 
-	def _parse_float(self):
-		return runpack("f", self._next(4))
+	def _parse_float(self, pc):
+		pc, tmp = self._next(pc, 4)
+		return pc, runpack("f", tmp)
 
-	def parse_floatreg(self):
-		assert(self.parseTag() == opcodes.TAGX_FLOATREG)
-		return self._parse_float()
+	def parse_floatreg(self, pc):
+		pc, tag = self.parseTag(pc)
+		assert(tag == opcodes.TAGX_FLOATREG)
+		return self._parse_float(pc)
 
-	def _parse_floatreg(self):
-		return self.parseInt()
+	def _parse_floatreg(self, pc):
+		return pc, self.parseInt(pc)
 
-	def parse_literal(self):
-		assert(self.parseTag() == opcodes.TAGX_LITERAL)
-		return self._parse_literal()
+	def parse_literal(self, pc):
+		pc, tag = self.parseTag(pc)
+		assert(tag == opcodes.TAGX_LITERAL)
+		return self._parse_literal(pc)
 
-	def _parse_literal(self):
-		return self.parseInt()
+	def _parse_literal(self, pc):
+		return pc, self.parseInt(pc)
 
-	def parse_alloclist(self):
-		assert(self.parseTag() == opcodes.TAGX_ALLOCLIST)
-		return self._parse_alloclist()
+	def parse_alloclist(self, pc):
+		pc, tag = self.parseTag(pc)
+		assert(tag == opcodes.TAGX_ALLOCLIST)
+		return self._parse_alloclist(pc)
 	
-	def _parse_alloclist(self):
-		length = self.parseInt()
+	def _parse_alloclist(self, pc):
+		pc, length = self.parseInt(pc)
 		res = []
 		for i in range(0, length):
-			res.append((self.parseInt(), self.parseInt()))
-		return res
+			pc, tmp1 = self.parseInt(pc)
+			pc, tmp2 = self.parseInt(pc)
+			res.append((tmp1, tmp2))
+		return pc, res
 
-	def parse_selectlist(self):
+	def parse_selectlist(self, pc):
 		#print "parse_selectlist:"
 		#pretty_print.print_hex(self.str[self.offset:-1])
 		#exit()
-		assert(self.parseTag() == opcodes.TAGX_SELECTLIST)
-		return self._parse_selectlist()
+		pc, tag = self.parseTag(pc)
+		assert(tag == opcodes.TAGX_SELECTLIST)
+		return self._parse_selectlist(pc)
 
-	def _parse_selectlist(self):
-		length = self.parseInt()
+	@jit.unroll_safe
+	def _parse_selectlist(self, pc):
+		pc, length = self.parseInt(pc)
 		res = []
 		for i in range(0, length >> 1):
-			res.append((self.parseInt(), self.parseInt()))
-		return res
+			pc, tmp1 = self.parseInt(pc)
+			pc, tmp2 = self.parseInt(pc)
+			res.append((tmp1, tmp2))
+		return pc, res
 
-	def createLabelTable(self):
+	def createLabelTable(self, pc):
 		#print "entry_func:%s"%(self.entry_func)
 		#print("atoms:")
 		#print self.atoms
 		#print "entry_arity:%d"%(self.entry_arity)
 		while(True):
-			instr = self.parseInstr()
-			#print "INSTR: %d"%(instr)
+			pc, instr = self.parseInstr(pc)
 			if instr == opcodes.LABEL:
-				self.parseInt()
-				self.labelTable.append(self.offset)
+				pc, _ = self.parseInt(pc)
+				self.labelTable.append(pc)
 			elif instr == opcodes.FUNC_INFO:
-				tag1 = self.parseOne()
-				module = self._parseInt(tag1)
-				tag2 = self.parseOne()
-				func_index = self._parseInt(tag2)
-				tag3 = self.parseOne()
-				arity = self._parseInt(tag3) 
+				pc, tag1 = self.parseOne(pc)
+				pc, module = self._parseInt(pc, tag1)
+				pc, tag2 = self.parseOne(pc)
+				pc, func_index = self._parseInt(pc, tag2)
+				pc, tag3 = self.parseOne(pc)
+				pc, arity = self._parseInt(pc, tag3) 
+				print
 				if module == 1:
 					if self.atoms[func_index-1] == self.entry_func:
 						if arity == self.entry_arity:
-							self.entry_addr = self.offset + 2 
+							self.entry_addr = pc + 2 
 			else:
 				arity = opcodes.arity[instr]
 				for i in range(0, arity):
-					first = self.parseOne()
-					tag = self._parseTag(first)
+					pc, first = self.parseOne(pc)
+					pc, tag = self._parseTag(pc, first)
 					#print first
 					#print tag
 					if self.isBaseTag(tag):
-						self._parseInt(first)
+						pc, _ = self._parseInt(pc, first)
 					elif tag == opcodes.TAGX_FLOATREG:
-						self._parse_floatreg()
+						pc, _ = self._parse_floatreg(pc)
 					elif tag == opcodes.TAGX_SELECTLIST:
-						self._parse_selectlist()
+						pc, _ = self._parse_selectlist(pc)
 					elif tag == opcodes.TAGX_FLOATREG:
-						self._parse_floatreg()
+						pc, _ = self._parse_floatreg(pc)
 					elif tag == opcodes.TAGX_ALLOCLIST:
-						self._parse_alloclist()
+						pc, _ = self._parse_alloclist(pc)
 					elif tag == opcodes.TAGX_LITERAL:
-						self._parse_literal()
+						pc, _ = self._parse_literal(pc)
 					else:
 						pretty_print.print_hex(self.str)
-						raise Exception("Unknown TAG: %d at position:%d"%(tag, self.offset-1))
-			if(self.offset >= len(self.str)):
+						raise Exception("Unknown TAG: %d at position:%d"%(tag, pc-1))
+			if(pc >= len(self.str)):
 					break
-		self.offset = 0
 		return self.labelTable

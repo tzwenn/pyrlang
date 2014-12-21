@@ -27,13 +27,12 @@ def main(argv):
 		#print_Root(s)
 		code = s.getCode()
 		at = s.getAtomTable()
-		cp = CodeParser(code,at, entry_func, len(args))
 
 		#print_labelTable(cp.labelTable)
 		#print cp.entry_addr
-		brt = BeamRunTime(cp, at, s.impTChunk.asArray())
+		brt = BeamRunTime(at, s.impTChunk.asArray())
 		brt.init_entry_arguments(args)
-		res = brt.execute()
+		res = brt.execute(code, entry_func, len(args))
 		print_value(res)
 		#res = brt.func_list[0].invoke([W_IntObject(3),
 			#W_IntObject(5)])

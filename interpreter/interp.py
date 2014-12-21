@@ -1,6 +1,7 @@
 import sys
 
 from pyrlang.rpybeam import opcodes
+from pyrlang.rpybeam.beam_code import CodeParser
 from pyrlang.lib import ModuleDict
 from register import X_Register, Y_Register
 from pyrlang.interpreter.datatypes.number import W_IntObject
@@ -11,18 +12,17 @@ from rpython.rlib import jit
 
 lib_module = ["erlang"]
 
-def printable_loc(s_cp):
-	index = ord(s_cp.str[s_cp.offset])
-	return str(s_cp.offset) + " " + opcodes.opnames[index]
+def printable_loc(pc, code):
+	index = ord(code[pc])
+	return str(pc) + " " + opcodes.opnames[index].upper()
 
-driver = jit.JitDriver(greens = ['s_cp'],
-		reds = ['s_current_line', 's_self', 's_atoms', 's_func_list', 's_x_reg', 's_y_reg'],
+driver = jit.JitDriver(greens = ['pc', 'code'],
+		reds = ['s_current_line', 's_atoms', 's_func_list', 'cp', 's_self', 's_x_reg', 's_y_reg'],
 		#virtualizables = ['s_y_reg'],
 		get_printable_location=printable_loc)
 
 class BeamRunTime:
-	def __init__(self, cp, atoms, impTs):
-		self.cp = cp # code parser
+	def __init__(self, atoms, impTs):
 		self.atoms = atoms
 		self.func_list = []
 		self.import_funcs(impTs)
@@ -45,97 +45,137 @@ class BeamRunTime:
 				function_name = "%s_%d"%(self.atoms[entry[1] - 1], entry[2])
 				self.func_list.append(moduleEntity.searchFunc(function_name)())
 
-	def execute(self):
+	@jit.unroll_safe
+	def execute(self, code, entry_func, arity):
+		cp = CodeParser(code, self.atoms, entry_func, arity)
+		pc = cp.entry_addr
+		code = cp.str
 		while(True):
-			driver.jit_merge_point(s_cp = self.cp,
+			driver.jit_merge_point(pc = pc,
+					code = code,
 					s_current_line = self.current_line,
 					s_atoms = self.atoms,
 					s_func_list = self.func_list,
+					cp = cp,
 					s_self = self,
 					s_x_reg = self.x_reg,
 					s_y_reg = self.y_reg)
-			#print printable_loc(self.cp)
-			instr = self.cp.parseInstr()
+			#print printable_loc(code, pc)
+			instr = ord(code[pc])
+			pc = pc + 1
 			#print "execute instr: %s"%(opcodes.opnames[instr])
 			if instr == opcodes.CALL: # 4
-				self.call(self.cp.parseInt(), self.cp.parseInt())
+				pc, arity = cp.parseInt(pc)
+				pc, label = cp.parseInt(pc)
+				pc = self.call(pc, cp, arity, label)
 
 			elif instr == opcodes.CALL_LAST: #5
-				self.call_last(self.cp.parseInt(), self.cp.parseInt(), self.cp.parseInt())
+				pc, arity = cp.parseInt(pc)
+				pc, label = cp.parseInt(pc)
+				pc, n = cp.parseInt(pc)
+				pc = self.call_last(cp, arity, label, n)
 
 			elif instr == opcodes.CALL_ONLY: # 6
-				self.call_only(self.cp.parseInt(), self.cp.parseInt())
-				driver.can_enter_jit(s_cp = self.cp,
+				pc, arity = cp.parseInt(pc)
+				pc, label = cp.parseInt(pc)
+				pc = self.call_only(cp, arity, label)
+				driver.can_enter_jit(pc = pc,
+						code = code,
 						s_current_line = self.current_line,
-						s_self = self, 
 						s_atoms = self.atoms,
 						s_func_list = self.func_list,
+						cp = cp,
+						s_self = self, 
 						s_x_reg = self.x_reg,
 						s_y_reg = self.y_reg)
 
 			elif instr == opcodes.ALLOCATE: # 12
-				self.allocate(self.cp.parseInt(), self.cp.parseInt())
+				pc, stack_need = cp.parseInt(pc)
+				pc, live = cp.parseInt(pc)
+				self.allocate(stack_need, live)
 
 			elif instr == opcodes.ALLOCATE_ZERO: # 14
-				self.allocate_zero(self.cp.parseInt(), self.cp.parseInt())
+				pc, stack_need = cp.parseInt(pc)
+				pc, live = cp.parseInt(pc)
+				self.allocate_zero(stack_need, live)
 
 			elif instr == opcodes.TEST_HEAP: # 16
-				self.test_heap(self.cp.parseBase(), self.cp.parseBase())
+				pc, term1 = cp.parseBase(pc)
+				pc, term2 = cp.parseBase(pc)
+				self.test_heap(term1, term2)
 
 			elif instr == opcodes.DEALLOCATE: # 18
-				self.deallcate(self.cp.parseInt())
+				pc, n = cp.parseInt(pc)
+				self.deallcate(n)
 
 			elif instr == opcodes.K_RETURN: # 19
 				if self.y_reg.is_empty():
 					return self.x_reg.get(0)
 				else:
-					self.cp.jump_absolute(self.y_reg.pop().addrval)
+					pc = self.y_reg.pop().addrval
 
 			elif instr == opcodes.IS_LT: # 39
-				self.is_lt(self.cp.parseInt(), self.cp.parseBase(), self.cp.parseBase())
+				pc, label = cp.parseInt(pc)
+				pc, term1 = cp.parseBase(pc)
+				pc, term2 = cp.parseBase(pc)
+				pc = self.is_lt(pc, cp, label, term1, term2)
 
 			elif instr == opcodes.IS_EQ_EXACT: # 43
-				next_addr = self.cp.parseInt()
-				test_reg = self.cp.parseBase()
+				pc, next_addr = cp.parseInt(pc)
+				pc, test_reg = cp.parseBase(pc)
 				# TODO: maybe other data types here
-				value = self.cp.parseInt()
-				self.is_eq_exact_int(next_addr, test_reg, value)
+				pc, value = cp.parseInt(pc)
+				pc = self.is_eq_exact_int(pc, cp, next_addr, test_reg, value)
 
 			elif instr == opcodes.IS_ATOM: # 48
-				self.is_atom(self.cp.parseInt(), self.cp.parseBase())
+				pc, label = cp.parseInt(pc)
+				pc, test_v = cp.parseBase(pc)
+				pc = self.is_atom(pc, cp, label, test_v)
 
 			elif instr == opcodes.IS_NIL: # 52
-				self.is_nil(self.cp.parseInt(), self.cp.parseBase())
+				pc, label = cp.parseInt(pc)
+				pc, test_v = cp.parseBase(pc)
+				pc = self.is_nil(pc, cp, label, test_v)
 
 			elif instr == opcodes.IS_NONEMPTY_LIST: # 56
-				self.is_nonempty_list(self.cp.parseInt(), self.cp.parseBase())
+				pc, label = cp.parseInt(pc)
+				pc, test_v = cp.parseBase(pc)
+				pc = self.is_nonempty_list(pc, cp, label, test_v)
 				
 			elif instr == opcodes.SELECT_VAL: # 59
-				reg = self.cp.parseBase()  
-				label = self.cp.parseInt()
-				sl = self.cp.parse_selectlist()
-				self.select_val(reg, label, sl)
+				pc, reg = cp.parseBase(pc)  
+				pc, label = cp.parseInt(pc)
+				pc, sl = cp.parse_selectlist(pc)
+				pc = self.select_val(cp, reg, label, sl)
 
 			elif instr == opcodes.MOVE: # 64
-				self.move(self.cp.parseBase(), self.cp.parseBase())
+				pc, source = cp.parseBase(pc)
+				pc, dst_reg = cp.parseBase(pc)
+				self.move(source, dst_reg)
 
 			elif instr == opcodes.GET_LIST: # 65
-				self.get_list(self.cp.parseBase(), self.cp.parseBase(), self.cp.parseBase())
+				pc, src_reg = cp.parseBase(pc)
+				pc, head_reg = cp.parseBase(pc)
+				pc, tail_reg = cp.parseBase(pc)
+				self.get_list(src_reg, head_reg, tail_reg)
 
 			elif instr == opcodes.PUT_LIST: # 69
-				self.put_list(self.cp.parseBase(), self.cp.parseBase(), self.cp.parseBase())
+				pc, head_reg = cp.parseBase(pc)
+				pc, tail_reg = cp.parseBase(pc)
+				pc, dst_reg = cp.parseBase(pc)
+				self.put_list(head_reg, tail_reg, dst_reg)
 
 			elif instr == opcodes.GC_BIF2: # 125
-				bif_index = self.cp.parseInt()
-				fail = self.cp.parseInt()
-				alive = self.cp.parseInt()
-				rand1 = self.cp.parseBase()
-				rand2 = self.cp.parseBase()
-				dst_reg = self.cp.parseBase()
-				self.gc_bif2(bif_index, fail, alive, rand1, rand2, dst_reg)
+				pc, fail = cp.parseInt(pc)
+				pc, alive = cp.parseInt(pc)
+				pc, bif_index = cp.parseInt(pc)
+				pc, rand1 = cp.parseBase(pc)
+				pc, rand2 = cp.parseBase(pc)
+				pc, dst_reg = cp.parseBase(pc)
+				pc = self.gc_bif2(pc, fail, alive, bif_index, rand1, rand2, dst_reg)
 
 			elif instr == opcodes.LINE: # 153
-				self.current_line = self.cp.parseInt()
+				pc, self.current_line = cp.parseInt(pc)
 
 			else:
 				raise Exception("Unimplemented opcode: %d"%(instr))
@@ -170,28 +210,32 @@ class BeamRunTime:
 		else:
 			self.y_reg.store(val, res)
 
-	def not_jump(self, label, test_v, class_name):
+	def not_jump(self, pc, cp, label, test_v, class_name):
 		v = self.get_basic_value(test_v)
-		if not isinstance(v, class_name):
-			self.cp.jump_label(label)
+		if isinstance(v, class_name):
+			return pc
+		else:
+			return cp.label_to_addr(label)
 
 ########################################################################
 
-	def call(self, arity, label):
-		self.y_reg.push(W_AddrObject(self.cp.offset))
-		self.cp.jump_label(label)
+	def call(self, pc, cp, arity, label):
+		self.y_reg.push(W_AddrObject(pc))
+		return cp.label_to_addr(label)
 
-	def call_last(self, arity, label, n):
+	def call_last(self, cp, arity, label, n):
 		self.deallcate(n)
-		self.cp.jump_label(label)
+		return cp.label_to_addr(label)
 
-	def call_only(self, arity, label):
-		self.cp.jump_label(label)
+	def call_only(self, cp, arity, label):
+		return cp.label_to_addr(label)
 
+	@jit.unroll_safe
 	def allocate(self, stack_need, live):
 		for i in range(0, stack_need):
 			self.y_reg.push(W_IntObject(-1))
 		
+	@jit.unroll_safe
 	def allocate_zero(self, stack_need, live):
 		for i in range(0, stack_need):
 			self.y_reg.push(W_IntObject(0))
@@ -199,44 +243,51 @@ class BeamRunTime:
 	def test_heap(self, alloc, live):
 		pass
 
+	@jit.unroll_safe
 	def deallcate(self, n):
 		for i in range(0, n):
 			self.y_reg.pop()
 		
-	def is_lt(self, label, v1, v2):
+	def is_lt(self, pc, cp, label, v1, v2):
 		int_v1 = self.get_basic_value(v1)
 		int_v2 = self.get_basic_value(v2)
-		if not int_v1.lt(int_v2):
-			self.cp.jump_label(label)
+		if int_v1.lt(int_v2):
+			return pc
+		else:
+			return cp.label_to_addr(label)
 
-	def is_eq_exact_int(self, label, test_reg, value):
+	def is_eq_exact_int(self, pc, cp, label, test_reg, value):
 		if self.fetch_basereg(test_reg).intval != value:
-			self.cp.jump_label(label)
+			return cp.label_to_addr(label)
+		else:
+			return pc
 
-	def is_atom(self, label, test_v):
-		self.not_jump(label, test_v, W_AtomObject)
+	def is_atom(self, pc, cp, label, test_v):
+		return self.not_jump(pc, cp, label, test_v, W_AtomObject)
 
-	def is_nil(self, label, test_v):
-		self.not_jump(label, test_v, W_NilObject)
+	def is_nil(self, pc, cp, label, test_v):
+		return self.not_jump(pc, cp, label, test_v, W_NilObject)
 		#value = self.get_basic_value(test_v)
 		#if not isinstance(value, W_NilObject):
-			#self.cp.jump_label(label)
+			#cp.jump_label(label)
 
-	def is_nonempty_list(self, label, test_v):
+	def is_nonempty_list(self, pc, cp, label, test_v):
 		value = self.get_basic_value(test_v)
 		if isinstance(value, W_NilObject):
-			self.cp.jump_label(label)
+			return cp.label_to_addr(label)
+		else:
+			return pc
 
-	def select_val(self, val_reg, label, slist):
+	@jit.unroll_safe
+	def select_val(self, cp, val_reg, label, slist):
 		val = self.fetch_basereg(val_reg)
 		#print "select_val:"
 		#print "atom: %d"%(val.index)
 		for i in range(0, len(slist)):
 			(v, l) = slist[i]
 			if v == val.indexval:
-				self.cp.jump_label(l)
-				return
-		self.cp.jump_label(label)
+				return cp.label_to_addr(l)
+		return cp.label_to_addr(label)
 		
 	def move(self, source, dst_reg):
 		self.store_basereg(dst_reg, self.get_basic_value(source))
@@ -252,10 +303,11 @@ class BeamRunTime:
 		res = W_ListObject(head, tail)
 		self.store_basereg(dst_reg, res)
 
-	def gc_bif2(self, fail, alive, bif_index, rand1, rand2, dst_reg):
+	def gc_bif2(self, pc, fail, alive, bif_index, rand1, rand2, dst_reg):
 		# TODO: wrap them with try-catch to handle inner exception.
 		tmp1 = self.get_basic_value(rand1)
 		tmp2 = self.get_basic_value(rand2)
 		#print "gc_bif2: opreate: %d, rand1: %d, rand2: %d"%(bif_index, tmp1.intval, tmp2.intval)
 		res = self.func_list[bif_index].invoke([tmp1, tmp2])
 		self.store_basereg(dst_reg, res)
+		return pc
