@@ -31,10 +31,10 @@ class X_Register(AbstractRegister):
 		self.regs[n] = val
 
 class Y_Register(AbstractRegister):
-	_virtualizable_ = ['regs[*]']
+	#_virtualizable_ = ['regs[*]']
 
 	def __init__(self):
-		self = jit.hint(self, fresh_virtualizable=True, access_directly=True)
+		#self = jit.hint(self, fresh_virtualizable=True, access_directly=True)
 		self.regs = []
 
 	def get(self, n):

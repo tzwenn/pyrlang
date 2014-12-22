@@ -232,7 +232,7 @@ class BeamRunTime:
 	@jit.unroll_safe
 	def allocate(self, stack_need, live):
 		for i in range(0, stack_need):
-			self.y_reg.push(W_IntObject(-1))
+			self.y_reg.push(None)
 		
 	@jit.unroll_safe
 	def allocate_zero(self, stack_need, live):
