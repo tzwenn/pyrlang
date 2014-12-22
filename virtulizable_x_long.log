@@ -1,0 +1,424 @@
+[1594f2aa99a0] {jit-backend-counts
+[1594f2ab7b1f] jit-backend-counts}
+[1594f33c9514] {jit-log-opt-loop
+# Loop 0 (156 IS_NONEMPTY_LIST) : loop with 81 ops
+[i0, p1, p2, p3, p4, p5]
++129: p6 = getfield_gc(p4, descr=<FieldP interpreter.register.X_Register.inst_regs 16>)
++140: p8 = getarrayitem_gc(p6, 0, descr=<ArrayP 8>)
++144: p10 = getarrayitem_gc(p6, 1, descr=<ArrayP 8>)
++148: p12 = getarrayitem_gc(p6, 2, descr=<ArrayP 8>)
++152: p14 = getarrayitem_gc(p6, 3, descr=<ArrayP 8>)
++156: p16 = getarrayitem_gc(p6, 4, descr=<ArrayP 8>)
++160: p18 = getarrayitem_gc(p6, 5, descr=<ArrayP 8>)
++164: p20 = getarrayitem_gc(p6, 6, descr=<ArrayP 8>)
++168: p22 = getarrayitem_gc(p6, 7, descr=<ArrayP 8>)
++172: p24 = getarrayitem_gc(p6, 8, descr=<ArrayP 8>)
++176: p26 = getarrayitem_gc(p6, 9, descr=<ArrayP 8>)
++180: p28 = getarrayitem_gc(p6, 10, descr=<ArrayP 8>)
++184: p30 = getarrayitem_gc(p6, 11, descr=<ArrayP 8>)
++195: p32 = getarrayitem_gc(p6, 12, descr=<ArrayP 8>)
++206: p34 = getarrayitem_gc(p6, 13, descr=<ArrayP 8>)
++210: p36 = getarrayitem_gc(p6, 14, descr=<ArrayP 8>)
++224: p38 = getarrayitem_gc(p6, 15, descr=<ArrayP 8>)
++238: label(i0, p1, p2, p3, p4, p5, p8, p10, p12, p14, p16, p18, p20, p22, p24, p26, p28, p30, p32, p34, p36, p38, descr=TargetToken(4318126192))
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
++321: p39 = getfield_gc(p3, descr=<FieldP interpreter.interp.BeamRunTime.inst_x_reg 32>)
++333: i40 = ptr_eq(p39, p4)
+guard_true(i40, descr=<Guard0x101618020>) [p3, p39, p8, p10, p12, p14, p16, p18, p20, p22, p24, p26, p28, p30, p32, p34, p36, p38, p4]
++346: guard_nonnull_class(p8, 4297440672, descr=<Guard0x101618410>) [p3, p8, p10, p12, p14, p16, p18, p20, p22, p24, p26, p28, p30, p32, p34, p36, p38, p4]
++364: i42 = getfield_gc(p3, descr=<FieldS interpreter.interp.BeamRunTime.inst_current_line 16>)
++369: p43 = getfield_gc(p3, descr=<FieldP interpreter.interp.BeamRunTime.inst_atoms 8>)
++374: p44 = getfield_gc(p3, descr=<FieldP interpreter.interp.BeamRunTime.inst_func_list 24>)
++379: p45 = getfield_gc(p3, descr=<FieldP interpreter.interp.BeamRunTime.inst_y_reg 40>)
+debug_merge_point(0, 0, '160 GET_LIST')
++384: p46 = getfield_gc_pure(p8, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
++388: p47 = getfield_gc_pure(p8, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
+debug_merge_point(0, 0, '164 IS_NONEMPTY_LIST')
++392: guard_nonnull_class(p47, 4297440672, descr=<Guard0x1016183a0>) [p3, p47, p8, p10, p12, p46, p18, p20, p22, p24, p26, p28, p30, p32, p34, p36, p38, p4]
+debug_merge_point(0, 0, '167 GET_LIST')
++411: p49 = getfield_gc_pure(p47, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
++415: p50 = getfield_gc_pure(p47, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
+debug_merge_point(0, 0, '171 IS_LT')
++419: guard_class(p49, 4297440496, descr=<Guard0x101618330>) [p3, p49, p46, p8, p10, p12, p47, p50, p22, p24, p26, p28, p30, p32, p34, p36, p38, p4]
++432: guard_nonnull_class(p46, 4297440496, descr=<Guard0x1016182c0>) [p3, p49, p46, p8, p10, p12, p47, p50, p22, p24, p26, p28, p30, p32, p34, p36, p38, p4]
++451: i53 = getfield_gc(p49, descr=<FieldS pyrlang.interpreter.datatypes.root.W_Root.inst_intval 24>)
++455: i54 = getfield_gc(p46, descr=<FieldS pyrlang.interpreter.datatypes.root.W_Root.inst_intval 24>)
++459: i55 = int_lt(i53, i54)
+guard_true(i55, descr=<Guard0x101618250>) [p3, p8, p10, p12, p46, p47, p49, p50, p22, p24, p26, p28, p30, p32, p34, p36, p38, p4]
+debug_merge_point(0, 0, '175 TEST_HEAP')
+debug_merge_point(0, 0, '178 PUT_LIST')
+debug_merge_point(0, 0, '182 PUT_LIST')
+debug_merge_point(0, 0, '186 MOVE')
+debug_merge_point(0, 0, '189 CALL_ONLY')
++468: p57 = getfield_gc(ConstPtr(ptr56), descr=<FieldP list.items 16>)
++481: i59 = getarrayitem_gc(p57, 13, descr=<ArrayS 8>)
++485: guard_value(i59, 156, descr=<Guard0x1016181e0>) [i42, i59, p45, p4, p3, p44, p43, p46, p47, p49, p50, p22, p24, p26, p28, p30, p32, p34, p36, p38, p10]
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
++498: p61 = same_as(p49)
++498: p62 = same_as(p50)
++498: i63 = same_as(i42)
++501: p64 = same_as(p43)
++511: p65 = same_as(p44)
++521: p66 = same_as(p45)
++531: label(i42, p43, p44, p3, p4, p45, p46, p50, p49, p10, p47, p22, p24, p26, p28, p30, p32, p34, p36, p38, i54, p57, i63, p64, p65, p66, descr=TargetToken(4318126272))
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
+debug_merge_point(0, 0, '160 GET_LIST')
+debug_merge_point(0, 0, '164 IS_NONEMPTY_LIST')
++607: guard_nonnull_class(p50, 4297440672, descr=<Guard0x101618170>) [p3, p50, p46, p49, p22, p24, p26, p28, p30, p32, p34, p36, p38, p4, p10]
+debug_merge_point(0, 0, '167 GET_LIST')
++625: p67 = getfield_gc_pure(p50, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
++629: p68 = getfield_gc_pure(p50, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
+debug_merge_point(0, 0, '171 IS_LT')
++633: guard_class(p67, 4297440496, descr=<Guard0x101618100>) [p3, p67, p46, p50, p68, p22, p24, p26, p28, p30, p32, p34, p36, p38, p4, p49, p10]
++645: i69 = getfield_gc(p67, descr=<FieldS pyrlang.interpreter.datatypes.root.W_Root.inst_intval 24>)
++649: i70 = int_lt(i69, i54)
+guard_true(i70, descr=<Guard0x101618090>) [p3, p46, p50, p67, p68, p22, p24, p26, p28, p30, p32, p34, p36, p38, p4, p49, p10]
+debug_merge_point(0, 0, '175 TEST_HEAP')
+debug_merge_point(0, 0, '178 PUT_LIST')
+debug_merge_point(0, 0, '182 PUT_LIST')
+debug_merge_point(0, 0, '186 MOVE')
+debug_merge_point(0, 0, '189 CALL_ONLY')
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
+p72 = new_with_vtable(4297440672)
++755: i73 = arraylen_gc(p57, descr=<ArrayS 8>)
++755: setfield_gc(p72, p10, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
++759: setfield_gc(p72, p49, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
++763: jump(i63, p64, p65, p3, p4, p66, p46, p68, p67, p72, p50, p22, p24, p26, p28, p30, p32, p34, p36, p38, i54, p57, i63, p64, p65, p66, descr=TargetToken(4318126272))
++837: --end of the loop--
+[1594f3441c1e] jit-log-opt-loop}
+[1594f3bf2675] {jit-log-opt-loop
+# Loop 1 (79 IS_NONEMPTY_LIST) : loop with 58 ops
+[i0, p1, p2, p3, p4, p5]
++129: p6 = getfield_gc(p4, descr=<FieldP interpreter.register.X_Register.inst_regs 16>)
++140: p8 = getarrayitem_gc(p6, 0, descr=<ArrayP 8>)
++144: p10 = getarrayitem_gc(p6, 1, descr=<ArrayP 8>)
++148: p12 = getarrayitem_gc(p6, 2, descr=<ArrayP 8>)
++152: p14 = getarrayitem_gc(p6, 3, descr=<ArrayP 8>)
++156: p16 = getarrayitem_gc(p6, 4, descr=<ArrayP 8>)
++160: p18 = getarrayitem_gc(p6, 5, descr=<ArrayP 8>)
++164: p20 = getarrayitem_gc(p6, 6, descr=<ArrayP 8>)
++168: p22 = getarrayitem_gc(p6, 7, descr=<ArrayP 8>)
++172: p24 = getarrayitem_gc(p6, 8, descr=<ArrayP 8>)
++176: p26 = getarrayitem_gc(p6, 9, descr=<ArrayP 8>)
++180: p28 = getarrayitem_gc(p6, 10, descr=<ArrayP 8>)
++184: p30 = getarrayitem_gc(p6, 11, descr=<ArrayP 8>)
++195: p32 = getarrayitem_gc(p6, 12, descr=<ArrayP 8>)
++206: p34 = getarrayitem_gc(p6, 13, descr=<ArrayP 8>)
++217: p36 = getarrayitem_gc(p6, 14, descr=<ArrayP 8>)
++231: p38 = getarrayitem_gc(p6, 15, descr=<ArrayP 8>)
++245: label(i0, p1, p2, p3, p4, p5, p8, p10, p12, p14, p16, p18, p20, p22, p24, p26, p28, p30, p32, p34, p36, p38, descr=TargetToken(4318126592))
+debug_merge_point(0, 0, '79 IS_NONEMPTY_LIST')
++321: p39 = getfield_gc(p3, descr=<FieldP interpreter.interp.BeamRunTime.inst_x_reg 32>)
++332: i40 = ptr_eq(p39, p4)
+guard_true(i40, descr=<Guard0x101618950>) [p3, p39, p8, p10, p12, p14, p16, p18, p20, p22, p24, p26, p28, p30, p32, p34, p36, p38, p4]
++341: guard_nonnull_class(p8, 4297440672, descr=<Guard0x101618e90>) [p3, p8, p10, p12, p14, p16, p18, p20, p22, p24, p26, p28, p30, p32, p34, p36, p38, p4]
++359: i42 = getfield_gc(p3, descr=<FieldS interpreter.interp.BeamRunTime.inst_current_line 16>)
++363: p43 = getfield_gc(p3, descr=<FieldP interpreter.interp.BeamRunTime.inst_atoms 8>)
++367: p44 = getfield_gc(p3, descr=<FieldP interpreter.interp.BeamRunTime.inst_func_list 24>)
++371: p45 = getfield_gc(p3, descr=<FieldP interpreter.interp.BeamRunTime.inst_y_reg 40>)
+debug_merge_point(0, 0, '82 TEST_HEAP')
+debug_merge_point(0, 0, '85 GET_LIST')
++375: p46 = getfield_gc_pure(p8, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
++379: p47 = getfield_gc_pure(p8, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
+debug_merge_point(0, 0, '89 PUT_LIST')
++383: guard_nonnull_class(p46, 4297440496, descr=<Guard0x101618e20>) [p3, p10, p46, p47, p14, p16, p18, p20, p22, p24, p26, p28, p30, p32, p34, p36, p38, p4]
+debug_merge_point(0, 0, '93 CALL_ONLY')
++403: p50 = getfield_gc(ConstPtr(ptr49), descr=<FieldP list.items 16>)
++416: i52 = getarrayitem_gc(p50, 6, descr=<ArrayS 8>)
++420: guard_value(i52, 79, descr=<Guard0x101618db0>) [i42, i52, p45, p4, p3, p44, p43, p47, p46, p14, p16, p18, p20, p22, p24, p26, p28, p30, p32, p34, p36, p38, p10]
+debug_merge_point(0, 0, '79 IS_NONEMPTY_LIST')
++430: p54 = same_as(p45)
++433: i55 = same_as(i42)
++436: p56 = same_as(p43)
++439: p57 = same_as(p44)
++449: label(i42, p43, p44, p3, p4, p45, p47, p46, p10, p14, p16, p18, p20, p22, p24, p26, p28, p30, p32, p34, p36, p38, p50, i55, p56, p57, p54, descr=TargetToken(4318126672))
+debug_merge_point(0, 0, '79 IS_NONEMPTY_LIST')
++525: guard_nonnull_class(p47, 4297440672, descr=<Guard0x101618d40>) [p3, p47, p46, p14, p16, p18, p20, p22, p24, p26, p28, p30, p32, p34, p36, p38, p4, p10]
+debug_merge_point(0, 0, '82 TEST_HEAP')
+debug_merge_point(0, 0, '85 GET_LIST')
++544: p58 = getfield_gc_pure(p47, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
++548: p59 = getfield_gc_pure(p47, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
+debug_merge_point(0, 0, '89 PUT_LIST')
++552: guard_nonnull_class(p58, 4297440496, descr=<Guard0x101618cd0>) [p3, p58, p59, p14, p16, p18, p20, p22, p24, p26, p28, p30, p32, p34, p36, p38, p4, p46, p10]
+debug_merge_point(0, 0, '93 CALL_ONLY')
+debug_merge_point(0, 0, '79 IS_NONEMPTY_LIST')
+p61 = new_with_vtable(4297440672)
++663: i62 = arraylen_gc(p50, descr=<ArrayS 8>)
++663: setfield_gc(p61, p10, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
++667: setfield_gc(p61, p46, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
++671: jump(i55, p56, p57, p3, p4, p54, p59, p58, p61, p14, p16, p18, p20, p22, p24, p26, p28, p30, p32, p34, p36, p38, p50, i55, p56, p57, p54, descr=TargetToken(4318126672))
++749: --end of the loop--
+[1594f3c4fea9] jit-log-opt-loop}
+[1594fc317e69] {jit-log-opt-bridge
+# bridge out of Guard 0x101618250 with 49 ops
+[p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
++59: p19 = getfield_gc(ConstPtr(ptr18), descr=<FieldP list.items 16>)
++72: i21 = getarrayitem_gc(p19, 14, descr=<ArrayS 8>)
++79: i22 = getfield_gc(p0, descr=<FieldS interpreter.interp.BeamRunTime.inst_current_line 16>)
++84: p23 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_atoms 8>)
++89: p24 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_func_list 24>)
++94: p25 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_x_reg 32>)
++99: p26 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_y_reg 40>)
++111: guard_value(i21, 194, descr=<Guard0x101618480>) [i22, i21, p26, p25, p0, p24, p23, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
+debug_merge_point(0, 0, '194 TEST_HEAP')
+debug_merge_point(0, 0, '197 PUT_LIST')
++124: i28 = ptr_eq(p25, p17)
+guard_true(i28, descr=<Guard0x101619280>) [p0, p25, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
++137: guard_nonnull_class(p4, 4297440496, descr=<Guard0x101619210>) [p0, p2, p4, p1, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
+debug_merge_point(0, 0, '201 MOVE')
+debug_merge_point(0, 0, '204 CALL_ONLY')
++156: i31 = getarrayitem_gc(p19, 13, descr=<ArrayS 8>)
++167: guard_value(i31, 156, descr=<Guard0x1016191a0>) [i22, i31, p26, p17, p0, p24, p23, p5, p3, p4, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p2]
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
++180: i33 = same_as(i22)
++183: p34 = same_as(p23)
++186: p35 = same_as(p24)
++196: p36 = same_as(p26)
++206: label(i22, p23, p24, p0, p17, p26, p5, p4, p2, p3, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p19, i33, p34, p35, p36, descr=TargetToken(4318126992))
++282: guard_nonnull_class(p5, 4297440672, descr=<Guard0x101619130>) [p0, p5, p3, p4, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p2]
+debug_merge_point(0, 0, '160 GET_LIST')
++301: p38 = getfield_gc_pure(p5, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
++305: p39 = getfield_gc_pure(p5, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
+debug_merge_point(0, 0, '164 IS_NONEMPTY_LIST')
++309: guard_nonnull_class(p39, 4297440672, descr=<Guard0x1016190c0>) [p0, p39, p5, p3, p38, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p4, p2]
+debug_merge_point(0, 0, '167 GET_LIST')
++328: p41 = getfield_gc_pure(p39, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
++332: p42 = getfield_gc_pure(p39, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
+debug_merge_point(0, 0, '171 IS_LT')
++336: guard_class(p41, 4297440496, descr=<Guard0x101619050>) [p0, p41, p38, p5, p3, p39, p42, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p4, p2]
++348: guard_nonnull_class(p38, 4297440496, descr=<Guard0x101618fe0>) [p0, p41, p38, p5, p3, p39, p42, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p4, p2]
++366: i45 = getfield_gc(p41, descr=<FieldS pyrlang.interpreter.datatypes.root.W_Root.inst_intval 24>)
++370: i46 = getfield_gc(p38, descr=<FieldS pyrlang.interpreter.datatypes.root.W_Root.inst_intval 24>)
++374: i47 = int_lt(i45, i46)
+guard_false(i47, descr=<Guard0x101618f70>) [p0, p5, p3, p38, p39, p41, p42, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p4, p2]
+debug_merge_point(0, 0, '194 TEST_HEAP')
+debug_merge_point(0, 0, '197 PUT_LIST')
+debug_merge_point(0, 0, '201 MOVE')
+debug_merge_point(0, 0, '204 CALL_ONLY')
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
+p49 = new_with_vtable(4297440672)
++469: i50 = arraylen_gc(p19, descr=<ArrayS 8>)
++469: setfield_gc(p49, p2, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
++473: setfield_gc(p49, p4, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
++477: jump(i33, p34, p35, p0, p17, p36, p39, p38, p49, p3, p41, p42, p8, p9, p10, p11, p12, p13, p14, p15, p16, p19, i33, p34, p35, p36, descr=TargetToken(4318126992))
++554: --end of the loop--
+[1594fc36fa60] jit-log-opt-bridge}
+[159551ffae05] {jit-log-opt-bridge
+# bridge out of Guard 0x101618410 with 53 ops
+[p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
++59: guard_nonnull_class(p1, ConstClass(W_NilObject), descr=<Guard0x101618b80>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
++77: p20 = getfield_gc(ConstPtr(ptr19), descr=<FieldP list.items 16>)
++90: i22 = getarrayitem_gc(p20, 15, descr=<ArrayS 8>)
++97: i23 = getfield_gc(p0, descr=<FieldS interpreter.interp.BeamRunTime.inst_current_line 16>)
++102: p24 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_atoms 8>)
++107: p25 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_func_list 24>)
++112: p26 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_x_reg 32>)
++117: p27 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_y_reg 40>)
++122: guard_value(i22, 210, descr=<Guard0x101619520>) [i23, i22, p27, p26, p0, p25, p24, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
+debug_merge_point(0, 0, '210 IS_NIL')
++135: i29 = ptr_eq(p26, p17)
+guard_true(i29, descr=<Guard0x1016194b0>) [p0, p26, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
+debug_merge_point(0, 0, '213 IS_ATOM')
++148: guard_nonnull_class(p3, ConstClass(W_AtomObject), descr=<Guard0x101619440>) [p0, p3, p1, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
+debug_merge_point(0, 0, '216 SELECT_VAL')
++174: i31 = getfield_gc(p3, descr=<FieldS pyrlang.interpreter.datatypes.root.W_Root.inst_indexval 16>)
++178: i33 = int_eq(8, i31)
+guard_false(i33, descr=<Guard0x1016193d0>) [p0, p3, p1, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
++188: i35 = int_eq(9, i31)
+guard_true(i35, descr=<Guard0x101619360>) [p0, p3, p1, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
++198: i37 = getarrayitem_gc(p20, 17, descr=<ArrayS 8>)
++205: guard_value(i37, 239, descr=<Guard0x1016192f0>) [i23, i37, p27, p17, p0, p25, p24, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16]
+debug_merge_point(0, 0, '239 ALLOCATE')
+debug_merge_point(0, 0, '242 MOVE')
+debug_merge_point(0, 0, '245 LINE')
+debug_merge_point(0, 0, '247 CALL')
++218: p39 = getfield_gc(p27, descr=<FieldP interpreter.register.Y_Register.inst_regs 8>)
++222: i40 = getfield_gc(p39, descr=<FieldS list.length 8>)
++226: i42 = int_add(i40, 1)
++230: p43 = getfield_gc(p39, descr=<FieldP list.items 16>)
++234: i44 = arraylen_gc(p43, descr=<ArrayP 8>)
++238: i45 = int_lt(i44, i42)
++249: cond_call(i45, ConstClass(_ll_list_resize_hint_really_look_inside_iff__listPtr_Signed_Bool), p39, i42, 1, descr=<Callv 0 rii EF=4>)
++320: setfield_gc(p0, 9, descr=<FieldS interpreter.interp.BeamRunTime.inst_current_line 16>)
++329: guard_no_exception(descr=<Guard0x101618f00>) [p0, i40, p39, i42, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
++349: p49 = getfield_gc(p39, descr=<FieldP list.items 16>)
+p51 = new_with_vtable(4297441128)
++446: setfield_gc(p51, 250, descr=<FieldS pyrlang.interpreter.datatypes.root.W_Root.inst_addrval 8>)
++500: setarrayitem_gc(p49, i40, p51, descr=<ArrayP 8>)
++505: i54 = getarrayitem_gc(p20, 4, descr=<ArrayS 8>)
++509: setfield_gc(p39, i42, descr=<FieldS list.length 8>)
++513: guard_value(i54, 63, descr=<Guard0x101618c60>) [i54, p27, p26, p0, p25, p24, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
+debug_merge_point(0, 0, '63 MOVE')
+debug_merge_point(0, 0, '66 CALL_ONLY')
++523: i57 = getarrayitem_gc(p20, 6, descr=<ArrayS 8>)
++527: guard_value(i57, 79, descr=<Guard0x101618bf0>) [i57, p27, p17, p0, p25, p24, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16]
+debug_merge_point(0, 0, '79 IS_NONEMPTY_LIST')
++537: p59 = same_as(p27)
++537: p60 = same_as(p24)
++537: p61 = same_as(p25)
++537: label(p24, p25, p0, p17, p27, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, descr=TargetToken(4318127152))
+p63 = new_with_vtable(ConstClass(W_NilObject))
++657: jump(9, p24, p25, p0, p17, p27, p2, p63, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, descr=TargetToken(4318126592))
++848: --end of the loop--
+[15955205915f] jit-log-opt-bridge}
+[159552a6828b] {jit-log-opt-bridge
+# bridge out of Guard 0x101618d40 with 49 ops
+[p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
++59: guard_nonnull_class(p1, ConstClass(W_NilObject), descr=<Guard0x101619c90>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
++78: p20 = getfield_gc(ConstPtr(ptr19), descr=<FieldP list.items 16>)
++91: i22 = getarrayitem_gc(p20, 7, descr=<ArrayS 8>)
++95: i23 = getfield_gc(p0, descr=<FieldS interpreter.interp.BeamRunTime.inst_current_line 16>)
++106: p24 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_atoms 8>)
++110: p25 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_func_list 24>)
++114: p26 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_x_reg 32>)
++118: p27 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_y_reg 40>)
++122: guard_value(i22, 98, descr=<Guard0x101619c20>) [i23, i22, p27, p26, p0, p25, p24, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
+debug_merge_point(0, 0, '98 IS_NIL')
++132: i29 = ptr_eq(p26, p16)
+guard_true(i29, descr=<Guard0x101619bb0>) [p0, p26, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
+debug_merge_point(0, 0, '101 MOVE')
+debug_merge_point(0, 0, '104 RETURN')
++145: p30 = getfield_gc(p27, descr=<FieldP interpreter.register.Y_Register.inst_regs 8>)
++149: i31 = getfield_gc(p30, descr=<FieldS list.length 8>)
++153: i32 = int_is_zero(i31)
+guard_false(i32, descr=<Guard0x101619b40>) [p0, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
++163: i34 = int_sub(i31, 1)
++167: p35 = getfield_gc(p30, descr=<FieldP list.items 16>)
++171: p36 = getarrayitem_gc(p35, i34, descr=<ArrayP 8>)
++176: setarrayitem_gc(p35, i34, ConstPtr(null), descr=<ArrayP 8>)
++185: i38 = arraylen_gc(p35, descr=<ArrayP 8>)
++196: i40 = int_rshift(i38, 1)
++199: i42 = int_sub(i40, 5)
++203: i43 = int_lt(i34, i42)
++214: cond_call(i43, ConstClass(_ll_list_resize_hint_really_look_inside_iff__listPtr_Signed_Bool), p30, i34, 0, descr=<Callv 0 rii EF=4>)
++293: guard_no_exception(descr=<Guard0x101619ad0>) [p0, p36, i34, p30, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
++313: i46 = getfield_gc(p36, descr=<FieldS pyrlang.interpreter.datatypes.root.W_Root.inst_addrval 8>)
++317: setfield_gc(p30, i34, descr=<FieldS list.length 8>)
++321: guard_value(i46, 250, descr=<Guard0x101619a60>) [i23, i46, p27, p26, p0, p25, p24, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17]
+debug_merge_point(0, 0, '250 MOVE')
+debug_merge_point(0, 0, '253 MOVE')
+debug_merge_point(0, 0, '256 CALL_LAST')
++334: i49 = getarrayitem_gc(p20, 13, descr=<ArrayS 8>)
++338: guard_value(i49, 156, descr=<Guard0x1016199f0>) [i23, i49, p27, p16, p0, p25, p24, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p2, p17]
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
++351: p51 = same_as(p25)
++351: p52 = same_as(p27)
++351: i53 = same_as(i23)
++351: p54 = same_as(p24)
++351: label(i23, p24, p25, p0, p16, p27, p2, p17, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, descr=TargetToken(4318127232))
+p56 = new_with_vtable(4297440672)
+p58 = new_with_vtable(ConstClass(W_NilObject))
+p60 = new_with_vtable(ConstClass(W_AtomObject))
++486: setfield_gc(p56, p17, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
++490: setfield_gc(p56, p2, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
++494: setfield_gc(p60, 8, descr=<FieldS pyrlang.interpreter.datatypes.root.W_Root.inst_indexval 16>)
++502: jump(i23, p24, p25, p0, p16, p27, p56, p58, p60, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, descr=TargetToken(4318126192))
++692: --end of the loop--
+[159552ac85f6] jit-log-opt-bridge}
+[159553556eed] {jit-log-opt-bridge
+# bridge out of Guard 0x101618090 with 49 ops
+[p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16]
++59: p18 = getfield_gc(ConstPtr(ptr17), descr=<FieldP list.items 16>)
++72: i20 = getarrayitem_gc(p18, 14, descr=<ArrayS 8>)
++79: i21 = getfield_gc(p0, descr=<FieldS interpreter.interp.BeamRunTime.inst_current_line 16>)
++90: p22 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_atoms 8>)
++94: p23 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_func_list 24>)
++98: p24 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_x_reg 32>)
++102: p25 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_y_reg 40>)
++106: guard_value(i20, 194, descr=<Guard0x1033a8950>) [i21, i20, p25, p24, p0, p23, p22, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p16, p15]
+debug_merge_point(0, 0, '194 TEST_HEAP')
+debug_merge_point(0, 0, '197 PUT_LIST')
++119: i27 = ptr_eq(p24, p14)
+guard_true(i27, descr=<Guard0x1033a88e0>) [p0, p24, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p16, p15]
++132: guard_nonnull_class(p1, 4297440496, descr=<Guard0x1033a8870>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p16, p15]
+debug_merge_point(0, 0, '201 MOVE')
+debug_merge_point(0, 0, '204 CALL_ONLY')
++157: i30 = getarrayitem_gc(p18, 13, descr=<ArrayS 8>)
++161: guard_value(i30, 156, descr=<Guard0x1033a8800>) [i21, i30, p25, p14, p0, p23, p22, p2, p1, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p16, p15]
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
++174: p32 = same_as(p23)
++177: p33 = same_as(p22)
++187: p34 = same_as(p25)
++190: i35 = same_as(i21)
++200: label(i21, p22, p23, p0, p14, p25, p2, p1, p15, p16, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p18, i35, p33, p32, p34, descr=TargetToken(4349100064))
++276: guard_nonnull_class(p2, 4297440672, descr=<Guard0x1033a8db0>) [p0, p2, p1, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16]
+debug_merge_point(0, 0, '160 GET_LIST')
++294: p37 = getfield_gc_pure(p2, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
++298: p38 = getfield_gc_pure(p2, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
+debug_merge_point(0, 0, '164 IS_NONEMPTY_LIST')
++302: guard_nonnull_class(p38, 4297440672, descr=<Guard0x1033a8cd0>) [p0, p38, p2, p37, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p1, p15, p16]
+debug_merge_point(0, 0, '167 GET_LIST')
++322: p40 = getfield_gc_pure(p38, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
++326: p41 = getfield_gc_pure(p38, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
+debug_merge_point(0, 0, '171 IS_LT')
++330: guard_class(p40, 4297440496, descr=<Guard0x1033a8bf0>) [p0, p40, p37, p2, p38, p41, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p1, p15, p16]
++343: guard_nonnull_class(p37, 4297440496, descr=<Guard0x1033a8b80>) [p0, p40, p37, p2, p38, p41, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p1, p15, p16]
++362: i44 = getfield_gc(p40, descr=<FieldS pyrlang.interpreter.datatypes.root.W_Root.inst_intval 24>)
++366: i45 = getfield_gc(p37, descr=<FieldS pyrlang.interpreter.datatypes.root.W_Root.inst_intval 24>)
++370: i46 = int_lt(i44, i45)
+guard_false(i46, descr=<Guard0x1033a8aa0>) [p0, p2, p37, p38, p40, p41, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p1, p15, p16]
+debug_merge_point(0, 0, '194 TEST_HEAP')
+debug_merge_point(0, 0, '197 PUT_LIST')
+debug_merge_point(0, 0, '201 MOVE')
+debug_merge_point(0, 0, '204 CALL_ONLY')
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
+p48 = new_with_vtable(4297440672)
++465: i49 = arraylen_gc(p18, descr=<ArrayS 8>)
++465: setfield_gc(p48, p16, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
++469: setfield_gc(p48, p15, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
++473: jump(i35, p33, p32, p0, p14, p34, p38, p37, p1, p48, p40, p41, p5, p6, p7, p8, p9, p10, p11, p12, p13, p18, i35, p33, p32, p34, descr=TargetToken(4349100064))
++561: --end of the loop--
+[1595535ad800] jit-log-opt-bridge}
+[15962571f765] {jit-log-opt-bridge
+# bridge out of Guard 0x1033a8cd0 with 31 ops
+[p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18]
++59: guard_nonnull_class(p1, ConstClass(W_NilObject), descr=<Guard0x1033a8020>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p18, p17, p16]
++79: p21 = getfield_gc(ConstPtr(ptr20), descr=<FieldP list.items 16>)
++92: i23 = getarrayitem_gc(p21, 14, descr=<ArrayS 8>)
++99: i24 = getfield_gc(p0, descr=<FieldS interpreter.interp.BeamRunTime.inst_current_line 16>)
++110: p25 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_atoms 8>)
++114: p26 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_func_list 24>)
++118: p27 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_x_reg 32>)
++122: p28 = getfield_gc(p0, descr=<FieldP interpreter.interp.BeamRunTime.inst_y_reg 40>)
++126: guard_value(i23, 194, descr=<Guard0x1033a8560>) [i24, i23, p28, p27, p0, p26, p25, p2, p3, p1, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p18, p17, p16]
+debug_merge_point(0, 0, '194 TEST_HEAP')
+debug_merge_point(0, 0, '197 PUT_LIST')
++139: i30 = ptr_eq(p27, p15)
+guard_true(i30, descr=<Guard0x1033a84f0>) [p0, p27, p2, p3, p1, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p18, p17, p16]
++152: guard_nonnull_class(p3, 4297440496, descr=<Guard0x1033a8480>) [p0, p3, p2, p1, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p18, p17, p16]
+debug_merge_point(0, 0, '201 MOVE')
+debug_merge_point(0, 0, '204 CALL_ONLY')
++171: i33 = getarrayitem_gc(p21, 13, descr=<ArrayS 8>)
++175: guard_value(i33, 156, descr=<Guard0x1033a8410>) [i24, i33, p28, p15, p0, p26, p25, p1, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p18, p17, p16]
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
+p36 = new_with_vtable(4297440672)
+p38 = new_with_vtable(4297440672)
+p40 = new_with_vtable(4297440672)
++292: setfield_gc(p40, p18, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
++296: setfield_gc(p40, p17, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
++300: setfield_gc(p38, p40, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
++304: setfield_gc(p38, p16, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
+p42 = new_with_vtable(ConstClass(W_AtomObject))
++326: setfield_gc(p36, p38, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 40>)
++330: setfield_gc(p36, p3, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 32>)
++334: setfield_gc(p42, 9, descr=<FieldS pyrlang.interpreter.datatypes.root.W_Root.inst_indexval 16>)
++342: jump(i24, p25, p26, p0, p15, p28, p1, p36, p42, p3, p1, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, descr=TargetToken(4318126192))
++431: --end of the loop--
+[15962576a9d8] jit-log-opt-bridge}
+[15a6bdea2546] {jit-backend-counts
+entry 0:1613
+TargetToken(4318126192):40434
+TargetToken(4318126272):199988721
+entry 1:241
+TargetToken(4318126592):20000
+TargetToken(4318126672):399998953
+bridge 4318134864:218
+TargetToken(4318126992):47761
+bridge 4318135312:19760
+TargetToken(4318127152):19759
+bridge 4318137664:19763
+TargetToken(4318127232):19762
+bridge 4318134416:19761
+TargetToken(4349100064):199941798
+bridge 4349136080:19059
+[15a6bdeb2f89] jit-backend-counts}
