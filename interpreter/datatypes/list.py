@@ -4,6 +4,8 @@ class W_NilObject(W_Root):
 	pass
 
 class W_ListObject(W_Root):
+	_immutable_fields_ = ['left', 'right']
+
 	def __init__(self, left, right = W_NilObject()):
 		if isinstance(left, W_NilObject):
 			raise Exception("list head should not be nil!")

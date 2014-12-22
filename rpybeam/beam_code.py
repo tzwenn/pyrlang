@@ -172,7 +172,6 @@ class CodeParser:
 				pc, func_index = self._parseInt(pc, tag2)
 				pc, tag3 = self.parseOne(pc)
 				pc, arity = self._parseInt(pc, tag3) 
-				print
 				if module == 1:
 					if self.atoms[func_index-1] == self.entry_func:
 						if arity == self.entry_arity:
