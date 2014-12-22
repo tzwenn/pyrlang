@@ -12,12 +12,12 @@ from rpython.rlib import jit
 
 lib_module = ["erlang"]
 
-def printable_loc(pc, code):
+def printable_loc(pc, code, cp):
 	index = ord(code[pc])
 	return str(pc) + " " + opcodes.opnames[index].upper()
 
-driver = jit.JitDriver(greens = ['pc', 'code'],
-		reds = ['s_current_line', 's_atoms', 's_func_list', 'cp', 's_self', 's_x_reg', 's_y_reg'],
+driver = jit.JitDriver(greens = ['pc', 'code', 'cp'],
+		reds = ['s_current_line', 's_atoms', 's_func_list', 's_self', 's_x_reg', 's_y_reg'],
 		virtualizables = ['s_x_reg'],
 		get_printable_location=printable_loc)
 
@@ -46,17 +46,16 @@ class BeamRunTime:
 				self.func_list.append(moduleEntity.searchFunc(function_name)())
 
 	@jit.unroll_safe
-	def execute(self, code, entry_func, arity):
-		cp = CodeParser(code, self.atoms, entry_func, arity)
+	def execute(self, cp):
 		pc = cp.entry_addr
 		code = cp.str
 		while(True):
 			driver.jit_merge_point(pc = pc,
 					code = code,
+					cp = cp,
 					s_current_line = self.current_line,
 					s_atoms = self.atoms,
 					s_func_list = self.func_list,
-					cp = cp,
 					s_self = self,
 					s_x_reg = self.x_reg,
 					s_y_reg = self.y_reg)
@@ -81,10 +80,10 @@ class BeamRunTime:
 				pc = self.call_only(cp, arity, label)
 				driver.can_enter_jit(pc = pc,
 						code = code,
+						cp = cp,
 						s_current_line = self.current_line,
 						s_atoms = self.atoms,
 						s_func_list = self.func_list,
-						cp = cp,
 						s_self = self, 
 						s_x_reg = self.x_reg,
 						s_y_reg = self.y_reg)

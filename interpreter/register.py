@@ -21,7 +21,6 @@ class X_Register(AbstractRegister):
 		assert(n < max_x_reg_size)
 		return self.regs[n]
 
-	#@jit.unroll_safe
 	def store(self, n, val):
 		assert(n >= 0)
 		assert(n < max_x_reg_size)
@@ -32,10 +31,10 @@ class X_Register(AbstractRegister):
 		self.regs[n] = val
 
 class Y_Register(AbstractRegister):
-	#_virtualizable_ = ['regs[*]']
+	_virtualizable_ = ['regs[*]']
 
 	def __init__(self):
-		#self = jit.hint(self, fresh_virtualizable=True, access_directly=True)
+		self = jit.hint(self, fresh_virtualizable=True, access_directly=True)
 		self.regs = []
 
 	def get(self, n):

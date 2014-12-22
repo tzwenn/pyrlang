@@ -30,9 +30,10 @@ def main(argv):
 
 		#print_labelTable(cp.labelTable)
 		#print cp.entry_addr
+		cp = CodeParser(code, at, entry_func, len(args))
 		brt = BeamRunTime(at, s.impTChunk.asArray())
 		brt.init_entry_arguments(args)
-		res = brt.execute(code, entry_func, len(args))
+		res = brt.execute(cp)
 		print_value(res)
 		#res = brt.func_list[0].invoke([W_IntObject(3),
 			#W_IntObject(5)])
