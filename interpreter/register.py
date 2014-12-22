@@ -10,14 +10,20 @@ class AbstractRegister:
 max_x_reg_size = 16
 
 class X_Register(AbstractRegister):
+	_virtualizable_ = ['regs[*]']
+
 	def __init__(self):
+		self = jit.hint(self, fresh_virtualizable=True, access_directly=True)
 		self.regs = [None] * max_x_reg_size
 
 	def get(self, n):
+		assert(n >= 0)
+		assert(n < max_x_reg_size)
 		return self.regs[n]
 
 	#@jit.unroll_safe
 	def store(self, n, val):
+		assert(n >= 0)
 		assert(n < max_x_reg_size)
 		#regs_len = len(self.regs)
 		#if n >= regs_len:

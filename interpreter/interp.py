@@ -18,7 +18,7 @@ def printable_loc(pc, code):
 
 driver = jit.JitDriver(greens = ['pc', 'code'],
 		reds = ['s_current_line', 's_atoms', 's_func_list', 'cp', 's_self', 's_x_reg', 's_y_reg'],
-		#virtualizables = ['s_y_reg'],
+		virtualizables = ['s_x_reg'],
 		get_printable_location=printable_loc)
 
 class BeamRunTime:
