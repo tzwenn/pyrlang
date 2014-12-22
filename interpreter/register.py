@@ -14,6 +14,7 @@ class X_Register(AbstractRegister):
 	def get(self, n):
 		return self.regs[n]
 
+	@jit.unroll_safe
 	def store(self, n, val):
 		regs_len = len(self.regs)
 		if n >= regs_len:
