@@ -49,13 +49,17 @@ class BeamRunTime:
 	def execute(self, cp):
 		pc = cp.entry_addr
 		code = cp.str
+		current_line = self.current_line
+		atoms = self.atoms
+		func_list = self.func_list
+
 		while(True):
 			driver.jit_merge_point(pc = pc,
 					code = code,
 					cp = cp,
-					s_current_line = self.current_line,
-					s_atoms = self.atoms,
-					s_func_list = self.func_list,
+					s_current_line = current_line,
+					s_atoms = atoms,
+					s_func_list = func_list,
 					s_self = self,
 					s_x_reg = self.x_reg,
 					s_y_reg = self.y_reg)
@@ -81,9 +85,9 @@ class BeamRunTime:
 				driver.can_enter_jit(pc = pc,
 						code = code,
 						cp = cp,
-						s_current_line = self.current_line,
-						s_atoms = self.atoms,
-						s_func_list = self.func_list,
+						s_current_line = current_line,
+						s_atoms = atoms,
+						s_func_list = func_list,
 						s_self = self, 
 						s_x_reg = self.x_reg,
 						s_y_reg = self.y_reg)
@@ -111,7 +115,9 @@ class BeamRunTime:
 				if self.y_reg.is_empty():
 					return self.x_reg.get(0)
 				else:
-					pc = self.y_reg.pop().addrval
+					w_addr = self.y_reg.pop()
+					assert isinstance(w_addr, W_AddrObject)
+					pc = w_addr.addrval
 
 			elif instr == opcodes.IS_LT: # 39
 				pc, label = cp.parseInt(pc)
@@ -171,10 +177,10 @@ class BeamRunTime:
 				pc, rand1 = cp.parseBase(pc)
 				pc, rand2 = cp.parseBase(pc)
 				pc, dst_reg = cp.parseBase(pc)
-				pc = self.gc_bif2(pc, fail, alive, bif_index, rand1, rand2, dst_reg)
+				pc = self.gc_bif2(pc, func_list, fail, alive, bif_index, rand1, rand2, dst_reg)
 
 			elif instr == opcodes.LINE: # 153
-				pc, self.current_line = cp.parseInt(pc)
+				pc, current_line = cp.parseInt(pc)
 
 			else:
 				raise Exception("Unimplemented opcode: %d"%(instr))
@@ -256,7 +262,9 @@ class BeamRunTime:
 			return cp.label_to_addr(label)
 
 	def is_eq_exact_int(self, pc, cp, label, test_reg, value):
-		if self.fetch_basereg(test_reg).intval != value:
+		w_i = self.fetch_basereg(test_reg)
+		assert isinstance(w_i, W_IntObject)
+		if w_i.intval != value:
 			return cp.label_to_addr(label)
 		else:
 			return pc
@@ -280,6 +288,7 @@ class BeamRunTime:
 	@jit.unroll_safe
 	def select_val(self, cp, val_reg, label, slist):
 		val = self.fetch_basereg(val_reg)
+		assert isinstance(val, W_AtomObject)
 		#print "select_val:"
 		#print "atom: %d"%(val.index)
 		for i in range(0, len(slist)):
@@ -293,6 +302,7 @@ class BeamRunTime:
 
 	def get_list(self, src_reg, head_reg, tail_reg):
 		lst = self.fetch_basereg(src_reg)
+		assert isinstance(lst, W_ListObject)
 		self.store_basereg(head_reg, lst.head())
 		self.store_basereg(tail_reg, lst.tail())
 
@@ -302,11 +312,11 @@ class BeamRunTime:
 		res = W_ListObject(head, tail)
 		self.store_basereg(dst_reg, res)
 
-	def gc_bif2(self, pc, fail, alive, bif_index, rand1, rand2, dst_reg):
+	def gc_bif2(self, pc, func_list, fail, alive, bif_index, rand1, rand2, dst_reg):
 		# TODO: wrap them with try-catch to handle inner exception.
 		tmp1 = self.get_basic_value(rand1)
 		tmp2 = self.get_basic_value(rand2)
 		#print "gc_bif2: opreate: %d, rand1: %d, rand2: %d"%(bif_index, tmp1.intval, tmp2.intval)
-		res = self.func_list[bif_index].invoke([tmp1, tmp2])
+		res = func_list[bif_index].invoke([tmp1, tmp2])
 		self.store_basereg(dst_reg, res)
 		return pc

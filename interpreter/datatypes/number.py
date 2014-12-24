@@ -5,24 +5,20 @@ class W_IntObject(W_Root):
 		self.intval = intval
 
 	def add(self, other): 
-		self._check_same(other) 
+		assert isinstance(other, W_IntObject)
 		return W_IntObject(self.intval + other.intval)
 
 	def mul(self, other): 
-		self._check_same(other) 
+		assert isinstance(other, W_IntObject)
 		return W_IntObject(self.intval * other.intval)
 
 	def sub(self, other):
-		self._check_same(other)
+		assert isinstance(other, W_IntObject)
 		return W_IntObject(self.intval - other.intval)
 
 	def lt(self, other): 
-		self._check_same(other)
+		assert isinstance(other, W_IntObject)
 		return self.intval < other.intval
-
-	def _check_same(self, some):
-		if not isinstance(some, W_IntObject):
-			raise Exception("wrong type")
 
 	def is_true(self):
 		return self.intval != 0

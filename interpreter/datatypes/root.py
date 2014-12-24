@@ -1,2 +1,2 @@
 class W_Root:
-	pass
+	_attrs_ = ()
