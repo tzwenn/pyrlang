@@ -23,22 +23,14 @@ def main(argv):
 	f = open(argv[1], "rb")
 	(entry_func, args) = parse_arg(argv)
 	try:
-		s = BeamRoot(f)
-		#print_Root(s)
-		code = s.getCode()
-		at = s.getAtomTable()
-
-		#print_labelTable(cp.labelTable)
-		#print cp.entry_addr
-		cp = CodeParser(code, at, entry_func, len(args))
-		brt = BeamRunTime(at, s.impTChunk.asArray())
+		b = BeamRoot(f)
+		brt = BeamRunTime()
 		brt.init_entry_arguments(args)
-		res = brt.execute(cp)
+		cp = CodeParser(b, {entry_func:{len(args):-1}})
+		func_addr = cp.imported_funcs_list[0]
+		res = brt.execute(cp, func_addr)
+
 		print_value(res)
-		#res = brt.func_list[0].invoke([W_IntObject(3),
-			#W_IntObject(5)])
-		#print "res in invoke: %d"%(res.intval)
-		#print brt.func_list[1].invoke([W_FloatObject(0.1)]).floatval
 	finally:
 		f.close()
 	return 0

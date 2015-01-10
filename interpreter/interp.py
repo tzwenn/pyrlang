@@ -2,56 +2,40 @@ import sys
 
 from pyrlang.rpybeam import opcodes
 from pyrlang.rpybeam.beam_code import CodeParser
-from pyrlang.lib import ModuleDict
-from register import X_Register, Y_Register
+from pyrlang.interpreter.register import X_Register, Y_Register
 from pyrlang.interpreter.datatypes.number import W_IntObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
 from rpython.rlib import jit
 
-lib_module = ["erlang"]
-
 def printable_loc(pc, code, cp):
 	index = ord(code[pc])
 	return str(pc) + " " + opcodes.opnames[index].upper()
 
 driver = jit.JitDriver(greens = ['pc', 'code', 'cp'],
-		reds = ['s_current_line', 's_atoms', 's_func_list', 's_self', 's_x_reg', 's_y_reg'],
+		reds = ['s_current_line', 's_atoms', 'import_header', 'import_mods', 's_func_list', 's_self', 's_x_reg', 's_y_reg'],
 		virtualizables = ['s_x_reg'],
 		get_printable_location=printable_loc)
 
 class BeamRunTime:
-	def __init__(self, atoms, impTs):
-		self.atoms = atoms
-		self.func_list = []
-		self.import_funcs(impTs)
+	def __init__(self):
 		self.x_reg = X_Register()
 		self.y_reg = Y_Register()
-		self.current_line = -1
 
 	def init_entry_arguments(self, arg_lst):
 		for i in range(0, len(arg_lst)):
 			self.x_reg.store(i, arg_lst[i])
 
-	def import_funcs(self, impTs):
-		for i in range(0, len(impTs)):
-			entry = impTs[i];
-			moduleName = self.atoms[entry[0] - 1]
-			# TODO: add else branch to hold custom module
-			if moduleName in lib_module:
-				# we use function_arity to emulate function overload
-				moduleEntity = ModuleDict.module_dict[moduleName]()
-				function_name = "%s_%d"%(self.atoms[entry[1] - 1], entry[2])
-				self.func_list.append(moduleEntity.searchFunc(function_name)())
-
 	@jit.unroll_safe
-	def execute(self, cp):
-		pc = cp.entry_addr
+	def execute(self, cp, func_addr):
+		pc = func_addr
 		code = cp.str
-		current_line = self.current_line
-		atoms = self.atoms
-		func_list = self.func_list
+		current_line = cp.current_line
+		atoms = cp.atoms
+		func_list = cp.func_list
+		import_header = cp.import_header
+		import_mods = cp.import_mods
 
 		while(True):
 			driver.jit_merge_point(pc = pc,
@@ -59,11 +43,13 @@ class BeamRunTime:
 					cp = cp,
 					s_current_line = current_line,
 					s_atoms = atoms,
+					import_header = import_header,
+					import_mods = import_mods,
 					s_func_list = func_list,
 					s_self = self,
 					s_x_reg = self.x_reg,
 					s_y_reg = self.y_reg)
-			#print printable_loc(code, pc)
+			#print printable_loc(pc, code, cp)
 			instr = ord(code[pc])
 			pc = pc + 1
 			#print "execute instr: %s"%(opcodes.opnames[instr])
@@ -87,10 +73,26 @@ class BeamRunTime:
 						cp = cp,
 						s_current_line = current_line,
 						s_atoms = atoms,
+						import_mods = import_mods,
+						import_header = import_header,
 						s_func_list = func_list,
 						s_self = self, 
 						s_x_reg = self.x_reg,
 						s_y_reg = self.y_reg)
+
+			elif instr == opcodes.CALL_EXT: # 7
+				pc, real_arity = cp.parseInt(pc)
+				pc, header_index = cp.parseInt(pc)
+				entry = import_header[header_index]
+				module_index = entry[0]
+				func_index = entry[1]
+				target_arity = entry[2]
+				#print import_header
+				#print module_index
+				#print func_index
+				#print import_mods
+				self.call_ext(import_mods, module_index, 
+						func_index, target_arity, real_arity)
 
 			elif instr == opcodes.ALLOCATE: # 12
 				pc, stack_need = cp.parseInt(pc)
@@ -177,7 +179,8 @@ class BeamRunTime:
 				pc, rand1 = cp.parseBase(pc)
 				pc, rand2 = cp.parseBase(pc)
 				pc, dst_reg = cp.parseBase(pc)
-				pc = self.gc_bif2(pc, func_list, fail, alive, bif_index, rand1, rand2, dst_reg)
+				pc = self.gc_bif2(pc, func_list, fail, alive, 
+						import_header[bif_index][1], rand1, rand2, dst_reg)
 
 			elif instr == opcodes.LINE: # 153
 				pc, current_line = cp.parseInt(pc)
@@ -234,6 +237,12 @@ class BeamRunTime:
 
 	def call_only(self, cp, arity, label):
 		return cp.label_to_addr(label)
+
+	def call_ext(self, import_mods, module_index, func_index, target_arity, real_arity):
+		# TODO: add some check for two arities
+		mod = import_mods[module_index]
+		func_addr = mod.imported_funcs_list[func_index]
+		self.execute(mod, func_addr)
 
 	@jit.unroll_safe
 	def allocate(self, stack_need, live):
@@ -316,7 +325,7 @@ class BeamRunTime:
 		# TODO: wrap them with try-catch to handle inner exception.
 		tmp1 = self.get_basic_value(rand1)
 		tmp2 = self.get_basic_value(rand2)
-		#print "gc_bif2: opreate: %d, rand1: %d, rand2: %d"%(bif_index, tmp1.intval, tmp2.intval)
+		#print "gc_bif2: operator: %d, rand1: %d, rand2: %d"%(bif_index, tmp1.intval, tmp2.intval)
 		res = func_list[bif_index].invoke([tmp1, tmp2])
 		self.store_basereg(dst_reg, res)
 		return pc
