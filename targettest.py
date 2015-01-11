@@ -26,8 +26,9 @@ def main(argv):
 		b = BeamRoot(f)
 		brt = BeamRunTime()
 		brt.init_entry_arguments(args)
-		cp = CodeParser(b, {entry_func:{len(args):-1}})
-		func_addr = cp.imported_funcs_list[0]
+		cp = CodeParser(b)
+		index = cp.search_exports(entry_func, len(args), cp.export_header, cp.atoms)
+		func_addr = cp.label_to_addr(cp.export_header[index][2])
 		res = brt.execute(cp, func_addr)
 
 		print_value(res)

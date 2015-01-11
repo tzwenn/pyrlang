@@ -27,6 +27,11 @@ class BaseNode:
 		c1, c2, c3, c4 = runpack("4B", stream.read(4))
 		return (c1 << 24) + (c2 << 16) + (c3 << 8) + c4
 
+	def readInt2(self, stream):
+		self.readlen += 2
+		c1, c2 = runpack("2B", stream.read(2))
+		return (c1 << 8) + c2
+
 	def readUCInt(self, stream):
 		self.readlen += 1
 		return runpack("B", stream.read(1))
@@ -56,6 +61,7 @@ class BeamRoot(BaseNode):
 		return self.atomChunk.asList()
 
 	def dispatchChunk(self, stream):
+		self.litTChunk = None # in case of there is not 'LitT' in beam file
 		while(True):
 			flag = self._readString(stream, 4)
 			if flag == 'Atom':
@@ -166,11 +172,20 @@ class ExpTChunk(Chunk):
 			self.readlen += e.readlen
 			self.entries.append(e)
 
+	def asArray(self):
+		res = []
+		for i in range(0, len(self.entries)):
+			res.append(self.entries[i].asArray())
+		return res	
+
 class InnerEntry(BaseNode):
 	def parse(self, stream):
 		self.function = self.readInt4(stream)
 		self.arity = self.readInt4(stream)
 		self.label = self.readInt4(stream)
+
+	def asArray(self):
+		return (self.function, self.arity, self.label)
 
 class LocTChunk(Chunk):
 	def parse(self, stream):
@@ -197,10 +212,9 @@ class LitTChunk(Chunk):
 		self.term_list = []
 		for i in range(0, self.count):
 			size = self.readInt4(substream)
-			assert(self.readUCInt(substream) == 0x83)
-			tag = self.readUCInt(substream)
-			if tag == 70: # new_float
-				self.term_list.append(NewFloatTerm(substream, size))
+			magic = self.readUCInt(substream)
+			assert(magic == 0x83)
+			self.term_list.append(self.create_term(substream))
 		self.discardRemain(stream)
 
 	def decompress(self,s):
@@ -208,14 +222,31 @@ class LitTChunk(Chunk):
 		bytes, finished, unused = rzlib.decompress(stream, s)
 		return bytes
 
+	def create_term(self, stream):
+		tag = self.readUCInt(stream)
+		if tag == 70: # new_float
+			return NewFloatTerm(stream)
+		elif tag == 100: # atom
+			return AtomTerm(stream)
+		elif tag == 107: # int list
+			return IntListTerm(stream)
+		elif tag == 108: # any list
+			t = AnyListTerm(stream)
+			for i in range(0, t.length):
+				t.vals.append(self.create_term(stream))
+			assert(ord(stream.read(1)[0]) == 0x6a) # list should end with nil
+			return t
+
+	def asArray(self):
+		return self.term_list
+
 #class AttrChunk(Chunk):
 	#def parse(self, stream):
 		#self.
 
 class Term(BaseNode):
-	def __init__(self, stream, size):
+	def __init__(self, stream):
 		self.readlen = 0
-		self.size = size
 		#print self.readUCInt(stream)
 		self.parse(stream)
 
@@ -226,3 +257,20 @@ class Term(BaseNode):
 class NewFloatTerm(Term):
 	def parse(self, stream):
 		self.floatval = self.readBFloat(stream)
+
+class AtomTerm(Term):
+	def parse(self, stream):
+		self.length = self.readInt2(stream)
+		self.value = self.readAny(stream, self.length)
+
+class IntListTerm(Term):
+	def parse(self, stream):
+		self.length = self.readInt2(stream)
+		self.vals = []
+		for i in range(0, self.length):
+			self.vals.append(ord(stream.read(1)[0]))
+
+class AnyListTerm(Term):
+	def parse(self, stream):
+		self.vals = []
+		self.length = self.readInt4(stream)

@@ -2,6 +2,7 @@ from rpython.rlib.rstruct.runpack import runpack
 from rpython.rlib import jit
 from pyrlang.interpreter.mod_file_loader import ModFileLoader
 from pyrlang.lib import ModuleDict
+from pyrlang.rpybeam.beam_file import BeamRoot
 import opcodes
 import pretty_print
 
@@ -10,27 +11,30 @@ lib_module = ["erlang"]
 class CodeParser:
 	_immutable_fields_ = ['atoms[*]', 'labelTable']
 
-	def __init__(self, beam, imported_funcs):
+	def __init__(self, beam):
 		self.position_key = 0
 		self.str = beam.getCode()
 		self.current_line = -1
 		self.labelTable = []
 		self.atoms = beam.getAtomTable()
 		self.import_header = list(beam.impTChunk.asArray())
+		if beam.litTChunk:
+			self.lit_table = beam.litTChunk.asArray()
 		self.func_list = []
 		self.import_mods = [] # list of CodeParser to represent import module
 		self.mod_dict = {} # mod atom index => import_mods' index
-		self.imported_funcs_dict = imported_funcs # func_name => arity => imported_func_list's index
-		self.imported_funcs_list = []
-		self.import_BIF_and_module(self.import_header)
+
+		self.export_header = beam.expTChunk.asArray()
+		self.export_funcs_list = []
+		self.import_BIF_and_module()
 		self.preprocess(0)
 		#pretty_print.print_labelTable(self.labelTable)
 
-	def import_BIF_and_module(self, impTs):
+	def import_BIF_and_module(self):
 		mfl = ModFileLoader()
-		custom_mod_entries = {}
-		for i in range(0, len(impTs)):
-			entry = impTs[i];
+		custom_mod_entries = []
+		for i in range(0, len(self.import_header)):
+			entry = self.import_header[i];
 			module_atom_index = entry[0] - 1
 			func_atom_index = entry[1] - 1
 			arity = entry[2]
@@ -45,21 +49,24 @@ class CodeParser:
 				self.import_header[i] = (entry[0], len(self.func_list), entry[2])
 				self.func_list.append(moduleEntity.searchFunc(bif_name)())
 			else:
-				if module_atom_index in custom_mod_entries:
-					if funcName in custom_mod_entries[module_atom_index]:
-						custom_mod_entries[module_atom_index][funcName][arity] = 0
-					else:
-						custom_mod_entries[module_atom_index][funcName] = {arity:0}
-				else:
-					custom_mod_entries[module_atom_index] = {funcName:{arity:-1}}
-		for (mod,funcs) in custom_mod_entries.items():
-			# search module file (*.beam) 
-			b = mfl.find(self.atoms[mod])
-			self.mod_dict[mod] = len(self.import_mods)
-			self.import_mods.append(CodeParser(b, funcs))
+				if module_atom_index not in custom_mod_entries:
+					b = mfl.find(moduleName)
+					self.mod_dict[module_atom_index] = len(self.import_mods)
+					self.import_mods.append(CodeParser(b))
+				mod_cp = self.import_mods[self.mod_dict[module_atom_index]]
+				func_index = self.search_exports(funcName, 
+						arity, mod_cp.export_header, mod_cp.atoms)
+				self.import_header[i] = (self.mod_dict[module_atom_index], func_index, arity)
+					
+	def search_exports(self, func_name, arity, header, atoms):
+		for i in range(0, len(header)):
+			entry = header[i]
+			if atoms[entry[0] - 1] == func_name and arity == entry[1]:
+				return i
+		return -1
 
 	def label_to_addr(self, label):
-		print "jump to label: %d"%(label)
+		#print "jump to label: %d"%(label)
 		return self.labelTable[label-1]
 
 	@jit.unroll_safe
@@ -115,7 +122,10 @@ class CodeParser:
 	def parseBase(self, pc):
 		pc, first = self.parseOne(pc)
 		pc, tag = self._parseTag(pc, first)
-		pc, intval = self._parseInt(pc, first)
+		if tag < opcodes.TAGX_BASE:
+			pc, intval = self._parseInt(pc, first)
+		else:
+			pc, intval = self._parse_literal(pc)
 		return pc, (tag, intval)
 
 	def _createInt(self, pc, tag):
@@ -165,7 +175,7 @@ class CodeParser:
 		return self._parse_literal(pc)
 
 	def _parse_literal(self, pc):
-		return pc, self.parseInt(pc)
+		return self.parseInt(pc)
 
 	def parse_alloclist(self, pc):
 		pc, tag = self.parseTag(pc)
@@ -201,12 +211,6 @@ class CodeParser:
 
 	##
 	# @brief One pass pre-process for CodeParser,
-	# We should 
-	# 1. create label table, (label_index => label_address)
-	# 2. rewriting call_ext access (replace the module_atom_index with our import_mods list index,
-	#    replace the func_atom_index and arity with imported_funcs index for every importing module,     
-	# 3. create a imported_funcs table for every imported funcs. (index => func_address)
-	#
 	# @param pc
 	#
 	# @return 
@@ -217,64 +221,14 @@ class CodeParser:
 		#print self.atoms
 		#print "entry_arity:%d"%(self.entry_arity)
 
-		# we only want to go one pass to replace extern module
-		# and function index, but we cannot modify the 'str' 
-		# field since it's a RPython string, so we just firstly
-		# store all the indices like:
-		# replace address => (module index, function index)
-		# as lastly replace where it occurs in 'str' by converting
-		# into list, and then converting back to RPython string.
-		#replace_table = {}  
-
 		#print "self module: %s" % (self.atoms[0])
-		#print self.imported_funcs_dict
+		#print self.export_funcs_dict
 		#print "########"
 		while(True):
 			pc, instr = self.parseInstr(pc)
 			if instr == opcodes.LABEL:
 				pc, _ = self.parseInt(pc)
 				self.labelTable.append(pc)
-			elif instr == opcodes.FUNC_INFO:
-				pc, tag1 = self.parseOne(pc)
-				pc, module = self._parseInt(pc, tag1)
-				pc, tag2 = self.parseOne(pc)
-				pc, func_index = self._parseInt(pc, tag2)
-				pc, tag3 = self.parseOne(pc)
-				pc, arity = self._parseInt(pc, tag3) 
-
-				func_name = self.atoms[func_index-1]
-				## build imported_funcs_dict table
-				if module == 1: 
-					# module == 1 means a function belong to itself
-					if func_name in self.imported_funcs_dict:
-						if arity in self.imported_funcs_dict[func_name]:
-							self.imported_funcs_dict[func_name][arity] = len(self.imported_funcs_list) 
-							self.imported_funcs_list.append(pc + 2)
-			elif instr in [opcodes.CALL_EXT, opcodes.CALL_EXT_ONLY]:
-				# we need to replace it with list index to achieve
-				# random access.
-				pc, read_arity = self.parseInt(pc)
-				pc, import_index = self.parseInt(pc)
-				import_entry = self.import_header[import_index]
-				module_atom_index = import_entry[0]
-				#print "module_atom_index:%d" % (module_atom_index)
-				#print "name:%s" % (self.atoms[module_atom_index-1])
-				#print self.atoms
-				if self.atoms[module_atom_index-1] not in lib_module:
-					module_index = self.mod_dict[module_atom_index-1]
-					func_atom_index = import_entry[1]
-					require_arity = import_entry[2]
-					func_name = self.atoms[func_atom_index-1]
-					#print self.import_mods[module_index].imported_funcs_dict
-					func_index = self.import_mods[module_index].imported_funcs_dict[func_name][require_arity]
-
-					#print "import_index:" + import_index
-					#print "mod_dict:" + self.mod_dict
-					#print "module_index:" + module_index
-					#print "func_atom_index:" + func_atom_index
-
-					self.import_header[import_index] = (module_index, func_index, require_arity)
-					#replace_table[pc - 3] = (module_index, func_index)
 
 			else:
 				arity = opcodes.arity[instr]
@@ -300,8 +254,3 @@ class CodeParser:
 						raise Exception("Unknown TAG: %d at position:%d"%(tag, pc-1))
 			if(pc >= len(self.str)):
 					break
-		#code_list = list(self.str)
-		#for (addr, replace) in replace_table.items():
-			#code_list[addr] = self.build_atom(replace[0])
-			#code_list[addr+1] = self.build_atom(replace[1])
-		#self.str = ''.join(code_list)
