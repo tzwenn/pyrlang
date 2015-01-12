@@ -20,6 +20,10 @@ class CodeParser:
 		self.import_header = list(beam.impTChunk.asArray())
 		if beam.litTChunk:
 			self.lit_table = beam.litTChunk.asArray()
+		if beam.locTChunk:
+			self.loc_table = beam.locTChunk.asArray()
+			#print "loc_table:"
+			#print self.loc_table
 		self.func_list = []
 		self.import_mods = [] # list of CodeParser to represent import module
 		self.mod_dict = {} # mod atom index => import_mods' index

@@ -62,8 +62,10 @@ class BeamRoot(BaseNode):
 
 	def dispatchChunk(self, stream):
 		self.litTChunk = None # in case of there is not 'LitT' in beam file
+		self.locTChunk = None
 		while(True):
 			flag = self._readString(stream, 4)
+			#print flag
 			if flag == 'Atom':
 				self.atomChunk = AtomChunk(stream)
 			elif flag == 'Code':
@@ -78,6 +80,8 @@ class BeamRoot(BaseNode):
 				self.locTChunk = LocTChunk(stream)
 			elif flag == 'LitT':
 				self.litTChunk = LitTChunk(stream)
+			elif flag == 'FunT':
+				self.funTChunk = FunTChuck(stream)
 			else:
 				break
 		#else:
@@ -94,7 +98,16 @@ class Chunk(BaseNode):
 	def discardRemain(self, stream):
 		n = self.readlen % 4
 		if n > 0:
-			self.readAny(stream, 4 - n)
+			self.size += 4 - n
+		distance = self.size + 8 - self.readlen 
+		#print self.size
+		#print self.readlen
+		#print stream.read()
+		#print distance
+		if distance > 0:
+			self.readAny(stream, distance)
+		#if n > 0:
+			#self.readAny(stream, 4 - n)
 
 class AtomChunk(Chunk):
 	def parse(self, stream):
@@ -195,6 +208,13 @@ class LocTChunk(Chunk):
 			e = InnerEntry(stream)
 			self.readlen += e.readlen
 			self.entries.append(e)
+
+	def asArray(self):
+		return [entry.asArray() for entry in self.entries]
+
+class FunTChuck(Chunk):
+	def parse(self, stream):
+		self.discardRemain(stream)
 
 class LitTChunk(Chunk):
 	def parse(self, stream):

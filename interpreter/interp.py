@@ -88,10 +88,6 @@ class BeamRunTime:
 				module_index = entry[0]
 				func_index = entry[1]
 				target_arity = entry[2]
-				#print import_header
-				#print module_index
-				#print func_index
-				#print import_mods
 				self.call_ext(import_mods, module_index, 
 						func_index, target_arity, real_arity)
 
@@ -172,6 +168,14 @@ class BeamRunTime:
 				pc, tail_reg = cp.parseBase(pc)
 				pc, dst_reg = cp.parseBase(pc)
 				self.put_list(head_reg, tail_reg, dst_reg)
+
+			elif instr == opcodes.CALL_FUN: # 75
+				pc, arity = cp.parseInt(pc)
+				pc = self.call_fun(pc, arity)
+
+			elif instr == opcodes.MAKE_FUN2: # 103
+				pc, index = cp.parseInt(pc)
+				self.make_fun2(cp, index)
 
 			elif instr == opcodes.GC_BIF2: # 125
 				pc, fail = cp.parseInt(pc)
@@ -355,6 +359,16 @@ class BeamRunTime:
 		tail = self.fetch_basereg(tail_reg)
 		res = W_ListObject(head, tail)
 		self.store_basereg(dst_reg, res)
+
+	def call_fun(self, pc, arity):
+		self.y_reg.push(W_AddrObject(pc))
+		addr_obj = self.fetch_basereg((opcodes.TAG_XREG, arity))
+		assert(isinstance(addr_obj, W_AddrObject))
+		return addr_obj.addrval
+
+	def make_fun2(self, cp, index):
+		label = cp.loc_table[index][2]
+		self.store_basereg((opcodes.TAG_XREG, 0), W_AddrObject(cp.label_to_addr(label)))
 
 	def gc_bif2(self, cp, pc, func_list, fail, alive, bif_index, rand1, rand2, dst_reg):
 		# TODO: wrap them with try-catch to handle inner exception.
