@@ -246,8 +246,15 @@ class LitTChunk(Chunk):
 		tag = self.readUCInt(stream)
 		if tag == 70: # new_float
 			return NewFloatTerm(stream)
+		elif tag == 97: # small_integer
+			return SmallIntegerTerm(stream)
 		elif tag == 100: # atom
 			return AtomTerm(stream)
+		elif tag == 104: # small_tuple
+			t = SmallTupleTerm(stream)
+			for i in range(0, t.length):
+				t.vals.append(self.create_term(stream))
+			return t
 		elif tag == 107: # int list
 			return IntListTerm(stream)
 		elif tag == 108: # any list
@@ -278,6 +285,10 @@ class NewFloatTerm(Term):
 	def parse(self, stream):
 		self.floatval = self.readBFloat(stream)
 
+class SmallIntegerTerm(Term):
+	def parse(self, stream):
+		self.val = self.readUCInt(stream)
+
 class AtomTerm(Term):
 	def parse(self, stream):
 		self.length = self.readInt2(stream)
@@ -294,3 +305,8 @@ class AnyListTerm(Term):
 	def parse(self, stream):
 		self.vals = []
 		self.length = self.readInt4(stream)
+
+class SmallTupleTerm(Term):
+	def parse(self, stream):
+		self.vals = []
+		self.length = self.readUCInt(stream)

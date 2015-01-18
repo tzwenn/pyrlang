@@ -1,6 +1,7 @@
 from beam_file import *
 from pyrlang.interpreter.datatypes.number import W_IntObject, W_FloatObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject
+from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
 
 def print_ImpT(impt, atomTable):
@@ -45,6 +46,9 @@ def value_str(v):
 		return "Nil"
 	elif isinstance(v, W_AtomObject):
 		return v.strval
+	elif isinstance(v, W_TupleObject):
+		vals = [value_str(e) for e in v.vals]
+		return "{%s}"%(", ".join(vals))
 	elif isinstance(v, W_ListObject):
 		s = []
 		i = 0

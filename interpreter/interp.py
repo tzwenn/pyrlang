@@ -6,6 +6,7 @@ from pyrlang.rpybeam.beam_file import *
 from pyrlang.interpreter.register import X_Register, Y_Register
 from pyrlang.interpreter.datatypes.number import W_IntObject, W_FloatObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject
+from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
 from rpython.rlib import jit
@@ -90,6 +91,23 @@ class BeamRunTime:
 				target_arity = entry[2]
 				self.call_ext(import_mods, module_index, 
 						func_index, target_arity, real_arity)
+
+			elif instr == opcodes.BIF1: # 10
+				pc, fail = cp.parseInt(pc)
+				pc, bif_index = cp.parseInt(pc)
+				pc, rand1 = cp.parseBase(pc)
+				pc, dst_reg = cp.parseBase(pc)
+				pc = self.bif1(cp, pc, func_list, fail, 
+						import_header[bif_index][1], rand1, dst_reg)
+
+			elif instr == opcodes.BIF2: # 11
+				pc, fail = cp.parseInt(pc)
+				pc, bif_index = cp.parseInt(pc)
+				pc, rand1 = cp.parseBase(pc)
+				pc, rand2 = cp.parseBase(pc)
+				pc, dst_reg = cp.parseBase(pc)
+				pc = self.bif2(cp, pc, func_list, fail, 
+						import_header[bif_index][1], rand1, rand2, dst_reg)
 
 			elif instr == opcodes.ALLOCATE: # 12
 				pc, stack_need = cp.parseInt(pc)
@@ -237,8 +255,13 @@ class BeamRunTime:
 	def term_to_value(self, t):
 		if isinstance(t, NewFloatTerm):
 			return W_FloatObject(t.floatval)
+		elif isinstance(t, SmallIntegerTerm):
+			return W_IntObject(t.val)
 		elif isinstance(t, AtomTerm):
 			return W_AtomObject(t.value)
+		elif isinstance(t, SmallTupleTerm):
+			o_lst = [self.term_to_value(e) for e in t.vals]
+			return W_TupleObject(o_lst)
 		elif isinstance(t, IntListTerm):
 			lst = t.vals
 			i_lst = []
@@ -261,6 +284,12 @@ class BeamRunTime:
 			right = W_ListObject(object_lst[length - i - 1], right)
 		return right
 
+	def apply_bif(self, cp, pc, func_list, fail, bif_index, rands, dst_reg):
+		# TODO: wrap them with try-catch to handle inner exception.
+		args = [self.get_basic_value(cp, rand) for rand in rands]
+		res = func_list[bif_index].invoke(args)
+		self.store_basereg(dst_reg, res)
+		return pc
 
 ########################################################################
 
@@ -281,6 +310,12 @@ class BeamRunTime:
 		label = mod.export_header[func_index][2]
 		func_addr = mod.label_to_addr(label)
 		self.execute(mod, func_addr)
+
+	def bif1(self, cp, pc, func_list, fail, bif_index, rand, dst_reg):
+		return self.apply_bif(cp, pc, func_list, fail, bif_index, [rand], dst_reg)
+
+	def bif2(self, cp, pc, func_list, fail, bif_index, rand1, rand2, dst_reg):
+		return self.apply_bif(cp, pc, func_list, fail, bif_index, [rand1, rand2], dst_reg)
 
 	@jit.unroll_safe
 	def allocate(self, stack_need, live):
@@ -371,10 +406,5 @@ class BeamRunTime:
 		self.store_basereg((opcodes.TAG_XREG, 0), W_AddrObject(cp.label_to_addr(label)))
 
 	def gc_bif2(self, cp, pc, func_list, fail, alive, bif_index, rand1, rand2, dst_reg):
-		# TODO: wrap them with try-catch to handle inner exception.
-		tmp1 = self.get_basic_value(cp, rand1)
-		tmp2 = self.get_basic_value(cp, rand2)
-		#print "gc_bif2: operator: %d, rand1: %d, rand2: %d"%(bif_index, tmp1.intval, tmp2.intval)
-		res = func_list[bif_index].invoke([tmp1, tmp2])
-		self.store_basereg(dst_reg, res)
-		return pc
+		# TODO: maybe we can help GC with alive?
+		return self.bif2(cp, pc, func_list, fail, bif_index, rand1, rand2, dst_reg)

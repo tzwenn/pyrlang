@@ -68,8 +68,8 @@ if __name__ == '__main__':
         elif op == LINE:
             print ' \t#line %s' % pretty_operand(operands[0])
         elif op == FUNC_INFO:
-            #print '\t#function %s:%s/%d' % (b.atoms[operands[0][1]-1], b.atoms[operands[1][1]-1], operands[2][1])
-			print '\t#function module:%s:func_name:%s/arity:%d' % (b.atoms[operands[0][1]-1], b.atoms[operands[1][1]-1], operands[2][1])
+            print '\t#function %s:%s/%d' % (b.atoms[operands[0][1]-1], b.atoms[operands[1][1]-1], operands[2][1])
+			#print '\t#function module:%s:func_name:%s/arity:%d' % (b.atoms[operands[0][1]-1], b.atoms[operands[1][1]-1], operands[2][1])
 
         elif op in (CALL_EXT, CALL_EXT_ONLY):
             print '\t%s %s %d' % (opnames[op], '%s:%s/%d'%b.imports[operands[1][1]], operands[0][1])
