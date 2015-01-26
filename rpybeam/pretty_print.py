@@ -64,7 +64,7 @@ def value_str(v):
 			s.append("...")
 		else:
 			s.append(value_str(v.head()))
-		return "[%s]"%("|".join(s))
+		return "[%s]"%(", ".join(s))
 
 def print_value(v):
 	print value_str(v)

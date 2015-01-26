@@ -9,5 +9,13 @@ class BaseModule:
 		return self.func_dict[name]
 
 class BaseFunc:
+	_attrs_ = ()
+
+class BaseBIF(BaseFunc):
 	def invoke(self, args):
+		pass
+
+# for the BIF which is called with call_ext_*
+class BaseFakeFunc(BaseFunc):
+	def invoke(self, cp, pc, runtime):
 		pass

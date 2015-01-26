@@ -1,22 +1,25 @@
 import sys
 
 from pyrlang.rpybeam import opcodes
-from pyrlang.rpybeam.beam_code import CodeParser
+from pyrlang.rpybeam import pretty_print
+from pyrlang.interpreter import fail_class
 from pyrlang.rpybeam.beam_file import *
 from pyrlang.interpreter.register import X_Register, Y_Register
+from pyrlang.interpreter.cont_stack import ContinuationStack
 from pyrlang.interpreter.datatypes.number import W_IntObject, W_FloatObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
-from pyrlang.interpreter.datatypes.inner import W_AddrObject
+from pyrlang.interpreter.datatypes.inner import W_AddrObject, W_CodeParserWrapperObject 
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
+from pyrlang.lib.base import BaseBIF, BaseFakeFunc
 from rpython.rlib import jit
 
-def printable_loc(pc, code, cp):
-	index = ord(code[pc])
+def printable_loc(pc, cp):
+	index = ord(cp.code[pc])
 	return str(pc) + " " + opcodes.opnames[index].upper()
 
-driver = jit.JitDriver(greens = ['pc', 'code', 'cp'],
-		reds = ['s_current_line', 's_atoms', 'import_header', 'import_mods', 's_func_list', 's_self', 's_x_reg', 's_y_reg'],
+driver = jit.JitDriver(greens = ['pc', 'cp'],
+		reds = ['s_self', 's_x_reg', 's_y_reg'],
 		virtualizables = ['s_x_reg'],
 		get_printable_location=printable_loc)
 
@@ -24,6 +27,7 @@ class BeamRunTime:
 	def __init__(self):
 		self.x_reg = X_Register()
 		self.y_reg = Y_Register()
+		self.cont_stack = ContinuationStack()
 
 	def init_entry_arguments(self, arg_lst):
 		for i in range(0, len(arg_lst)):
@@ -32,27 +36,15 @@ class BeamRunTime:
 	@jit.unroll_safe
 	def execute(self, cp, func_addr):
 		pc = func_addr
-		code = cp.str
-		current_line = cp.current_line
-		atoms = cp.atoms
-		func_list = cp.func_list
-		import_header = cp.import_header
-		import_mods = cp.import_mods
 
 		while(True):
 			driver.jit_merge_point(pc = pc,
-					code = code,
 					cp = cp,
-					s_current_line = current_line,
-					s_atoms = atoms,
-					import_header = import_header,
-					import_mods = import_mods,
-					s_func_list = func_list,
 					s_self = self,
 					s_x_reg = self.x_reg,
 					s_y_reg = self.y_reg)
-			#print printable_loc(pc, code, cp)
-			instr = ord(code[pc])
+			#print printable_loc(pc, cp)
+			instr = ord(cp.code[pc])
 			pc = pc + 1
 			#print "execute instr: %s"%(opcodes.opnames[instr])
 			if instr == opcodes.CALL: # 4
@@ -71,34 +63,28 @@ class BeamRunTime:
 				pc, label = cp.parseInt(pc)
 				pc = self.call_only(cp, arity, label)
 				driver.can_enter_jit(pc = pc,
-						code = code,
 						cp = cp,
-						s_current_line = current_line,
-						s_atoms = atoms,
-						import_mods = import_mods,
-						import_header = import_header,
-						s_func_list = func_list,
 						s_self = self, 
 						s_x_reg = self.x_reg,
 						s_y_reg = self.y_reg)
 
 			elif instr == opcodes.CALL_EXT: # 7
 				pc, real_arity = cp.parseInt(pc)
-				pc, header_index = cp.parseInt(pc)
-				entry = import_header[header_index]
-				module_index = entry[0]
-				func_index = entry[1]
-				target_arity = entry[2]
-				self.call_ext(import_mods, module_index, 
-						func_index, target_arity, real_arity)
+				pc, (tag, header_index) = cp.parseBase(pc)
+				if (tag == opcodes.TAG_LITERAL):
+					entry = cp.import_header[header_index]
+					cp, pc = self.call_ext(cp, pc, entry, real_arity)
+				else:
+					assert tag == opcodes.TAG_LABEL
+					pc = self._call_ext_bif(pc, cp, header_index)
 
 			elif instr == opcodes.BIF1: # 10
 				pc, fail = cp.parseInt(pc)
 				pc, bif_index = cp.parseInt(pc)
 				pc, rand1 = cp.parseBase(pc)
 				pc, dst_reg = cp.parseBase(pc)
-				pc = self.bif1(cp, pc, func_list, fail, 
-						import_header[bif_index][1], rand1, dst_reg)
+				pc = self.bif1(cp, pc, fail, 
+						cp.import_header[bif_index][1], rand1, dst_reg)
 
 			elif instr == opcodes.BIF2: # 11
 				pc, fail = cp.parseInt(pc)
@@ -106,8 +92,8 @@ class BeamRunTime:
 				pc, rand1 = cp.parseBase(pc)
 				pc, rand2 = cp.parseBase(pc)
 				pc, dst_reg = cp.parseBase(pc)
-				pc = self.bif2(cp, pc, func_list, fail, 
-						import_header[bif_index][1], rand1, rand2, dst_reg)
+				pc = self.bif2(cp, pc, fail, 
+						cp.import_header[bif_index][1], rand1, rand2, dst_reg)
 
 			elif instr == opcodes.ALLOCATE: # 12
 				pc, stack_need = cp.parseInt(pc)
@@ -132,9 +118,15 @@ class BeamRunTime:
 				if self.y_reg.is_empty():
 					return self.x_reg.get(0)
 				else:
-					w_addr = self.y_reg.pop()
-					assert isinstance(w_addr, W_AddrObject)
-					pc = w_addr.addrval
+					obj = self.y_reg.pop()
+					if isinstance(obj, W_CodeParserWrapperObject):
+						cp = obj.cp
+						w_addr = self.y_reg.pop()
+						assert isinstance(w_addr, W_AddrObject)
+						pc = w_addr.addrval
+					else:
+						assert isinstance(obj, W_AddrObject)
+						pc = obj.addrval
 
 			elif instr == opcodes.IS_LT: # 39
 				pc, label = cp.parseInt(pc)
@@ -168,7 +160,7 @@ class BeamRunTime:
 				pc, reg = cp.parseBase(pc)  
 				pc, label = cp.parseInt(pc)
 				pc, sl = cp.parse_selectlist(pc)
-				pc = self.select_val(atoms, cp, reg, label, sl)
+				pc = self.select_val(cp, reg, label, sl)
 
 			elif instr == opcodes.MOVE: # 64
 				pc, source = cp.parseBase(pc)
@@ -191,6 +183,16 @@ class BeamRunTime:
 				pc, arity = cp.parseInt(pc)
 				pc = self.call_fun(pc, arity)
 
+			elif instr == opcodes.CALL_EXT_ONLY: # 78
+				pc, real_arity = cp.parseInt(pc)
+				pc, (tag, header_index) = cp.parseBase(pc)
+				if tag == opcodes.TAG_LITERAL:
+					entry = cp.import_header[header_index]
+					cp, pc = self.call_ext_only(cp, entry, real_arity)
+				else:
+					assert tag == opcodes.TAG_LABEL
+					pc = self._call_ext_bif(pc, cp, header_index)
+
 			elif instr == opcodes.MAKE_FUN2: # 103
 				pc, index = cp.parseInt(pc)
 				self.make_fun2(cp, index)
@@ -202,11 +204,11 @@ class BeamRunTime:
 				pc, rand1 = cp.parseBase(pc)
 				pc, rand2 = cp.parseBase(pc)
 				pc, dst_reg = cp.parseBase(pc)
-				pc = self.gc_bif2(cp, pc, func_list, fail, alive, 
-						import_header[bif_index][1], rand1, rand2, dst_reg)
+				pc = self.gc_bif2(cp, pc, fail, alive, 
+						cp.import_header[bif_index][1], rand1, rand2, dst_reg)
 
 			elif instr == opcodes.LINE: # 153
-				pc, current_line = cp.parseInt(pc)
+				pc, cp.current_line = cp.parseInt(pc)
 
 			else:
 				raise Exception("Unimplemented opcode: %d"%(instr))
@@ -277,6 +279,7 @@ class BeamRunTime:
 		else:
 			W_IntObject(-999) # only used for type inference
 
+	@jit.unroll_safe
 	def build_list_object(self, object_lst):
 		right = W_NilObject()
 		length = len(object_lst)
@@ -284,12 +287,88 @@ class BeamRunTime:
 			right = W_ListObject(object_lst[length - i - 1], right)
 		return right
 
-	def apply_bif(self, cp, pc, func_list, fail, bif_index, rands, dst_reg):
+	def exit(self, s):
+		print s
+		raise Exception()
+
+	def fail(self, cp, pc, fclass, reason):
+		pretty_print.print_value(W_TupleObject([W_AtomObject('fail'),
+			W_AtomObject(fail_class.fail_names[fclass]),
+			reason]))
+		if self.cont_stack.is_empty():
+			if fclass == fail_class.THROWN:
+				self.exit("not catch thrown exception")
+			elif fclass == fail_class.EXIT:
+				self.exit(pretty_print.value_str(reason))
+			elif fclass == fail_class.ERROR:
+				stack_trace = self.create_call_stack_info(cp, pc)
+				res = W_TupleObject([reason, stack_trace])
+				self.exit(pretty_print.value_str(res))
+		else:
+			(label, depth) = self.cont_stack.pop()
+			new_depth = self.y_reg.depth()
+			self.deallcate(new_depth - depth)
+			self.x_reg.store(0, None)
+			self.x_reg.store(1, W_AtomObject(fail_class.fail_names[fclass]))
+			self.x_reg.store(2, reason)
+			return W_AddrObject(cp.label_to_addr(label))
+
+	@jit.unroll_safe
+	def create_call_stack_info(self, cp, pc):
+		res = [self._one_call_stack_info(cp, pc)]
+		_cp = cp
+		i = 0
+		while(i < self.y_reg.depth()):
+			obj = self.y_reg.get(-(i+1))
+			i += 1
+			if isinstance(obj, W_AddrObject):
+				res.append(self._one_call_stack_info(_cp, obj.addrval))
+			elif isinstance(obj, W_CodeParserWrapperObject):
+				_cp = obj.cp
+				w_addr = self.y_reg.get(-(i+1))
+				i += 1
+				assert isinstance(w_addr, W_AddrObject)
+				res.append(self._one_call_stack_info(_cp, w_addr.addrval))
+		res.reverse()
+		return self.build_list_object(res)
+
+	def _one_call_stack_info(self, cp, pc):
+		(module_name, func_name, arity) = cp.find_func_def(pc)
+		line_number = cp.find_current_line(pc)
+		return W_TupleObject([W_AtomObject(module_name),
+			W_AtomObject(func_name),
+			W_IntObject(arity),
+			W_ListObject(W_TupleObject([W_AtomObject('file'), 
+				W_AtomObject(cp.file_name)]),
+				W_ListObject(W_TupleObject([W_AtomObject('line'), 
+					W_IntObject(line_number)])))])
+
+	def apply_bif(self, cp, pc, fail, bif_index, rands, dst_reg):
 		# TODO: wrap them with try-catch to handle inner exception.
 		args = [self.get_basic_value(cp, rand) for rand in rands]
-		res = func_list[bif_index].invoke(args)
+		bif = cp.func_list[bif_index]
+		assert isinstance(bif, BaseBIF)
+		res = bif.invoke(args)
 		self.store_basereg(dst_reg, res)
 		return pc
+
+	def _call_ext_only(self, cp, entry):
+		module_index = entry[0]
+		func_index = entry[1]
+		mod = cp.import_mods[module_index]
+		label = cp.export_header[func_index][2]
+		func_addr = mod.label_to_addr(label)
+		return mod, func_addr
+
+	def _call_ext_bif(self, pc, cp, header_index):
+		fake_bif = cp.func_list[header_index]
+		assert isinstance(fake_bif, BaseFakeFunc)
+		res = fake_bif.invoke(cp, pc, self)
+		if isinstance(res, W_AddrObject):
+			return res.addrval
+		else:
+			self.x_reg.store(0, res)
+			return pc
 
 ########################################################################
 
@@ -304,18 +383,17 @@ class BeamRunTime:
 	def call_only(self, cp, arity, label):
 		return cp.label_to_addr(label)
 
-	def call_ext(self, import_mods, module_index, func_index, target_arity, real_arity):
+	def call_ext(self, cp, pc, entry, real_arity):
 		# TODO: add some check for two arities
-		mod = import_mods[module_index]
-		label = mod.export_header[func_index][2]
-		func_addr = mod.label_to_addr(label)
-		self.execute(mod, func_addr)
+		self.y_reg.push(W_AddrObject(pc))
+		self.y_reg.push(W_CodeParserWrapperObject(cp))
+		return self._call_ext_only(cp, entry)
 
-	def bif1(self, cp, pc, func_list, fail, bif_index, rand, dst_reg):
-		return self.apply_bif(cp, pc, func_list, fail, bif_index, [rand], dst_reg)
+	def bif1(self, cp, pc, fail, bif_index, rand, dst_reg):
+		return self.apply_bif(cp, pc, fail, bif_index, [rand], dst_reg)
 
-	def bif2(self, cp, pc, func_list, fail, bif_index, rand1, rand2, dst_reg):
-		return self.apply_bif(cp, pc, func_list, fail, bif_index, [rand1, rand2], dst_reg)
+	def bif2(self, cp, pc, fail, bif_index, rand1, rand2, dst_reg):
+		return self.apply_bif(cp, pc, fail, bif_index, [rand1, rand2], dst_reg)
 
 	@jit.unroll_safe
 	def allocate(self, stack_need, live):
@@ -368,7 +446,7 @@ class BeamRunTime:
 			return pc
 
 	@jit.unroll_safe
-	def select_val(self, atoms, cp, val_reg, label, slist):
+	def select_val(self, cp, val_reg, label, slist):
 		val = self.fetch_basereg(val_reg)
 		assert isinstance(val, W_AtomObject)
 		atom_str = val.strval
@@ -376,7 +454,7 @@ class BeamRunTime:
 		#print "atom: %d"%(val.index)
 		for i in range(0, len(slist)):
 			(v, l) = slist[i]
-			if atoms[v-1] == atom_str:
+			if cp.atoms[v-1] == atom_str:
 				return cp.label_to_addr(l)
 		return cp.label_to_addr(label)
 		
@@ -401,10 +479,13 @@ class BeamRunTime:
 		assert(isinstance(addr_obj, W_AddrObject))
 		return addr_obj.addrval
 
+	def call_ext_only(self, cp, entry, real_arity):
+		return self._call_ext_only(cp, entry)
+
 	def make_fun2(self, cp, index):
 		label = cp.loc_table[index][2]
 		self.store_basereg((opcodes.TAG_XREG, 0), W_AddrObject(cp.label_to_addr(label)))
 
-	def gc_bif2(self, cp, pc, func_list, fail, alive, bif_index, rand1, rand2, dst_reg):
+	def gc_bif2(self, cp, pc, fail, alive, bif_index, rand1, rand2, dst_reg):
 		# TODO: maybe we can help GC with alive?
-		return self.bif2(cp, pc, func_list, fail, bif_index, rand1, rand2, dst_reg)
+		return self.bif2(cp, pc, fail, bif_index, rand1, rand2, dst_reg)

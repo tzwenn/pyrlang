@@ -1,11 +1,14 @@
 import sys
+# used for my MacBook
 sys.path.append('/Users/kiwakachen/src/python/pypy-zh/pypy')
+# used for lab's MacPro
+sys.path.append('/Users/huangruochen/src/python/pypy')
 sys.path.append('../')
 
-from rpybeam.beam_file import BeamRoot
+from pyrlang.rpybeam.beam_file import BeamRoot
 from pyrlang.rpybeam.pretty_print import *
-from rpybeam.beam_code import CodeParser
-from interpreter.interp import BeamRunTime
+from pyrlang.rpybeam.beam_code import CodeParser
+from pyrlang.interpreter.interp import BeamRunTime
 from pyrlang.interpreter.datatypes.number import *
 
 def parse_arg(argv):
@@ -26,10 +29,13 @@ def main(argv):
 		b = BeamRoot(f)
 		brt = BeamRunTime()
 		brt.init_entry_arguments(args)
-		cp = CodeParser(b)
+		cp = CodeParser(b, argv[1])
 		index = cp.search_exports(entry_func, len(args), cp.export_header, cp.atoms)
 		func_addr = cp.label_to_addr(cp.export_header[index][2])
-		res = brt.execute(cp, func_addr)
+		try:
+			res = brt.execute(cp, func_addr)
+		except:
+			return 0
 
 		print_value(res)
 	finally:

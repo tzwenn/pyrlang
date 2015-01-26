@@ -52,3 +52,6 @@ class Y_Register(AbstractRegister):
 	def is_empty(self):
 		return len(self.regs) == 0
 
+	def depth(self):
+		return len(self.regs)
+
