@@ -68,3 +68,49 @@ def value_str(v):
 
 def print_value(v):
 	print value_str(v)
+
+def get_tuple_vals(v):
+	assert isinstance(v, W_TupleObject)
+	return v.vals
+
+def get_list_contents(v):
+	assert isinstance(v, W_ListObject)
+	res = []
+	while True:
+		res.append(v.head())
+		if isinstance(v.tail(), W_NilObject):
+			break
+		v = v.tail()
+	return res
+
+def get_atom_val(v):
+	assert isinstance(v, W_AtomObject)
+	return v.strval
+
+def get_int_val(v):
+	assert isinstance(v, W_IntObject)
+	return v.intval
+
+def _stack_trace_tuple(v):
+	l = get_tuple_vals(v)
+	(module_atom, func_atom, arity, file_msg) = l
+	(file_path_tuple, line_tuple) = get_list_contents(file_msg)
+	path_atom = get_tuple_vals(file_path_tuple)[1]
+	line = get_tuple_vals(line_tuple)[1]
+	return (get_atom_val(module_atom),
+			get_atom_val(func_atom),
+			get_int_val(arity),
+			get_atom_val(path_atom),
+			get_int_val(line))
+
+def error_message(v):
+	(reason, stack_trace) = get_tuple_vals(v)
+	st_list = get_list_contents(stack_trace)
+	t1 = _stack_trace_tuple(st_list[0])
+
+	s = "** exception error: %s\n"%get_atom_val(reason)
+	s += "     in function  %s:%s/%d (%s, line %d)"%t1 
+	if len(st_list) > 1:
+		for i in range(1, len(st_list)):
+			s += "\n     in call from %s:%s/%d (%s, line %d)"%_stack_trace_tuple(st_list[i])
+	return s

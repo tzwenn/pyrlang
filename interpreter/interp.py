@@ -162,6 +162,15 @@ class BeamRunTime:
 				pc, sl = cp.parse_selectlist(pc)
 				pc = self.select_val(cp, reg, label, sl)
 
+			elif instr == opcodes.K_CATCH: # 62
+				pc, reg = cp.parseBase(pc)
+				pc, label = cp.parseInt(pc)
+				self.k_catch(cp, reg, label)
+
+			elif instr == opcodes.CATCH_END: # 63
+				pc, reg = cp.parseBase(pc)
+				self.catch_end(pc, cp, reg)
+
 			elif instr == opcodes.MOVE: # 64
 				pc, source = cp.parseBase(pc)
 				pc, dst_reg = cp.parseBase(pc)
@@ -292,9 +301,9 @@ class BeamRunTime:
 		raise Exception()
 
 	def fail(self, cp, pc, fclass, reason):
-		pretty_print.print_value(W_TupleObject([W_AtomObject('fail'),
-			W_AtomObject(fail_class.fail_names[fclass]),
-			reason]))
+		#pretty_print.print_value(W_TupleObject([W_AtomObject('fail'),
+			#W_AtomObject(fail_class.fail_names[fclass]),
+			#reason]))
 		if self.cont_stack.is_empty():
 			if fclass == fail_class.THROWN:
 				self.exit("not catch thrown exception")
@@ -303,9 +312,9 @@ class BeamRunTime:
 			elif fclass == fail_class.ERROR:
 				stack_trace = self.create_call_stack_info(cp, pc)
 				res = W_TupleObject([reason, stack_trace])
-				self.exit(pretty_print.value_str(res))
+				self.exit(pretty_print.error_message(res))
 		else:
-			(label, depth) = self.cont_stack.pop()
+			(label, depth) = self.cont_stack.top()
 			new_depth = self.y_reg.depth()
 			self.deallcate(new_depth - depth)
 			self.x_reg.store(0, None)
@@ -329,7 +338,7 @@ class BeamRunTime:
 				i += 1
 				assert isinstance(w_addr, W_AddrObject)
 				res.append(self._one_call_stack_info(_cp, w_addr.addrval))
-		res.reverse()
+		#res.reverse()
 		return self.build_list_object(res)
 
 	def _one_call_stack_info(self, cp, pc):
@@ -339,7 +348,9 @@ class BeamRunTime:
 			W_AtomObject(func_name),
 			W_IntObject(arity),
 			W_ListObject(W_TupleObject([W_AtomObject('file'), 
-				W_AtomObject(cp.file_name)]),
+				#FIXME: it actually should be a string type,
+				# and it also influent the error_message function
+				W_AtomObject(cp.file_name)]), 
 				W_ListObject(W_TupleObject([W_AtomObject('line'), 
 					W_IntObject(line_number)])))])
 
@@ -457,6 +468,27 @@ class BeamRunTime:
 			if cp.atoms[v-1] == atom_str:
 				return cp.label_to_addr(l)
 		return cp.label_to_addr(label)
+
+	def k_catch(self, cp, reg, label):
+		addr = cp.label_to_addr(label)
+		self.store_basereg(reg, W_AddrObject(addr))
+		self.cont_stack.push((label, self.y_reg.depth()))
+
+	def catch_end(self, pc, cp, reg):
+		self.store_basereg(reg, None)
+		(fail_addr, depth) = self.cont_stack.pop()
+		x0 = self.x_reg.get(0)
+		if not x0: # it means x0 is a none value
+			x1 = self.x_reg.get(1)
+			x2 = self.x_reg.get(2)
+			assert isinstance(x1, W_AtomObject)
+			atom_val = x1.strval
+			if atom_val == fail_class.fail_names[fail_class.THROWN]:
+				self.x_reg.store(0, x2)
+			elif atom_val == fail_class.fail_names[fail_class.ERROR]:
+				self.x_reg.store(0, W_TupleObject([x2, self.create_call_stack_info(cp, pc)]))
+			else:
+				self.x_reg.store(0, W_TupleObject([W_AtomObject('EXIT'), x2]))
 		
 	def move(self, cp, source, dst_reg):
 		self.store_basereg(dst_reg, self.get_basic_value(cp, source))

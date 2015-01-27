@@ -2,6 +2,9 @@ class ContinuationStack:
 	def __init__(self):
 		self.vals = []
 
+	def top(self):
+		return self.vals[-1]
+
 	def pop(self):
 		return self.vals.pop()
 
