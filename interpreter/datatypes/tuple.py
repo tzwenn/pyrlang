@@ -11,3 +11,6 @@ class W_TupleObject(W_Root):
 
 	def size(self):
 		return W_IntObject(len(self.vals))
+
+	def clone(self):
+		return W_TupleObject([val.clone() for val in self.vals])

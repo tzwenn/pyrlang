@@ -29,6 +29,9 @@ class W_IntObject(W_Root):
 	def getval(self):
 		return self.intval
 
+	def clone(self):
+		return W_IntObject(self.intval)
+
 
 class W_FloatObject(W_Root):
 	def __init__(self, floatval):
@@ -50,3 +53,6 @@ class W_FloatObject(W_Root):
 
 	def getval(self):
 		return self.floatval
+
+	def clone(self):
+		return W_FloatObject(self.floatval)

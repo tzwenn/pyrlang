@@ -52,10 +52,10 @@ class CodeParser:
 			moduleName = self.atoms[module_atom_index]
 			funcName = self.atoms[func_atom_index]
 			# BIF
-			if moduleName in lib_module and self.is_bif(entry):
+			if moduleName in lib_module and ModuleDict.is_bif_from_tuple(self.get_name_entry(entry)):
 				# we use function_arity to emulate function overload
 				moduleEntity = ModuleDict.module_dict[moduleName]()
-				bif_name = self.get_bif_name(funcName, arity)
+				bif_name = ModuleDict.get_bif_name(funcName, arity)
 				#print "mod: %s: func_list: %d => %s"%(self.atoms[0], len(self.func_list), bif_name)
 				self.import_header[i] = (entry[0], len(self.func_list), entry[2])
 				if moduleName in self.bif_map:
@@ -73,18 +73,19 @@ class CodeParser:
 						arity, mod_cp.export_header, mod_cp.atoms)
 				self.import_header[i] = (self.mod_dict[module_atom_index], func_index, arity)
 
-	def is_bif(self, entry):
-		(module_index, func_index, arity) = entry
-		module_name = self.atoms[module_index - 1]
-		if module_name in lib_module:
-			bif_name = self.get_bif_name(self.atoms[func_index - 1], arity)
-			m = ModuleDict.module_dict[module_name]()
-			return (bif_name in ModuleDict.module_dict[module_name]().func_dict)
-		else:
-			return False
+	def get_module_cp_by_name(self, module_name):
+		mod_index = self.mod_dict[self.atoms.index(module_name)]
+		return self.import_mods[mod_index]
 
-	def get_bif_name(self, func_name, arity):
-		return "%s_%d"%(func_name, arity)
+	def get_func_addr_by_name(self, func_name, arity):
+		index = self.search_exports(func_name, arity, self.export_header, self.atoms)
+		label = self.export_header[index][2]
+		return self.label_to_addr(label)
+
+	def get_name_entry(self, entry):
+		return (self.atoms[entry[0] - 1],
+				self.atoms[entry[1] - 1],
+				entry[2])
 					
 	def search_exports(self, func_name, arity, header, atoms):
 		for i in range(0, len(header)):
@@ -265,7 +266,7 @@ class CodeParser:
 				pc, real_arity = self.parseInt(pc)
 				pc, header_index = self.parseInt(pc)
 				entry = self._import_header[header_index]
-				if self.is_bif(entry):
+				if ModuleDict.is_bif_from_tuple(self.get_name_entry(entry)):
 					# at this time, the func index are already replaced
 					replace_dict[pc - 1] = self.import_header[header_index][1]
 			elif instr == opcodes.LINE:

@@ -11,6 +11,7 @@ from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject, W_CodeParserWrapperObject 
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
+from pyrlang.interpreter import constant
 from pyrlang.lib.base import BaseBIF, BaseFakeFunc
 from rpython.rlib import jit
 
@@ -19,14 +20,17 @@ def printable_loc(pc, cp):
 	return str(pc) + " " + opcodes.opnames[index].upper()
 
 driver = jit.JitDriver(greens = ['pc', 'cp'],
-		reds = ['s_self', 's_x_reg', 's_y_reg'],
+		reds = ['reduction', 'single', 's_self', 's_x_reg', 's_y_reg'],
 		virtualizables = ['s_x_reg'],
 		get_printable_location=printable_loc)
 
-class BeamRunTime:
-	def __init__(self):
+class Process:
+	def __init__(self, pid, scheduler, priority = constant.PRIORITY_NORMAL):
 		self.x_reg = X_Register()
 		self.y_reg = Y_Register()
+		self.pid = pid
+		self.scheduler = scheduler
+		self.priority = priority
 		self.cont_stack = ContinuationStack()
 
 	def init_entry_arguments(self, arg_lst):
@@ -34,12 +38,15 @@ class BeamRunTime:
 			self.x_reg.store(i, arg_lst[i])
 
 	@jit.unroll_safe
-	def execute(self, cp, func_addr):
+	def execute(self, cp, func_addr, single = False):
 		pc = func_addr
+		reduction = 2000
 
 		while(True):
 			driver.jit_merge_point(pc = pc,
 					cp = cp,
+					reduction = reduction,
+					single = single, 
 					s_self = self,
 					s_x_reg = self.x_reg,
 					s_y_reg = self.y_reg)
@@ -57,16 +64,25 @@ class BeamRunTime:
 				pc, label = cp.parseInt(pc)
 				pc, n = cp.parseInt(pc)
 				pc = self.call_last(cp, arity, label, n)
+				reduction -= 1
+				if not single and reduction <= 0:
+					break
 
 			elif instr == opcodes.CALL_ONLY: # 6
 				pc, arity = cp.parseInt(pc)
 				pc, label = cp.parseInt(pc)
 				pc = self.call_only(cp, arity, label)
-				driver.can_enter_jit(pc = pc,
-						cp = cp,
-						s_self = self, 
-						s_x_reg = self.x_reg,
-						s_y_reg = self.y_reg)
+				reduction -= 1
+				if not single and reduction <= 0:
+					break
+				else:
+					driver.can_enter_jit(pc = pc,
+							cp = cp,
+							reduction = reduction,
+							single = single,
+							s_self = self, 
+							s_x_reg = self.x_reg,
+							s_y_reg = self.y_reg)
 
 			elif instr == opcodes.CALL_EXT: # 7
 				pc, real_arity = cp.parseInt(pc)
@@ -77,6 +93,9 @@ class BeamRunTime:
 				else:
 					assert tag == opcodes.TAG_LABEL
 					pc = self._call_ext_bif(pc, cp, header_index)
+				reduction -= 1
+				if not single and reduction <= 0:
+					break
 
 			elif instr == opcodes.BIF1: # 10
 				pc, fail = cp.parseInt(pc)
@@ -85,6 +104,9 @@ class BeamRunTime:
 				pc, dst_reg = cp.parseBase(pc)
 				pc = self.bif1(cp, pc, fail, 
 						cp.import_header[bif_index][1], rand1, dst_reg)
+				reduction -= 1
+				if not single and reduction <= 0:
+					break
 
 			elif instr == opcodes.BIF2: # 11
 				pc, fail = cp.parseInt(pc)
@@ -94,6 +116,9 @@ class BeamRunTime:
 				pc, dst_reg = cp.parseBase(pc)
 				pc = self.bif2(cp, pc, fail, 
 						cp.import_header[bif_index][1], rand1, rand2, dst_reg)
+				reduction -= 1
+				if not single and reduction <= 0:
+					break
 
 			elif instr == opcodes.ALLOCATE: # 12
 				pc, stack_need = cp.parseInt(pc)
@@ -116,7 +141,7 @@ class BeamRunTime:
 
 			elif instr == opcodes.K_RETURN: # 19
 				if self.y_reg.is_empty():
-					return self.x_reg.get(0)
+					return (constant.STATE_TERMINATE, pc)
 				else:
 					obj = self.y_reg.pop()
 					if isinstance(obj, W_CodeParserWrapperObject):
@@ -215,12 +240,16 @@ class BeamRunTime:
 				pc, dst_reg = cp.parseBase(pc)
 				pc = self.gc_bif2(cp, pc, fail, alive, 
 						cp.import_header[bif_index][1], rand1, rand2, dst_reg)
+				reduction -= 1
+				if not single and reduction <= 0:
+					break
 
 			elif instr == opcodes.LINE: # 153
 				pc, cp.current_line = cp.parseInt(pc)
 
 			else:
 				raise Exception("Unimplemented opcode: %d"%(instr))
+		return (constant.STATE_SWITH, pc)
 
 	def get_basic_value(self, cp, pair):
 		(tag, value) = pair
@@ -380,6 +409,13 @@ class BeamRunTime:
 		else:
 			self.x_reg.store(0, res)
 			return pc
+
+	def _spawn(self, cp, pc, args, priority):
+		pid = self.scheduler.create_pid()
+		sub_process = Process(pid, self.scheduler, priority)
+		sub_process.init_entry_arguments(args)
+		self.scheduler.push_to_priority_queue((sub_process, cp, pc), priority)
+		return pid
 
 ########################################################################
 

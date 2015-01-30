@@ -1,7 +1,8 @@
 from root import W_Root
 
 class W_NilObject(W_Root):
-	pass
+	def clone(self):
+		return W_NilObject()
 
 class W_ListObject(W_Root):
 	_immutable_fields_ = ['left', 'right']
@@ -17,3 +18,6 @@ class W_ListObject(W_Root):
 
 	def tail(self):
 		return self.right
+
+	def clone(self):
+		return W_ListObject(self.left.clone(), self.right.clone())
