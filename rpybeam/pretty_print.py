@@ -3,6 +3,7 @@ from pyrlang.interpreter.datatypes.number import W_IntObject, W_FloatObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
+from pyrlang.interpreter.datatypes.pid import W_PidOjbect
 from pyrlang.utils.eterm_operators import * 
 
 def print_ImpT(impt, atomTable):
@@ -50,6 +51,9 @@ def value_str(v):
 	elif isinstance(v, W_TupleObject):
 		vals = [value_str(e) for e in v.vals]
 		return "{%s}"%(", ".join(vals))
+	elif isinstance(v, W_PidOjbect):
+		(node_num, process_num, serial) = get_pid_contents(v)
+		return "<%d.%d.%d>"%(node_num, process_num, serial)
 	elif isinstance(v, W_ListObject):
 		s = []
 		i = 0

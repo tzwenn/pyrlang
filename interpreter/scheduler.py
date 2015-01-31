@@ -39,7 +39,7 @@ class Scheduler:
 					self._handle_one_process(self.normal_queue, pcp)
 
 	def create_pid(self):
-		self.pid_provider.create_pid()
+		return self.pid_provider.create_pid()
 
 	def push_to_priority_queue(self, pcp, priority):
 		if priority == constant.PRIORITY_MAXIMUM:

@@ -73,9 +73,15 @@ class CodeParser:
 						arity, mod_cp.export_header, mod_cp.atoms)
 				self.import_header[i] = (self.mod_dict[module_atom_index], func_index, arity)
 
+	def get_self_module_name(self):
+		return self.atoms[0]
+
 	def get_module_cp_by_name(self, module_name):
-		mod_index = self.mod_dict[self.atoms.index(module_name)]
-		return self.import_mods[mod_index]
+		if module_name == self.get_self_module_name():
+			return self
+		else:
+			mod_index = self.mod_dict[self.atoms.index(module_name)]
+			return self.import_mods[mod_index]
 
 	def get_func_addr_by_name(self, func_name, arity):
 		index = self.search_exports(func_name, arity, self.export_header, self.atoms)

@@ -5,6 +5,6 @@ class PidProvider:
 		self.process_num = 0
 
 	def create_pid(self):
-		pid = W_PidOjbect(0, self.process_num, 83)
+		pid = W_PidOjbect(0, self.process_num, 0)
 		self.process_num += 1
 		return pid

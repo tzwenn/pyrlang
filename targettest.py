@@ -50,13 +50,13 @@ def main(argv):
 			except:
 				return 0
 		else:
-			try:
-				scheduler.push_to_priority_queue((brt, cp, func_addr), brt.priority)
-				scheduler.schedule()
-				res = brt.x_reg.get(0)
-				print_value(res)
-			except:
-				return 0
+			#try:
+			scheduler.push_to_priority_queue((brt, cp, func_addr), brt.priority)
+			scheduler.schedule()
+			res = brt.x_reg.get(0)
+			print_value(res)
+			#except:
+				#return 0
 	finally:
 		f.close()
 	return 0

@@ -97,6 +97,27 @@ class Process:
 				if not single and reduction <= 0:
 					break
 
+			elif instr == opcodes.CALL_EXT_LAST: # 8
+				pc, real_arity = cp.parseInt(pc)
+				pc, (tag, header_index) = cp.parseBase(pc)
+				pc, dealloc = cp.parseInt(pc)
+				if (tag == opcodes.TAG_LITERAL):
+					entry = cp.import_header[header_index]
+					cp, pc = self.call_ext_last(cp, pc, entry, real_arity, dealloc)
+				else:
+					assert tag == opcodes.TAG_LABEL
+					pc = self._call_ext_bif(pc, cp, header_index)
+					self.deallcate(dealloc)
+					# calling a bif means the dispatch loop 
+					# need a extra k_return semantics 
+					if self.y_reg.is_empty():
+						return (constant.STATE_TERMINATE, pc)
+					else:
+						(cp, pc) = self.k_return(cp)
+				reduction -= 1
+				if not single and reduction <= 0:
+					break
+
 			elif instr == opcodes.BIF1: # 10
 				pc, fail = cp.parseInt(pc)
 				pc, bif_index = cp.parseInt(pc)
@@ -143,15 +164,7 @@ class Process:
 				if self.y_reg.is_empty():
 					return (constant.STATE_TERMINATE, pc)
 				else:
-					obj = self.y_reg.pop()
-					if isinstance(obj, W_CodeParserWrapperObject):
-						cp = obj.cp
-						w_addr = self.y_reg.pop()
-						assert isinstance(w_addr, W_AddrObject)
-						pc = w_addr.addrval
-					else:
-						assert isinstance(obj, W_AddrObject)
-						pc = obj.addrval
+					(cp, pc) = self.k_return(cp)
 
 			elif instr == opcodes.IS_LT: # 39
 				pc, label = cp.parseInt(pc)
@@ -436,6 +449,10 @@ class Process:
 		self.y_reg.push(W_CodeParserWrapperObject(cp))
 		return self._call_ext_only(cp, entry)
 
+	def call_ext_last(self, cp, pc, entry, real_arity, dealloc):
+		self.deallcate(dealloc)
+		return self._call_ext_only(cp, entry)
+
 	def bif1(self, cp, pc, fail, bif_index, rand, dst_reg):
 		return self.apply_bif(cp, pc, fail, bif_index, [rand], dst_reg)
 
@@ -459,6 +476,19 @@ class Process:
 	def deallcate(self, n):
 		for i in range(0, n):
 			self.y_reg.pop()
+
+	def k_return(self, cp):
+		obj = self.y_reg.pop()
+		if isinstance(obj, W_CodeParserWrapperObject):
+			cp = obj.cp
+			w_addr = self.y_reg.pop()
+			assert isinstance(w_addr, W_AddrObject)
+			pc = w_addr.addrval
+			return (cp, pc)
+		else:
+			assert isinstance(obj, W_AddrObject)
+			pc = obj.addrval
+			return (cp, pc)
 		
 	def is_lt(self, pc, cp, label, v1, v2):
 		int_v1 = self.get_basic_value(cp, v1)
