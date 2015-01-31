@@ -1,0 +1,1648 @@
+[2755cdebd19] {jit-backend-counts
+[2755cdfa865] jit-backend-counts}
+[27561009b7a] {jit-log-opt-loop
+# Loop 0 (156 IS_NONEMPTY_LIST) : loop with 365 ops
+[i0, i1, p2, p3, p4]
++129: p5 = getfield_gc(p3, descr=<FieldP pyrlang.interpreter.register.X_Register.inst_regs 16>)
++140: p7 = getarrayitem_gc(p5, 0, descr=<ArrayP 8>)
++144: p9 = getarrayitem_gc(p5, 1, descr=<ArrayP 8>)
++148: p11 = getarrayitem_gc(p5, 2, descr=<ArrayP 8>)
++152: p13 = getarrayitem_gc(p5, 3, descr=<ArrayP 8>)
++156: p15 = getarrayitem_gc(p5, 4, descr=<ArrayP 8>)
++160: p17 = getarrayitem_gc(p5, 5, descr=<ArrayP 8>)
++164: p19 = getarrayitem_gc(p5, 6, descr=<ArrayP 8>)
++168: p21 = getarrayitem_gc(p5, 7, descr=<ArrayP 8>)
++172: p23 = getarrayitem_gc(p5, 8, descr=<ArrayP 8>)
++176: p25 = getarrayitem_gc(p5, 9, descr=<ArrayP 8>)
++180: p27 = getarrayitem_gc(p5, 10, descr=<ArrayP 8>)
++184: p29 = getarrayitem_gc(p5, 11, descr=<ArrayP 8>)
++188: p31 = getarrayitem_gc(p5, 12, descr=<ArrayP 8>)
++199: p33 = getarrayitem_gc(p5, 13, descr=<ArrayP 8>)
++210: p35 = getarrayitem_gc(p5, 14, descr=<ArrayP 8>)
++224: p37 = getarrayitem_gc(p5, 15, descr=<ArrayP 8>)
++238: label(i0, i1, p2, p3, p4, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, descr=TargetToken(4318167552))
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
++321: p39 = getfield_gc(ConstPtr(ptr38), descr=<FieldP pyrlang.rpybeam.beam_code.CodeParser.inst_code 32>)
++334: i41 = strgetitem(p39, 156)
++342: guard_value(i41, 56, descr=<Guard0x10168cdb0>) [i41, i1, i0, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++352: i44 = strgetitem(p39, 157)
++360: i46 = int_and(i44, 7)
++367: i48 = int_eq(i46, 7)
+guard_false(i48, descr=<Guard0x10168ccd0>) [i44, i1, i0, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++377: i50 = int_and(i44, 8)
++384: i51 = int_is_true(i50)
+guard_true(i51, descr=<Guard0x10168cc60>) [i1, i0, p2, i44, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++394: i53 = int_and(i44, 16)
++401: i54 = int_is_true(i53)
+guard_false(i54, descr=<Guard0x10168cbf0>) [i1, i0, p2, i44, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++411: i56 = strgetitem(p39, 158)
++419: i58 = int_and(i44, 224)
++426: i60 = int_lshift(i58, 3)
++430: i61 = int_or(i60, i56)
++433: i63 = strgetitem(p39, 159)
++441: i65 = int_and(i63, 7)
++448: i67 = int_eq(i65, 7)
+guard_false(i67, descr=<Guard0x10168cb10>) [i1, i0, i61, p2, i63, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++458: i69 = int_and(i63, 8)
++465: i70 = int_is_true(i69)
+guard_false(i70, descr=<Guard0x10168c950>) [i1, i0, i61, p2, i65, i63, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++475: i72 = int_rshift(i63, 4)
++479: guard_value(i65, 3, descr=<Guard0x10168c8e0>) [i1, i0, p2, i61, i72, i65, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++489: p74 = getfield_gc(p2, descr=<FieldP pyrlang.interpreter.interp.Process.inst_x_reg 40>)
++500: i75 = ptr_eq(p74, p3)
+guard_true(i75, descr=<Guard0x10168c870>) [i1, i0, p2, i61, i72, p74, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++513: guard_value(i72, 0, descr=<Guard0x10168c800>) [i1, i0, p2, i61, i72, p3, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37]
++523: guard_nonnull_class(p7, 4297397368, descr=<Guard0x10168c790>) [i1, i0, p2, i61, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++541: p78 = getfield_gc(p2, descr=<FieldP pyrlang.interpreter.interp.Process.inst_y_reg 48>)
+debug_merge_point(0, 0, '160 GET_LIST')
++545: i80 = strgetitem(p39, 160)
++553: guard_value(i80, 65, descr=<Guard0x10168c6b0>) [i80, i1, i0, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++563: i83 = strgetitem(p39, 161)
++571: i85 = int_and(i83, 7)
++578: i87 = int_eq(i85, 7)
+guard_false(i87, descr=<Guard0x10168c5d0>) [i1, i0, p2, i83, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++588: i89 = int_and(i83, 8)
++595: i90 = int_is_true(i89)
+guard_false(i90, descr=<Guard0x10168c410>) [i1, i0, p2, i85, i83, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++605: i92 = int_rshift(i83, 4)
++609: i94 = strgetitem(p39, 162)
++617: i96 = int_and(i94, 7)
++624: i98 = int_eq(i96, 7)
+guard_false(i98, descr=<Guard0x10168c330>) [i1, i0, p2, i94, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i85, i92]
++634: i100 = int_and(i94, 8)
++641: i101 = int_is_true(i100)
+guard_false(i101, descr=<Guard0x10168c170>) [i1, i0, p2, i96, i94, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i85, i92]
++651: i103 = int_rshift(i94, 4)
++655: i105 = strgetitem(p39, 163)
++663: i107 = int_and(i105, 7)
++670: i109 = int_eq(i107, 7)
+guard_false(i109, descr=<Guard0x10168c090>) [i1, i0, p2, i105, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i96, i103, i85, i92]
++680: i111 = int_and(i105, 8)
++687: i112 = int_is_true(i111)
+guard_false(i112, descr=<Guard0x10167fe50>) [i1, i0, p2, i107, i105, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i96, i103, i85, i92]
++697: i114 = int_rshift(i105, 4)
++701: i116 = int_eq(i85, 3)
+guard_true(i116, descr=<Guard0x10167fde0>) [i1, i0, p2, i92, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i107, i114, i96, i103, None, None]
++711: guard_value(i92, 0, descr=<Guard0x10167fd70>) [i1, i0, p2, i92, p3, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, i107, i114, i96, i103, None, None]
++721: p119 = getfield_gc_pure(p7, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 8>)
++725: i121 = int_eq(i96, 3)
+guard_true(i121, descr=<Guard0x10167fd00>) [i1, i0, p7, p2, i103, p119, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i107, i114, None, None, None, None]
++735: guard_value(i103, 3, descr=<Guard0x10167fc90>) [i1, i0, p7, p2, i103, p119, p3, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, i107, i114, None, None, None, None]
++745: p123 = getfield_gc_pure(p7, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 16>)
++749: i125 = int_eq(i107, 3)
+guard_true(i125, descr=<Guard0x10167fc20>) [i1, i0, p2, i114, p123, p7, p9, p11, p119, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None]
++759: guard_value(i114, 4, descr=<Guard0x10167fbb0>) [i1, i0, p2, i114, p123, p3, p7, p9, p11, p119, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, None, None, None, None, None, None]
+debug_merge_point(0, 0, '164 IS_NONEMPTY_LIST')
++769: i128 = strgetitem(p39, 164)
++777: guard_value(i128, 56, descr=<Guard0x10167fb40>) [i128, i1, i0, p2, p7, p9, p11, p119, p123, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None]
++787: i131 = strgetitem(p39, 165)
++795: i133 = int_and(i131, 7)
++802: i135 = int_eq(i133, 7)
+guard_false(i135, descr=<Guard0x10167fa60>) [i131, i1, i0, p2, p7, p9, p11, p119, p123, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None]
++812: i137 = int_and(i131, 8)
++819: i138 = int_is_true(i137)
+guard_false(i138, descr=<Guard0x10167f9f0>) [i1, i0, p2, i131, p7, p9, p11, p119, p123, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None]
++829: i140 = int_rshift(i131, 4)
++833: i142 = strgetitem(p39, 166)
++841: i144 = int_and(i142, 7)
++848: i146 = int_eq(i144, 7)
+guard_false(i146, descr=<Guard0x10167f910>) [i1, i0, i140, p2, i142, p7, p9, p11, p119, p123, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None]
++858: i148 = int_and(i142, 8)
++865: i149 = int_is_true(i148)
+guard_false(i149, descr=<Guard0x10167f750>) [i1, i0, i140, p2, i144, i142, p7, p9, p11, p119, p123, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None]
++875: i151 = int_rshift(i142, 4)
++879: guard_value(i144, 3, descr=<Guard0x10167f6e0>) [i1, i0, p2, i140, i151, i144, p7, p9, p11, p119, p123, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None]
++889: guard_value(i151, 4, descr=<Guard0x10167f670>) [i1, i0, p2, i140, i151, p3, p7, p9, p11, p119, p123, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, None, None, None, None, None, None]
++899: guard_nonnull_class(p123, 4297397368, descr=<Guard0x10167f600>) [i1, i0, p2, i140, p123, p7, p9, p11, p119, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None]
+debug_merge_point(0, 0, '167 GET_LIST')
++918: i156 = strgetitem(p39, 167)
++926: guard_value(i156, 65, descr=<Guard0x10167f520>) [i156, i1, i0, p2, p7, p9, p11, p119, p123, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None]
++936: i159 = strgetitem(p39, 168)
++944: i161 = int_and(i159, 7)
++951: i163 = int_eq(i161, 7)
+guard_false(i163, descr=<Guard0x10167f440>) [i1, i0, p2, i159, p7, p9, p11, p119, p123, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None]
++961: i165 = int_and(i159, 8)
++968: i166 = int_is_true(i165)
+guard_false(i166, descr=<Guard0x10167f280>) [i1, i0, p2, i161, i159, p7, p9, p11, p119, p123, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None]
++978: i168 = int_rshift(i159, 4)
++982: i170 = strgetitem(p39, 169)
++990: i172 = int_and(i170, 7)
++997: i174 = int_eq(i172, 7)
+guard_false(i174, descr=<Guard0x10167f1a0>) [i1, i0, p2, i170, p7, p9, p11, p119, p123, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i161, i168, None, None, None, None, None, None]
++1007: i176 = int_and(i170, 8)
++1014: i177 = int_is_true(i176)
+guard_false(i177, descr=<Guard0x10167efe0>) [i1, i0, p2, i172, i170, p7, p9, p11, p119, p123, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i161, i168, None, None, None, None, None, None]
++1024: i179 = int_rshift(i170, 4)
++1028: i181 = strgetitem(p39, 170)
++1036: i183 = int_and(i181, 7)
++1047: i185 = int_eq(i183, 7)
+guard_false(i185, descr=<Guard0x10167ef00>) [i1, i0, p2, i181, p7, p9, p11, p119, p123, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i172, i179, i161, i168, None, None, None, None, None, None]
++1057: i187 = int_and(i181, 8)
++1068: i188 = int_is_true(i187)
+guard_false(i188, descr=<Guard0x10167ed40>) [i1, i0, p2, i183, i181, p7, p9, p11, p119, p123, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i172, i179, i161, i168, None, None, None, None, None, None]
++1078: i190 = int_rshift(i181, 4)
++1089: i192 = int_eq(i161, 3)
+guard_true(i192, descr=<Guard0x10167ecd0>) [i1, i0, p2, i168, p7, p9, p11, p119, p123, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i190, i183, i172, i179, None, None, None, None, None, None, None, None]
++1099: guard_value(i168, 4, descr=<Guard0x10167ec60>) [i1, i0, p2, i168, p3, p7, p9, p11, p119, p123, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, i190, i183, i172, i179, None, None, None, None, None, None, None, None]
++1109: p194 = getfield_gc_pure(p123, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 8>)
++1113: i196 = int_eq(i172, 3)
+guard_true(i196, descr=<Guard0x10167ebf0>) [i1, i0, p123, p2, i179, p194, p7, p9, p11, p119, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i190, i183, None, None, None, None, None, None, None, None, None, None]
++1123: guard_value(i179, 5, descr=<Guard0x10167eb80>) [i1, i0, p123, p2, i179, p194, p3, p7, p9, p11, p119, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, i190, i183, None, None, None, None, None, None, None, None, None, None]
++1133: p198 = getfield_gc_pure(p123, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 16>)
++1137: i200 = int_eq(i183, 3)
+guard_true(i200, descr=<Guard0x10167eb10>) [i1, i0, p2, i190, p198, p7, p9, p11, p119, p123, p194, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None]
++1147: guard_value(i190, 6, descr=<Guard0x10167eaa0>) [i1, i0, p2, i190, p198, p3, p7, p9, p11, p119, p123, p194, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, None, None, None, None, None, None, None, None, None, None, None, None]
+debug_merge_point(0, 0, '171 IS_LT')
++1157: i203 = strgetitem(p39, 171)
++1165: guard_value(i203, 39, descr=<Guard0x10167ea30>) [i203, i1, i0, p2, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None]
++1175: i206 = strgetitem(p39, 172)
++1183: i208 = int_and(i206, 7)
++1190: i210 = int_eq(i208, 7)
+guard_false(i210, descr=<Guard0x10167e950>) [i206, i1, i0, p2, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None]
++1200: i212 = int_and(i206, 8)
++1207: i213 = int_is_true(i212)
+guard_false(i213, descr=<Guard0x10167e8e0>) [i1, i0, p2, i206, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None]
++1217: i215 = int_rshift(i206, 4)
++1221: i217 = strgetitem(p39, 173)
++1229: i219 = int_and(i217, 7)
++1236: i221 = int_eq(i219, 7)
+guard_false(i221, descr=<Guard0x10167e800>) [i1, i0, i215, p2, i217, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None]
++1246: i223 = int_and(i217, 8)
++1253: i224 = int_is_true(i223)
+guard_false(i224, descr=<Guard0x10167e640>) [i1, i0, i215, p2, i219, i217, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None]
++1263: i226 = int_rshift(i217, 4)
++1267: i228 = strgetitem(p39, 174)
++1275: i230 = int_and(i228, 7)
++1286: i232 = int_eq(i230, 7)
+guard_false(i232, descr=<Guard0x10167e560>) [i1, i0, i215, p2, i228, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i226, i219, None, None, None, None, None, None, None, None, None, None, None, None]
++1296: i234 = int_and(i228, 8)
++1314: i235 = int_is_true(i234)
+guard_false(i235, descr=<Guard0x10167e3a0>) [i1, i0, i215, p2, i230, i228, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i226, i219, None, None, None, None, None, None, None, None, None, None, None, None]
++1324: i237 = int_rshift(i228, 4)
++1335: guard_value(i219, 3, descr=<Guard0x10167e330>) [i1, i0, p2, i215, i226, i219, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i230, i237, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1345: guard_value(i226, 5, descr=<Guard0x10167e2c0>) [i1, i0, p2, i215, i226, p3, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, i230, i237, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1355: guard_value(i230, 3, descr=<Guard0x10167e250>) [i1, i0, p2, i215, p194, i237, i230, p7, p9, p11, p119, p123, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1365: guard_value(i237, 3, descr=<Guard0x10167e1e0>) [i1, i0, p2, i215, p194, i237, p3, p7, p9, p11, p119, p123, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1375: guard_class(p194, 4297397456, descr=<Guard0x10166b750>) [i1, i0, p2, i215, p194, p119, p7, p9, p11, p123, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1388: i243 = getfield_gc(p194, descr=<FieldS pyrlang.interpreter.datatypes.number.W_IntObject.inst_intval 8>)
++1392: i244 = getfield_gc(p119, descr=<FieldS pyrlang.interpreter.datatypes.number.W_IntObject.inst_intval 8>)
++1396: i245 = int_lt(i243, i244)
+guard_true(i245, descr=<Guard0x10167e170>) [i1, i0, p2, i215, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
+debug_merge_point(0, 0, '175 TEST_HEAP')
++1405: i247 = strgetitem(p39, 175)
++1413: guard_value(i247, 16, descr=<Guard0x10167e100>) [i247, i1, i0, p2, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1423: i250 = strgetitem(p39, 176)
++1431: i252 = int_and(i250, 7)
++1438: i254 = int_eq(i252, 7)
+guard_false(i254, descr=<Guard0x10167e020>) [i1, i0, p2, i250, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1448: i256 = int_and(i250, 8)
++1455: i257 = int_is_true(i256)
+guard_false(i257, descr=<Guard0x10167dde0>) [i1, i0, p2, i252, i250, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1465: i259 = int_rshift(i250, 4)
++1465: i261 = strgetitem(p39, 177)
++1473: i263 = int_and(i261, 7)
++1480: i265 = int_eq(i263, 7)
+guard_false(i265, descr=<Guard0x10167dd00>) [i1, i0, p2, i261, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1490: i267 = int_and(i261, 8)
++1497: i268 = int_is_true(i267)
+guard_false(i268, descr=<Guard0x10167db40>) [i1, i0, p2, i263, i261, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1507: i270 = int_rshift(i261, 4)
+debug_merge_point(0, 0, '178 PUT_LIST')
++1507: i272 = strgetitem(p39, 178)
++1515: guard_value(i272, 69, descr=<Guard0x10167dad0>) [i272, i1, i0, p2, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1525: i275 = strgetitem(p39, 179)
++1533: i277 = int_and(i275, 7)
++1540: i279 = int_eq(i277, 7)
+guard_false(i279, descr=<Guard0x10167d9f0>) [i1, i0, p2, i275, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1550: i281 = int_and(i275, 8)
++1557: i282 = int_is_true(i281)
+guard_false(i282, descr=<Guard0x10167d830>) [i1, i0, p2, i277, i275, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1567: i284 = int_rshift(i275, 4)
++1571: i286 = strgetitem(p39, 180)
++1579: i288 = int_and(i286, 7)
++1590: i290 = int_eq(i288, 7)
+guard_false(i290, descr=<Guard0x10167d750>) [i1, i0, p2, i286, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i277, i284, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1600: i292 = int_and(i286, 8)
++1618: i293 = int_is_true(i292)
+guard_false(i293, descr=<Guard0x10167d590>) [i1, i0, p2, i288, i286, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i277, i284, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1628: i295 = int_rshift(i286, 4)
++1639: i297 = strgetitem(p39, 181)
++1654: i299 = int_and(i297, 7)
++1665: i301 = int_eq(i299, 7)
+guard_false(i301, descr=<Guard0x10167d4b0>) [i1, i0, p2, i297, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i295, i288, i277, i284, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1675: i303 = int_and(i297, 8)
++1693: i304 = int_is_true(i303)
+guard_false(i304, descr=<Guard0x10167d2f0>) [i1, i0, p2, i299, i297, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i295, i288, i277, i284, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1703: i306 = int_rshift(i297, 4)
++1714: i308 = int_eq(i277, 3)
+guard_true(i308, descr=<Guard0x10167d280>) [i1, i0, p2, i284, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i299, i306, i295, i288, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1724: guard_value(i284, 3, descr=<Guard0x10167d210>) [i1, i0, p2, i284, p3, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, i299, i306, i295, i288, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1734: i311 = int_eq(i288, 3)
+guard_true(i311, descr=<Guard0x10167d1a0>) [i1, i0, p2, p119, i295, p7, p9, p11, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i299, i306, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1744: guard_value(i295, 6, descr=<Guard0x10167d130>) [i1, i0, p2, p119, i295, p3, p7, p9, p11, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, i299, i306, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1754: guard_class(p119, 4297397456, descr=<Guard0x10166b7c0>) [i1, i0, p2, p198, p119, p7, p9, p11, p123, p194, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i299, i306, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1767: i315 = int_eq(i299, 3)
+guard_true(i315, descr=<Guard0x10167d050>) [i1, i0, p2, i306, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1777: guard_value(i306, 0, descr=<Guard0x10167cfe0>) [i1, i0, p2, i306, p3, p7, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
+debug_merge_point(0, 0, '182 PUT_LIST')
++1787: i318 = strgetitem(p39, 182)
++1795: guard_value(i318, 69, descr=<Guard0x10167cf70>) [i318, i1, i0, p2, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1805: i321 = strgetitem(p39, 183)
++1813: i323 = int_and(i321, 7)
++1820: i325 = int_eq(i323, 7)
+guard_false(i325, descr=<Guard0x10167ce90>) [i1, i0, p2, i321, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1830: i327 = int_and(i321, 8)
++1837: i328 = int_is_true(i327)
+guard_false(i328, descr=<Guard0x10167ccd0>) [i1, i0, p2, i323, i321, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1847: i330 = int_rshift(i321, 4)
++1851: i332 = strgetitem(p39, 184)
++1859: i334 = int_and(i332, 7)
++1866: i336 = int_eq(i334, 7)
+guard_false(i336, descr=<Guard0x10167cbf0>) [i1, i0, p2, i332, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i323, i330, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1876: i338 = int_and(i332, 8)
++1883: i339 = int_is_true(i338)
+guard_false(i339, descr=<Guard0x10167ca30>) [i1, i0, p2, i334, i332, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i323, i330, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1893: i341 = int_rshift(i332, 4)
++1897: i343 = strgetitem(p39, 185)
++1905: i345 = int_and(i343, 7)
++1912: i347 = int_eq(i345, 7)
+guard_false(i347, descr=<Guard0x10167c950>) [i1, i0, p2, i343, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i334, i341, i323, i330, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1922: i349 = int_and(i343, 8)
++1929: i350 = int_is_true(i349)
+guard_false(i350, descr=<Guard0x10167c790>) [i1, i0, p2, i345, i343, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i334, i341, i323, i330, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1939: i352 = int_rshift(i343, 4)
++1943: i354 = int_eq(i323, 3)
+guard_true(i354, descr=<Guard0x101624020>) [i1, i0, p2, i330, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i345, i352, i334, i341, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1953: guard_value(i330, 5, descr=<Guard0x10167c720>) [i1, i0, p2, i330, p3, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, i345, i352, i334, i341, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1963: i357 = int_eq(i334, 3)
+guard_true(i357, descr=<Guard0x10167c6b0>) [i1, i0, p2, p194, i341, p9, p11, p119, p123, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i345, i352, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1973: guard_value(i341, 1, descr=<Guard0x10167c640>) [i1, i0, p2, p194, i341, p3, p9, p11, p119, p123, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, i345, i352, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1983: i360 = int_eq(i345, 3)
+guard_true(i360, descr=<Guard0x10167c5d0>) [i1, i0, p2, i352, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++1993: guard_value(i352, 1, descr=<Guard0x10167c560>) [i1, i0, p2, i352, p3, p9, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
+debug_merge_point(0, 0, '186 MOVE')
++2003: i363 = strgetitem(p39, 186)
++2011: guard_value(i363, 64, descr=<Guard0x10167c4f0>) [i363, i1, i0, p2, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++2021: i366 = strgetitem(p39, 187)
++2029: i368 = int_and(i366, 7)
++2036: i370 = int_eq(i368, 7)
+guard_false(i370, descr=<Guard0x10167c410>) [i1, i0, p2, i366, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++2046: i372 = int_and(i366, 8)
++2053: i373 = int_is_true(i372)
+guard_false(i373, descr=<Guard0x10167c250>) [i1, i0, p2, i368, i366, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++2063: i375 = int_rshift(i366, 4)
++2067: i377 = strgetitem(p39, 188)
++2075: i379 = int_and(i377, 7)
++2082: i381 = int_eq(i379, 7)
+guard_false(i381, descr=<Guard0x10167c170>) [i1, i0, p2, i377, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i368, i375, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++2092: i383 = int_and(i377, 8)
++2099: i384 = int_is_true(i383)
+guard_false(i384, descr=<Guard0x10166bf30>) [i1, i0, p2, i379, i377, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i368, i375, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++2109: i386 = int_rshift(i377, 4)
++2113: guard_value(i368, 2, descr=<Guard0x10166bec0>) [i1, i0, p2, i375, i368, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i386, i379, None, None, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++2123: i388 = int_is_zero(i375)
+guard_false(i388, descr=<Guard0x10166be50>) [i1, i0, p2, i375, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i386, i379, None, None, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++2133: i390 = int_sub(i375, 1)
++2137: i392 = int_lt(i390, 0)
+guard_false(i392, descr=<Guard0x10166bde0>) [i1, i0, p2, i390, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i386, i379, None, None, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++2147: p394 = getarrayitem_gc_pure(ConstPtr(ptr393), i390, descr=<ArrayP 8>)
++2161: i396 = int_eq(i379, 3)
+guard_true(i396, descr=<Guard0x10166bd70>) [i1, i0, p2, i386, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p394, None, None, None, None, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++2171: guard_value(i386, 2, descr=<Guard0x10166bd00>) [i1, i0, p2, i386, p3, p11, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p394, None, None, None, None, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
+debug_merge_point(0, 0, '189 CALL_ONLY')
++2181: i399 = strgetitem(p39, 189)
++2189: guard_value(i399, 6, descr=<Guard0x10166bc90>) [i399, i1, i0, p2, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p394, None, None, None, None, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++2199: i402 = strgetitem(p39, 190)
++2207: i404 = int_and(i402, 7)
++2214: i406 = int_eq(i404, 7)
+guard_false(i406, descr=<Guard0x10166bbb0>) [i402, i1, i0, p2, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p394, None, None, None, None, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++2224: i408 = int_and(i402, 8)
++2231: i409 = int_is_true(i408)
+guard_false(i409, descr=<Guard0x10166bb40>) [i1, i0, p2, i402, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p394, None, None, None, None, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++2241: i411 = int_rshift(i402, 4)
++2241: i413 = strgetitem(p39, 191)
++2249: i415 = int_and(i413, 7)
++2256: i417 = int_eq(i415, 7)
+guard_false(i417, descr=<Guard0x10166ba60>) [i413, i1, i0, p2, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p394, None, None, None, None, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++2266: i419 = int_and(i413, 8)
++2273: i420 = int_is_true(i419)
+guard_false(i420, descr=<Guard0x10166b9f0>) [i1, i0, p2, i413, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p394, None, None, None, None, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++2283: i422 = int_rshift(i413, 4)
++2287: i424 = int_sub(i422, 1)
++2291: i426 = int_lt(i424, 0)
+guard_false(i426, descr=<Guard0x10166b980>) [i1, i0, i424, p2, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p394, None, None, None, None, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++2301: p428 = getfield_gc(ConstPtr(ptr427), descr=<FieldP list.items 16>)
++2314: i429 = getarrayitem_gc(p428, i424, descr=<ArrayS 8>)
++2319: i431 = int_sub(i0, 1)
++2330: guard_true(i1, descr=<Guard0x10166b910>) [i431, i429, p2, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p394, None, None, None, None, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
++2346: guard_value(i429, 156, descr=<Guard0x10166b8a0>) [i431, i429, p78, p3, p2, p119, p123, p194, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, p394, None, None, None, None, p9, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
++2359: p433 = same_as(p198)
++2359: p434 = same_as(p194)
++2359: p435 = same_as(p394)
++2362: p436 = same_as(p78)
++2365: label(i431, p2, p3, p78, p119, p198, p194, p9, p394, p123, p21, p23, p25, p27, p29, p31, p33, p35, p37, i140, i215, i244, p428, i424, p436, p435, p39, descr=TargetToken(4318167712))
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
+debug_merge_point(0, 0, '160 GET_LIST')
+debug_merge_point(0, 0, '164 IS_NONEMPTY_LIST')
++2427: guard_nonnull_class(p198, 4297397368, descr=<Guard0x10168ce20>) [i431, p2, i140, p198, p119, p194, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p394, p9]
+debug_merge_point(0, 0, '167 GET_LIST')
++2453: p437 = getfield_gc_pure(p198, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 8>)
++2457: p438 = getfield_gc_pure(p198, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 16>)
+debug_merge_point(0, 0, '171 IS_LT')
++2461: guard_class(p437, 4297397456, descr=<Guard0x10168cf70>) [i431, p2, i215, p437, p119, p198, p438, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p194, p394, p9]
++2473: i439 = getfield_gc(p437, descr=<FieldS pyrlang.interpreter.datatypes.number.W_IntObject.inst_intval 8>)
++2477: i440 = int_lt(i439, i244)
+guard_true(i440, descr=<Guard0x10168cf00>) [i431, p2, i215, p119, p198, p437, p438, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p194, p394, p9]
+debug_merge_point(0, 0, '175 TEST_HEAP')
+debug_merge_point(0, 0, '178 PUT_LIST')
+debug_merge_point(0, 0, '182 PUT_LIST')
+debug_merge_point(0, 0, '186 MOVE')
+debug_merge_point(0, 0, '189 CALL_ONLY')
++2490: i441 = getarrayitem_gc(p428, i424, descr=<ArrayS 8>)
++2495: i442 = int_sub(i431, 1)
++2499: guard_value(i441, 156, descr=<Guard0x10168ce90>) [i442, i441, p436, p3, p2, p119, p198, p437, p438, p21, p23, p25, p27, p29, p31, p33, p35, p37, p435, p194, None, p9]
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
+p444 = new_with_vtable(4297397368)
++2605: i445 = strlen(p39)
++2605: setfield_gc(p444, p194, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 8>)
++2609: setfield_gc(p444, p9, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 16>)
++2613: jump(i442, p2, p3, p436, p119, p438, p437, p444, p435, p198, p21, p23, p25, p27, p29, p31, p33, p35, p37, i140, i215, i244, p428, i424, p436, p435, p39, descr=TargetToken(4318167712))
++2677: --end of the loop--
+[2756121cb7e] jit-log-opt-loop}
+[27561e58a38] {jit-log-opt-loop
+# Loop 1 (79 IS_NONEMPTY_LIST) : loop with 187 ops
+[i0, i1, p2, p3, p4]
++129: p5 = getfield_gc(p3, descr=<FieldP pyrlang.interpreter.register.X_Register.inst_regs 16>)
++140: p7 = getarrayitem_gc(p5, 0, descr=<ArrayP 8>)
++144: p9 = getarrayitem_gc(p5, 1, descr=<ArrayP 8>)
++148: p11 = getarrayitem_gc(p5, 2, descr=<ArrayP 8>)
++152: p13 = getarrayitem_gc(p5, 3, descr=<ArrayP 8>)
++156: p15 = getarrayitem_gc(p5, 4, descr=<ArrayP 8>)
++160: p17 = getarrayitem_gc(p5, 5, descr=<ArrayP 8>)
++164: p19 = getarrayitem_gc(p5, 6, descr=<ArrayP 8>)
++168: p21 = getarrayitem_gc(p5, 7, descr=<ArrayP 8>)
++172: p23 = getarrayitem_gc(p5, 8, descr=<ArrayP 8>)
++176: p25 = getarrayitem_gc(p5, 9, descr=<ArrayP 8>)
++180: p27 = getarrayitem_gc(p5, 10, descr=<ArrayP 8>)
++184: p29 = getarrayitem_gc(p5, 11, descr=<ArrayP 8>)
++195: p31 = getarrayitem_gc(p5, 12, descr=<ArrayP 8>)
++206: p33 = getarrayitem_gc(p5, 13, descr=<ArrayP 8>)
++217: p35 = getarrayitem_gc(p5, 14, descr=<ArrayP 8>)
++231: p37 = getarrayitem_gc(p5, 15, descr=<ArrayP 8>)
++245: label(i0, i1, p2, p3, p4, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, descr=TargetToken(4318167872))
+debug_merge_point(0, 0, '79 IS_NONEMPTY_LIST')
++321: p39 = getfield_gc(ConstPtr(ptr38), descr=<FieldP pyrlang.rpybeam.beam_code.CodeParser.inst_code 32>)
++334: i41 = strgetitem(p39, 79)
++339: guard_value(i41, 56, descr=<Guard0x10168cfe0>) [i41, i1, i0, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++349: i44 = strgetitem(p39, 80)
++354: i46 = int_and(i44, 7)
++361: i48 = int_eq(i46, 7)
+guard_false(i48, descr=<Guard0x101762f00>) [i44, i1, i0, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++371: i50 = int_and(i44, 8)
++378: i51 = int_is_true(i50)
+guard_false(i51, descr=<Guard0x101762e90>) [i1, i0, p2, i44, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++388: i53 = int_rshift(i44, 4)
++392: i55 = strgetitem(p39, 81)
++397: i57 = int_and(i55, 7)
++404: i59 = int_eq(i57, 7)
+guard_false(i59, descr=<Guard0x101762e20>) [i1, i0, i53, p2, i55, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++414: i61 = int_and(i55, 8)
++421: i62 = int_is_true(i61)
+guard_false(i62, descr=<Guard0x101762db0>) [i1, i0, i53, p2, i57, i55, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++431: i64 = int_rshift(i55, 4)
++435: guard_value(i57, 3, descr=<Guard0x101762d40>) [i1, i0, p2, i53, i64, i57, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++445: p66 = getfield_gc(p2, descr=<FieldP pyrlang.interpreter.interp.Process.inst_x_reg 40>)
++457: i67 = ptr_eq(p66, p3)
+guard_true(i67, descr=<Guard0x101762cd0>) [i1, i0, p2, i53, i64, p66, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++466: guard_value(i64, 0, descr=<Guard0x101762c60>) [i1, i0, p2, i53, i64, p3, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37]
++476: guard_nonnull_class(p7, 4297397368, descr=<Guard0x101762bf0>) [i1, i0, p2, i53, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++494: p70 = getfield_gc(p2, descr=<FieldP pyrlang.interpreter.interp.Process.inst_y_reg 48>)
+debug_merge_point(0, 0, '82 TEST_HEAP')
++499: i72 = strgetitem(p39, 82)
++504: guard_value(i72, 16, descr=<Guard0x101762b80>) [i72, i1, i0, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++514: i75 = strgetitem(p39, 83)
++519: i77 = int_and(i75, 7)
++526: i79 = int_eq(i77, 7)
+guard_false(i79, descr=<Guard0x101762b10>) [i1, i0, p2, i75, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++536: i81 = int_and(i75, 8)
++543: i82 = int_is_true(i81)
+guard_false(i82, descr=<Guard0x101762aa0>) [i1, i0, p2, i77, i75, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++553: i84 = int_rshift(i75, 4)
++553: i86 = strgetitem(p39, 84)
++558: i88 = int_and(i86, 7)
++565: i90 = int_eq(i88, 7)
+guard_false(i90, descr=<Guard0x101762a30>) [i1, i0, p2, i86, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++575: i92 = int_and(i86, 8)
++582: i93 = int_is_true(i92)
+guard_false(i93, descr=<Guard0x1017629c0>) [i1, i0, p2, i88, i86, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++592: i95 = int_rshift(i86, 4)
+debug_merge_point(0, 0, '85 GET_LIST')
++592: i97 = strgetitem(p39, 85)
++597: guard_value(i97, 65, descr=<Guard0x101762950>) [i97, i1, i0, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++607: i100 = strgetitem(p39, 86)
++612: i102 = int_and(i100, 7)
++619: i104 = int_eq(i102, 7)
+guard_false(i104, descr=<Guard0x1017628e0>) [i1, i0, p2, i100, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++629: i106 = int_and(i100, 8)
++636: i107 = int_is_true(i106)
+guard_false(i107, descr=<Guard0x101762870>) [i1, i0, p2, i102, i100, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3]
++646: i109 = int_rshift(i100, 4)
++650: i111 = strgetitem(p39, 87)
++655: i113 = int_and(i111, 7)
++662: i115 = int_eq(i113, 7)
+guard_false(i115, descr=<Guard0x101762800>) [i1, i0, p2, i111, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i102, i109]
++672: i117 = int_and(i111, 8)
++679: i118 = int_is_true(i117)
+guard_false(i118, descr=<Guard0x101762790>) [i1, i0, p2, i113, i111, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i102, i109]
++689: i120 = int_rshift(i111, 4)
++693: i122 = strgetitem(p39, 88)
++698: i124 = int_and(i122, 7)
++705: i126 = int_eq(i124, 7)
+guard_false(i126, descr=<Guard0x101762720>) [i1, i0, p2, i122, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i120, i113, i102, i109]
++715: i128 = int_and(i122, 8)
++726: i129 = int_is_true(i128)
+guard_false(i129, descr=<Guard0x1017626b0>) [i1, i0, p2, i124, i122, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i120, i113, i102, i109]
++736: i131 = int_rshift(i122, 4)
++747: i133 = int_eq(i102, 3)
+guard_true(i133, descr=<Guard0x101762640>) [i1, i0, p2, i109, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i124, i131, i120, i113, None, None]
++757: guard_value(i109, 0, descr=<Guard0x1017625d0>) [i1, i0, p2, i109, p3, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, i124, i131, i120, i113, None, None]
++767: p136 = getfield_gc_pure(p7, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 8>)
++771: i138 = int_eq(i113, 3)
+guard_true(i138, descr=<Guard0x101762560>) [i1, i0, p7, p2, i120, p136, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i124, i131, None, None, None, None]
++781: guard_value(i120, 2, descr=<Guard0x1017624f0>) [i1, i0, p7, p2, i120, p136, p3, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, i124, i131, None, None, None, None]
++791: p140 = getfield_gc_pure(p7, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 16>)
++795: i142 = int_eq(i124, 3)
+guard_true(i142, descr=<Guard0x101762480>) [i1, i0, p2, i131, p140, p7, p9, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None]
++805: guard_value(i131, 0, descr=<Guard0x101762410>) [i1, i0, p2, i131, p140, p3, p7, p9, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, None, None, None, None, None, None]
+debug_merge_point(0, 0, '89 PUT_LIST')
++815: i145 = strgetitem(p39, 89)
++820: guard_value(i145, 69, descr=<Guard0x1017623a0>) [i145, i1, i0, p2, p140, p9, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None]
++830: i148 = strgetitem(p39, 90)
++835: i150 = int_and(i148, 7)
++842: i152 = int_eq(i150, 7)
+guard_false(i152, descr=<Guard0x101762330>) [i1, i0, p2, i148, p140, p9, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None]
++852: i154 = int_and(i148, 8)
++859: i155 = int_is_true(i154)
+guard_false(i155, descr=<Guard0x1017622c0>) [i1, i0, p2, i150, i148, p140, p9, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None]
++869: i157 = int_rshift(i148, 4)
++873: i159 = strgetitem(p39, 91)
++878: i161 = int_and(i159, 7)
++885: i163 = int_eq(i161, 7)
+guard_false(i163, descr=<Guard0x101762250>) [i1, i0, p2, i159, p140, p9, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i150, i157, None, None, None, None, None, None]
++895: i165 = int_and(i159, 8)
++902: i166 = int_is_true(i165)
+guard_false(i166, descr=<Guard0x1017621e0>) [i1, i0, p2, i161, i159, p140, p9, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i150, i157, None, None, None, None, None, None]
++912: i168 = int_rshift(i159, 4)
++916: i170 = strgetitem(p39, 92)
++921: i172 = int_and(i170, 7)
++932: i174 = int_eq(i172, 7)
+guard_false(i174, descr=<Guard0x101762170>) [i1, i0, p2, i170, p140, p9, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i168, i161, i150, i157, None, None, None, None, None, None]
++942: i176 = int_and(i170, 8)
++953: i177 = int_is_true(i176)
+guard_false(i177, descr=<Guard0x101762100>) [i1, i0, p2, i172, i170, p140, p9, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i168, i161, i150, i157, None, None, None, None, None, None]
++963: i179 = int_rshift(i170, 4)
++974: i181 = int_eq(i150, 3)
+guard_true(i181, descr=<Guard0x101762090>) [i1, i0, p2, i157, p140, p9, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i172, i179, i168, i161, None, None, None, None, None, None, None, None]
++984: guard_value(i157, 2, descr=<Guard0x101762020>) [i1, i0, p2, i157, p3, p140, p9, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, i172, i179, i168, i161, None, None, None, None, None, None, None, None]
++994: i184 = int_eq(i161, 3)
+guard_true(i184, descr=<Guard0x101757f30>) [i1, i0, p2, p136, i168, p140, p9, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i172, i179, None, None, None, None, None, None, None, None, None, None]
++1004: guard_value(i168, 1, descr=<Guard0x101757ec0>) [i1, i0, p2, p136, i168, p3, p140, p9, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, i172, i179, None, None, None, None, None, None, None, None, None, None]
++1014: guard_nonnull_class(p136, 4297397456, descr=<Guard0x101757e50>) [i1, i0, p2, p9, p136, p140, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, i172, i179, None, None, None, None, None, None, None, None, None, None]
++1034: i188 = int_eq(i172, 3)
+guard_true(i188, descr=<Guard0x101757de0>) [i1, i0, p2, i179, p140, p9, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, None, None, None, None, None, None, None, None, None, None, None, None]
++1044: guard_value(i179, 1, descr=<Guard0x101757d70>) [i1, i0, p2, i179, p3, p140, p9, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, None, None, None, None, None, None, None, None, None, None, None, None]
+debug_merge_point(0, 0, '93 CALL_ONLY')
++1054: i191 = strgetitem(p39, 93)
++1059: guard_value(i191, 6, descr=<Guard0x101757d00>) [i191, i1, i0, p2, p140, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p9, None, None, None, None, None, None, None, None, None, None, None, None]
++1069: i194 = strgetitem(p39, 94)
++1074: i196 = int_and(i194, 7)
++1081: i198 = int_eq(i196, 7)
+guard_false(i198, descr=<Guard0x101757c90>) [i194, i1, i0, p2, p140, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p9, None, None, None, None, None, None, None, None, None, None, None, None]
++1091: i200 = int_and(i194, 8)
++1098: i201 = int_is_true(i200)
+guard_false(i201, descr=<Guard0x101757c20>) [i1, i0, p2, i194, p140, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p9, None, None, None, None, None, None, None, None, None, None, None, None]
++1108: i203 = int_rshift(i194, 4)
++1108: i205 = strgetitem(p39, 95)
++1113: i207 = int_and(i205, 7)
++1120: i209 = int_eq(i207, 7)
+guard_false(i209, descr=<Guard0x101757bb0>) [i205, i1, i0, p2, p140, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p9, None, None, None, None, None, None, None, None, None, None, None, None]
++1130: i211 = int_and(i205, 8)
++1137: i212 = int_is_true(i211)
+guard_false(i212, descr=<Guard0x101757b40>) [i1, i0, p2, i205, p140, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p9, None, None, None, None, None, None, None, None, None, None, None, None]
++1147: i214 = int_rshift(i205, 4)
++1151: i216 = int_sub(i214, 1)
++1155: i218 = int_lt(i216, 0)
+guard_false(i218, descr=<Guard0x101757ad0>) [i1, i0, i216, p2, p140, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p9, None, None, None, None, None, None, None, None, None, None, None, None]
++1165: p220 = getfield_gc(ConstPtr(ptr219), descr=<FieldP list.items 16>)
++1178: i221 = getarrayitem_gc(p220, i216, descr=<ArrayS 8>)
++1183: i223 = int_sub(i0, 1)
++1194: guard_true(i1, descr=<Guard0x101757a60>) [i223, i221, p2, p140, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p9, None, None, None, None, None, None, None, None, None, None, None, None]
++1210: guard_value(i221, 79, descr=<Guard0x1017579f0>) [i223, i221, p70, p3, p2, p140, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p9, None, None, None, None, None, None, None, None, None, None, None, None]
+debug_merge_point(0, 0, '79 IS_NONEMPTY_LIST')
++1220: p225 = same_as(p70)
++1223: label(i223, p2, p3, p70, p140, p136, p9, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, i53, p220, i216, p225, p39, descr=TargetToken(4318167952))
+debug_merge_point(0, 0, '79 IS_NONEMPTY_LIST')
++1271: guard_nonnull_class(p140, 4297397368, descr=<Guard0x101757980>) [i223, p2, i53, p140, p136, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p9]
+debug_merge_point(0, 0, '82 TEST_HEAP')
+debug_merge_point(0, 0, '85 GET_LIST')
++1289: p226 = getfield_gc_pure(p140, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 8>)
++1293: p227 = getfield_gc_pure(p140, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 16>)
+debug_merge_point(0, 0, '89 PUT_LIST')
++1297: guard_nonnull_class(p226, 4297397456, descr=<Guard0x101757910>) [i223, p2, p226, p227, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p3, p136, p9]
+debug_merge_point(0, 0, '93 CALL_ONLY')
++1315: i228 = getarrayitem_gc(p220, i216, descr=<ArrayS 8>)
++1320: i229 = int_sub(i223, 1)
++1324: guard_value(i228, 79, descr=<Guard0x1017578a0>) [i229, i228, p225, p3, p2, p227, p226, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p136, p9]
+debug_merge_point(0, 0, '79 IS_NONEMPTY_LIST')
+p231 = new_with_vtable(4297397368)
++1420: i232 = strlen(p39)
++1420: setfield_gc(p231, p136, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 8>)
++1424: setfield_gc(p231, p9, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 16>)
++1428: jump(i229, p2, p3, p225, p227, p226, p231, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, i53, p220, i216, p225, p39, descr=TargetToken(4318167952))
++1463: --end of the loop--
+[27561f54f73] jit-log-opt-loop}
+[27564d0bb63] {jit-log-opt-bridge
+# bridge out of Guard 0x10167e170 with 300 ops
+[i0, i1, p2, i3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++59: i22 = int_sub(i3, 1)
++63: i24 = int_lt(i22, 0)
+guard_false(i24, descr=<Guard0x101763440>) [i0, i1, p2, i22, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++73: p26 = getfield_gc(ConstPtr(ptr25), descr=<FieldP list.items 16>)
++86: i27 = getarrayitem_gc(p26, i22, descr=<ArrayS 8>)
++91: p28 = getfield_gc(p2, descr=<FieldP pyrlang.interpreter.interp.Process.inst_x_reg 40>)
++102: p29 = getfield_gc(p2, descr=<FieldP pyrlang.interpreter.interp.Process.inst_y_reg 48>)
++106: guard_value(i27, 194, descr=<Guard0x1041a0bf0>) [i0, i1, i27, p29, p28, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
+debug_merge_point(0, 0, '194 TEST_HEAP')
++119: p32 = getfield_gc(ConstPtr(ptr31), descr=<FieldP pyrlang.rpybeam.beam_code.CodeParser.inst_code 32>)
++132: i33 = strgetitem(p32, 194)
++140: guard_value(i33, 16, descr=<Guard0x1041a0b80>) [i33, i0, i1, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++150: i36 = strgetitem(p32, 195)
++158: i38 = int_and(i36, 7)
++165: i40 = int_eq(i38, 7)
+guard_false(i40, descr=<Guard0x1041a0b10>) [i0, i1, p2, i36, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++175: i42 = int_and(i36, 8)
++182: i43 = int_is_true(i42)
+guard_false(i43, descr=<Guard0x1041a0aa0>) [i0, i1, p2, i38, i36, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++192: i45 = int_rshift(i36, 4)
++192: i47 = strgetitem(p32, 196)
++200: i49 = int_and(i47, 7)
++207: i51 = int_eq(i49, 7)
+guard_false(i51, descr=<Guard0x1041a0a30>) [i0, i1, p2, i47, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++217: i53 = int_and(i47, 8)
++224: i54 = int_is_true(i53)
+guard_false(i54, descr=<Guard0x1041a09c0>) [i0, i1, p2, i49, i47, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++234: i56 = int_rshift(i47, 4)
+debug_merge_point(0, 0, '197 PUT_LIST')
++234: i58 = strgetitem(p32, 197)
++242: guard_value(i58, 69, descr=<Guard0x1041a0950>) [i58, i0, i1, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++252: i61 = strgetitem(p32, 198)
++260: i63 = int_and(i61, 7)
++267: i65 = int_eq(i63, 7)
+guard_false(i65, descr=<Guard0x1041a08e0>) [i0, i1, p2, i61, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++277: i67 = int_and(i61, 8)
++284: i68 = int_is_true(i67)
+guard_false(i68, descr=<Guard0x1041a0870>) [i0, i1, p2, i63, i61, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++294: i70 = int_rshift(i61, 4)
++298: i72 = strgetitem(p32, 199)
++306: i74 = int_and(i72, 7)
++317: i76 = int_eq(i74, 7)
+guard_false(i76, descr=<Guard0x1041a0800>) [i0, i1, p2, i72, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i63, i70]
++327: i78 = int_and(i72, 8)
++345: i79 = int_is_true(i78)
+guard_false(i79, descr=<Guard0x1041a0790>) [i0, i1, p2, i74, i72, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i63, i70]
++355: i81 = int_rshift(i72, 4)
++366: i83 = strgetitem(p32, 200)
++374: i85 = int_and(i83, 7)
++385: i87 = int_eq(i85, 7)
+guard_false(i87, descr=<Guard0x1041a0720>) [i0, i1, p2, i83, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i74, i81, i63, i70]
++395: i89 = int_and(i83, 8)
++413: i90 = int_is_true(i89)
+guard_false(i90, descr=<Guard0x1041a06b0>) [i0, i1, p2, i85, i83, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i74, i81, i63, i70]
++423: i92 = int_rshift(i83, 4)
++434: i94 = int_eq(i63, 3)
+guard_true(i94, descr=<Guard0x1041a0640>) [i0, i1, p2, i70, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i92, i85, i74, i81, None, None]
++444: i96 = ptr_eq(p28, p20)
+guard_true(i96, descr=<Guard0x1041a05d0>) [i0, i1, p2, i70, p28, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i92, i85, i74, i81, None, None]
++457: guard_value(i70, 3, descr=<Guard0x1041a0560>) [i0, i1, p2, i70, p20, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, i92, i85, i74, i81, None, None]
++467: i99 = int_eq(i74, 3)
+guard_true(i99, descr=<Guard0x1041a04f0>) [i0, i1, p2, p7, i81, p4, p5, p6, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i92, i85, None, None, None, None]
++477: guard_value(i81, 1, descr=<Guard0x1041a0480>) [i0, i1, p2, p7, i81, p20, p4, p5, p6, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, i92, i85, None, None, None, None]
++487: guard_nonnull_class(p7, 4297397456, descr=<Guard0x1041a0410>) [i0, i1, p2, p5, p7, p4, p6, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i92, i85, None, None, None, None]
++506: i103 = int_eq(i85, 3)
+guard_true(i103, descr=<Guard0x1041a03a0>) [i0, i1, p2, i92, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, None, None]
++516: guard_value(i92, 1, descr=<Guard0x1041a0330>) [i0, i1, p2, i92, p20, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, None, None, None, None, None, None]
+debug_merge_point(0, 0, '201 MOVE')
++526: i106 = strgetitem(p32, 201)
++541: guard_value(i106, 64, descr=<Guard0x1041a02c0>) [i106, i0, i1, p2, p4, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p5, None, None, None, None, None, None]
++551: i109 = strgetitem(p32, 202)
++559: i111 = int_and(i109, 7)
++566: i113 = int_eq(i111, 7)
+guard_false(i113, descr=<Guard0x1041a0250>) [i0, i1, p2, i109, p4, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p5, None, None, None, None, None, None]
++576: i115 = int_and(i109, 8)
++583: i116 = int_is_true(i115)
+guard_false(i116, descr=<Guard0x1041a01e0>) [i0, i1, p2, i111, i109, p4, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p5, None, None, None, None, None, None]
++593: i118 = int_rshift(i109, 4)
++597: i120 = strgetitem(p32, 203)
++605: i122 = int_and(i120, 7)
++612: i124 = int_eq(i122, 7)
+guard_false(i124, descr=<Guard0x1041a0170>) [i0, i1, p2, i120, p4, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i111, i118, p5, None, None, None, None, None, None]
++622: i126 = int_and(i120, 8)
++629: i127 = int_is_true(i126)
+guard_false(i127, descr=<Guard0x1041a0100>) [i0, i1, p2, i122, i120, p4, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i111, i118, p5, None, None, None, None, None, None]
++639: i129 = int_rshift(i120, 4)
++643: guard_value(i111, 3, descr=<Guard0x1041a0090>) [i0, i1, p2, i118, i111, p4, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i129, i122, None, None, p5, None, None, None, None, None, None]
++653: guard_value(i118, 4, descr=<Guard0x1041a0020>) [i0, i1, p2, i118, p20, p4, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, i129, i122, None, None, p5, None, None, None, None, None, None]
++663: i133 = int_eq(i122, 3)
+guard_true(i133, descr=<Guard0x104195f30>) [i0, i1, p2, i129, p8, p4, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, p5, None, None, None, None, None, None]
++673: guard_value(i129, 0, descr=<Guard0x104195ec0>) [i0, i1, p2, i129, p8, p20, p4, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, None, None, None, None, p5, None, None, None, None, None, None]
+debug_merge_point(0, 0, '204 CALL_ONLY')
++683: i136 = strgetitem(p32, 204)
++691: guard_value(i136, 6, descr=<Guard0x104195e50>) [i136, i0, i1, p2, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, p5, None, None, None, None, None, None]
++701: i139 = strgetitem(p32, 205)
++709: i141 = int_and(i139, 7)
++716: i143 = int_eq(i141, 7)
+guard_false(i143, descr=<Guard0x104195de0>) [i139, i0, i1, p2, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, p5, None, None, None, None, None, None]
++726: i145 = int_and(i139, 8)
++733: i146 = int_is_true(i145)
+guard_false(i146, descr=<Guard0x104195d70>) [i0, i1, p2, i139, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, p5, None, None, None, None, None, None]
++743: i148 = int_rshift(i139, 4)
++743: i150 = strgetitem(p32, 206)
++751: i152 = int_and(i150, 7)
++758: i154 = int_eq(i152, 7)
+guard_false(i154, descr=<Guard0x104195d00>) [i150, i0, i1, p2, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, p5, None, None, None, None, None, None]
++768: i156 = int_and(i150, 8)
++775: i157 = int_is_true(i156)
+guard_false(i157, descr=<Guard0x104195c90>) [i0, i1, p2, i150, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, p5, None, None, None, None, None, None]
++785: i159 = int_rshift(i150, 4)
++789: i161 = int_sub(i159, 1)
++794: i163 = int_lt(i161, 0)
+guard_false(i163, descr=<Guard0x104195c20>) [i0, i1, i161, p2, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, p5, None, None, None, None, None, None]
++804: i164 = getarrayitem_gc(p26, i161, descr=<ArrayS 8>)
++816: i166 = int_sub(i1, 1)
++827: guard_true(i0, descr=<Guard0x104195bb0>) [i166, i164, p2, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, p5, None, None, None, None, None, None]
++843: guard_value(i164, 156, descr=<Guard0x104195b40>) [i166, i164, p29, p20, p2, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, None, None, None, None, p5, None, None, None, None, None, None]
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
++856: p168 = same_as(p29)
++859: label(i166, p2, p20, p29, p8, p7, p5, p6, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p32, p26, p168, i161, descr=TargetToken(4318169312))
++893: i169 = strgetitem(p32, 156)
++901: guard_value(i169, 56, descr=<Guard0x104195ad0>) [i169, i166, p2, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p5]
++911: i172 = strgetitem(p32, 157)
++919: i174 = int_and(i172, 7)
++926: i176 = int_eq(i174, 7)
+guard_false(i176, descr=<Guard0x104195a60>) [i172, i166, p2, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p5]
++936: i178 = int_and(i172, 8)
++943: i179 = int_is_true(i178)
+guard_true(i179, descr=<Guard0x1041959f0>) [i166, p2, i172, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p5]
++953: i181 = int_and(i172, 16)
++960: i182 = int_is_true(i181)
+guard_false(i182, descr=<Guard0x104195980>) [i166, p2, i172, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p5]
++970: i184 = strgetitem(p32, 158)
++978: i186 = int_and(i172, 224)
++985: i188 = int_lshift(i186, 3)
++989: i189 = int_or(i188, i184)
++992: i191 = strgetitem(p32, 159)
++1000: i193 = int_and(i191, 7)
++1007: i195 = int_eq(i193, 7)
+guard_false(i195, descr=<Guard0x104195910>) [i166, i189, p2, i191, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p5]
++1017: i197 = int_and(i191, 8)
++1024: i198 = int_is_true(i197)
+guard_false(i198, descr=<Guard0x1041958a0>) [i166, i189, p2, i193, i191, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p5]
++1034: i200 = int_rshift(i191, 4)
++1038: guard_value(i193, 3, descr=<Guard0x104195830>) [i166, p2, i189, i200, i193, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p5]
++1048: guard_value(i200, 0, descr=<Guard0x1041957c0>) [i166, p2, i189, i200, p20, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p5]
++1058: guard_nonnull_class(p8, 4297397368, descr=<Guard0x104195750>) [i166, p2, i189, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p5]
+debug_merge_point(0, 0, '160 GET_LIST')
++1077: i205 = strgetitem(p32, 160)
++1085: guard_value(i205, 65, descr=<Guard0x1041956e0>) [i205, i166, p2, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p5]
++1095: i208 = strgetitem(p32, 161)
++1103: i210 = int_and(i208, 7)
++1110: i212 = int_eq(i210, 7)
+guard_false(i212, descr=<Guard0x104195670>) [i166, p2, i208, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p5]
++1120: i214 = int_and(i208, 8)
++1127: i215 = int_is_true(i214)
+guard_false(i215, descr=<Guard0x104195600>) [i166, p2, i210, i208, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p5]
++1137: i217 = int_rshift(i208, 4)
++1141: i219 = strgetitem(p32, 162)
++1149: i221 = int_and(i219, 7)
++1156: i223 = int_eq(i221, 7)
+guard_false(i223, descr=<Guard0x104195590>) [i166, p2, i219, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i210, i217, p5]
++1166: i225 = int_and(i219, 8)
++1173: i226 = int_is_true(i225)
+guard_false(i226, descr=<Guard0x104195520>) [i166, p2, i221, i219, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i210, i217, p5]
++1183: i228 = int_rshift(i219, 4)
++1187: i230 = strgetitem(p32, 163)
++1195: i232 = int_and(i230, 7)
++1202: i234 = int_eq(i232, 7)
+guard_false(i234, descr=<Guard0x1041954b0>) [i166, p2, i230, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i228, i221, i210, i217, p5]
++1212: i236 = int_and(i230, 8)
++1223: i237 = int_is_true(i236)
+guard_false(i237, descr=<Guard0x104195440>) [i166, p2, i232, i230, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i228, i221, i210, i217, p5]
++1233: i239 = int_rshift(i230, 4)
++1244: i241 = int_eq(i210, 3)
+guard_true(i241, descr=<Guard0x1041953d0>) [i166, p2, i217, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i232, i239, i228, i221, None, None, p5]
++1254: guard_value(i217, 0, descr=<Guard0x104195360>) [i166, p2, i217, p20, p8, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, i232, i239, i228, i221, None, None, p5]
++1264: p243 = getfield_gc_pure(p8, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 8>)
++1268: i245 = int_eq(i221, 3)
+guard_true(i245, descr=<Guard0x1041952f0>) [i166, p8, p2, i228, p243, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i232, i239, None, None, None, None, p5]
++1278: guard_value(i228, 3, descr=<Guard0x104195280>) [i166, p8, p2, i228, p243, p20, p6, p7, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, i232, i239, None, None, None, None, p5]
++1288: p247 = getfield_gc_pure(p8, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 16>)
++1292: i249 = int_eq(i232, 3)
+guard_true(i249, descr=<Guard0x104195210>) [i166, p2, i239, p247, p8, p6, p243, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p7, None, None, None, None, None, None, p5]
++1302: guard_value(i239, 4, descr=<Guard0x1041951a0>) [i166, p2, i239, p247, p20, p8, p6, p243, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p7, None, None, None, None, None, None, p5]
+debug_merge_point(0, 0, '164 IS_NONEMPTY_LIST')
++1312: i252 = strgetitem(p32, 164)
++1320: guard_value(i252, 56, descr=<Guard0x104195130>) [i252, i166, p2, p8, p6, p243, p247, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p7, None, None, None, None, None, None, p5]
++1330: i255 = strgetitem(p32, 165)
++1338: i257 = int_and(i255, 7)
++1345: i259 = int_eq(i257, 7)
+guard_false(i259, descr=<Guard0x1041950c0>) [i255, i166, p2, p8, p6, p243, p247, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p7, None, None, None, None, None, None, p5]
++1355: i261 = int_and(i255, 8)
++1362: i262 = int_is_true(i261)
+guard_false(i262, descr=<Guard0x104195050>) [i166, p2, i255, p8, p6, p243, p247, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p7, None, None, None, None, None, None, p5]
++1372: i264 = int_rshift(i255, 4)
++1376: i266 = strgetitem(p32, 166)
++1384: i268 = int_and(i266, 7)
++1391: i270 = int_eq(i268, 7)
+guard_false(i270, descr=<Guard0x104194fe0>) [i166, i264, p2, i266, p8, p6, p243, p247, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p7, None, None, None, None, None, None, p5]
++1401: i272 = int_and(i266, 8)
++1408: i273 = int_is_true(i272)
+guard_false(i273, descr=<Guard0x104194f70>) [i166, i264, p2, i268, i266, p8, p6, p243, p247, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p7, None, None, None, None, None, None, p5]
++1418: i275 = int_rshift(i266, 4)
++1422: guard_value(i268, 3, descr=<Guard0x104194f00>) [i166, p2, i264, i275, i268, p8, p6, p243, p247, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p7, None, None, None, None, None, None, p5]
++1432: guard_value(i275, 4, descr=<Guard0x104194e90>) [i166, p2, i264, i275, p20, p8, p6, p243, p247, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p7, None, None, None, None, None, None, p5]
++1442: guard_nonnull_class(p247, 4297397368, descr=<Guard0x104194e20>) [i166, p2, i264, p247, p8, p6, p243, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p7, None, None, None, None, None, None, p5]
+debug_merge_point(0, 0, '167 GET_LIST')
++1460: i280 = strgetitem(p32, 167)
++1468: guard_value(i280, 65, descr=<Guard0x104194db0>) [i280, i166, p2, p8, p6, p243, p247, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p7, None, None, None, None, None, None, p5]
++1478: i283 = strgetitem(p32, 168)
++1486: i285 = int_and(i283, 7)
++1493: i287 = int_eq(i285, 7)
+guard_false(i287, descr=<Guard0x104194d40>) [i166, p2, i283, p8, p6, p243, p247, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p7, None, None, None, None, None, None, p5]
++1503: i289 = int_and(i283, 8)
++1510: i290 = int_is_true(i289)
+guard_false(i290, descr=<Guard0x104194cd0>) [i166, p2, i285, i283, p8, p6, p243, p247, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p7, None, None, None, None, None, None, p5]
++1520: i292 = int_rshift(i283, 4)
++1524: i294 = strgetitem(p32, 169)
++1532: i296 = int_and(i294, 7)
++1539: i298 = int_eq(i296, 7)
+guard_false(i298, descr=<Guard0x104194c60>) [i166, p2, i294, p8, p6, p243, p247, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i292, i285, p7, None, None, None, None, None, None, p5]
++1549: i300 = int_and(i294, 8)
++1560: i301 = int_is_true(i300)
+guard_false(i301, descr=<Guard0x104194bf0>) [i166, p2, i296, i294, p8, p6, p243, p247, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i292, i285, p7, None, None, None, None, None, None, p5]
++1570: i303 = int_rshift(i294, 4)
++1581: i305 = strgetitem(p32, 170)
++1596: i307 = int_and(i305, 7)
++1607: i309 = int_eq(i307, 7)
+guard_false(i309, descr=<Guard0x104194b80>) [i166, p2, i305, p8, p6, p243, p247, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i296, i303, i292, i285, p7, None, None, None, None, None, None, p5]
++1617: i311 = int_and(i305, 8)
++1635: i312 = int_is_true(i311)
+guard_false(i312, descr=<Guard0x104194b10>) [i166, p2, i307, i305, p8, p6, p243, p247, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i296, i303, i292, i285, p7, None, None, None, None, None, None, p5]
++1645: i314 = int_rshift(i305, 4)
++1656: i316 = int_eq(i285, 3)
+guard_true(i316, descr=<Guard0x104194aa0>) [i166, p2, i292, p8, p6, p243, p247, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i314, i307, i296, i303, None, None, p7, None, None, None, None, None, None, p5]
++1666: guard_value(i292, 4, descr=<Guard0x104194a30>) [i166, p2, i292, p20, p8, p6, p243, p247, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, i314, i307, i296, i303, None, None, p7, None, None, None, None, None, None, p5]
++1676: p318 = getfield_gc_pure(p247, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 8>)
++1680: i320 = int_eq(i296, 3)
+guard_true(i320, descr=<Guard0x1041949c0>) [i166, p247, p2, i303, p318, p8, p6, p243, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i314, i307, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1690: guard_value(i303, 5, descr=<Guard0x104194950>) [i166, p247, p2, i303, p318, p20, p8, p6, p243, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, i314, i307, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1700: p322 = getfield_gc_pure(p247, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 16>)
++1704: i324 = int_eq(i307, 3)
+guard_true(i324, descr=<Guard0x1041948e0>) [i166, p2, i314, p322, p8, p6, p243, p247, p318, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1714: guard_value(i314, 6, descr=<Guard0x104194870>) [i166, p2, i314, p322, p20, p8, p6, p243, p247, p318, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
+debug_merge_point(0, 0, '171 IS_LT')
++1724: i327 = strgetitem(p32, 171)
++1732: guard_value(i327, 39, descr=<Guard0x104194800>) [i327, i166, p2, p8, p6, p243, p247, p318, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1742: i330 = strgetitem(p32, 172)
++1750: i332 = int_and(i330, 7)
++1757: i334 = int_eq(i332, 7)
+guard_false(i334, descr=<Guard0x104194790>) [i330, i166, p2, p8, p6, p243, p247, p318, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1767: i336 = int_and(i330, 8)
++1774: i337 = int_is_true(i336)
+guard_false(i337, descr=<Guard0x104194720>) [i166, p2, i330, p8, p6, p243, p247, p318, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1784: i339 = int_rshift(i330, 4)
++1788: i341 = strgetitem(p32, 173)
++1796: i343 = int_and(i341, 7)
++1803: i345 = int_eq(i343, 7)
+guard_false(i345, descr=<Guard0x1041946b0>) [i166, i339, p2, i341, p8, p6, p243, p247, p318, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1813: i347 = int_and(i341, 8)
++1820: i348 = int_is_true(i347)
+guard_false(i348, descr=<Guard0x104194640>) [i166, i339, p2, i343, i341, p8, p6, p243, p247, p318, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1830: i350 = int_rshift(i341, 4)
++1834: i352 = strgetitem(p32, 174)
++1842: i354 = int_and(i352, 7)
++1853: i356 = int_eq(i354, 7)
+guard_false(i356, descr=<Guard0x1041945d0>) [i166, i339, p2, i352, p8, p6, p243, p247, p318, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i343, i350, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1863: i358 = int_and(i352, 8)
++1881: i359 = int_is_true(i358)
+guard_false(i359, descr=<Guard0x104194560>) [i166, i339, p2, i354, i352, p8, p6, p243, p247, p318, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i343, i350, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1891: i361 = int_rshift(i352, 4)
++1902: guard_value(i343, 3, descr=<Guard0x1041944f0>) [i166, p2, i339, i350, i343, p8, p6, p243, p247, p318, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i361, i354, None, None, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1912: guard_value(i350, 5, descr=<Guard0x104194480>) [i166, p2, i339, i350, p20, p8, p6, p243, p247, p318, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, i361, i354, None, None, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1922: guard_value(i354, 3, descr=<Guard0x104194410>) [i166, p2, i339, p318, i361, i354, p8, p6, p243, p247, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1932: guard_value(i361, 3, descr=<Guard0x1041943a0>) [i166, p2, i339, p318, i361, p20, p8, p6, p243, p247, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, None, None, None, None, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1942: guard_class(p318, 4297397456, descr=<Guard0x104194330>) [i166, p2, i339, p318, p243, p8, p6, p247, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1962: i367 = getfield_gc(p318, descr=<FieldS pyrlang.interpreter.datatypes.number.W_IntObject.inst_intval 8>)
++1966: i368 = getfield_gc(p243, descr=<FieldS pyrlang.interpreter.datatypes.number.W_IntObject.inst_intval 8>)
++1970: i369 = int_lt(i367, i368)
+guard_false(i369, descr=<Guard0x1041942c0>) [i166, p2, i339, p8, p6, p243, p247, p318, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1979: i371 = int_sub(i339, 1)
++1984: i373 = int_lt(i371, 0)
+guard_false(i373, descr=<Guard0x104194250>) [i166, p2, i371, p8, p6, p243, p247, p318, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
++1994: i374 = getarrayitem_gc(p26, i371, descr=<ArrayS 8>)
++2006: guard_value(i374, 194, descr=<Guard0x1041941e0>) [i166, i374, p168, p20, p2, p8, p6, p243, p247, p318, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, None, None, None, None, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
+debug_merge_point(0, 0, '194 TEST_HEAP')
+debug_merge_point(0, 0, '197 PUT_LIST')
++2019: guard_class(p243, 4297397456, descr=<Guard0x104194170>) [i166, p2, p243, p8, p6, p247, p318, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
+debug_merge_point(0, 0, '201 MOVE')
+debug_merge_point(0, 0, '204 CALL_ONLY')
++2031: i377 = getarrayitem_gc(p26, i161, descr=<ArrayS 8>)
++2043: i379 = int_sub(i166, 1)
++2047: guard_value(i377, 156, descr=<Guard0x104194100>) [i379, i377, p168, p20, p2, p247, p6, p243, p318, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, None, None, None, None, None, None, None, None, None, None, p7, None, None, None, None, None, None, p5]
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
+p382 = new_with_vtable(4297397368)
++2146: i383 = strlen(p32)
++2146: setfield_gc(p382, p7, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 8>)
++2150: setfield_gc(p382, p5, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 16>)
++2154: jump(i379, p2, p20, p168, p247, p243, p382, p6, p318, p322, p11, p12, p13, p14, p15, p16, p17, p18, p19, p32, p26, p168, i161, descr=TargetToken(4318169312))
++2206: --end of the loop--
+[27564eb8f94] jit-log-opt-bridge}
+[2757557aa16] {jit-log-opt-bridge
+# bridge out of Guard 0x10168c790 with 318 ops
+[i0, i1, p2, i3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++59: guard_nonnull_class(p4, ConstClass(W_NilObject), descr=<Guard0x1041a0c60>) [i0, i1, p2, i3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++77: i23 = int_sub(i3, 1)
++82: i25 = int_lt(i23, 0)
+guard_false(i25, descr=<Guard0x105b57440>) [i0, i1, p2, i23, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++92: p27 = getfield_gc(ConstPtr(ptr26), descr=<FieldP list.items 16>)
++105: i28 = getarrayitem_gc(p27, i23, descr=<ArrayS 8>)
++110: p29 = getfield_gc(p2, descr=<FieldP pyrlang.interpreter.interp.Process.inst_x_reg 40>)
++114: p30 = getfield_gc(p2, descr=<FieldP pyrlang.interpreter.interp.Process.inst_y_reg 48>)
++118: guard_value(i28, 210, descr=<Guard0x105b573d0>) [i0, i1, i28, p30, p29, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
+debug_merge_point(0, 0, '210 IS_NIL')
++131: p33 = getfield_gc(ConstPtr(ptr32), descr=<FieldP pyrlang.rpybeam.beam_code.CodeParser.inst_code 32>)
++144: i34 = strgetitem(p33, 210)
++152: guard_value(i34, 52, descr=<Guard0x105b57360>) [i34, i0, i1, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++162: i37 = strgetitem(p33, 211)
++170: i39 = int_and(i37, 7)
++177: i41 = int_eq(i39, 7)
+guard_false(i41, descr=<Guard0x105b572f0>) [i37, i0, i1, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++187: i43 = int_and(i37, 8)
++194: i44 = int_is_true(i43)
+guard_false(i44, descr=<Guard0x105b57280>) [i0, i1, p2, i37, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++204: i46 = int_rshift(i37, 4)
++208: i48 = strgetitem(p33, 212)
++216: i50 = int_and(i48, 7)
++223: i52 = int_eq(i50, 7)
+guard_false(i52, descr=<Guard0x105b57210>) [i0, i1, i46, p2, i48, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++233: i54 = int_and(i48, 8)
++240: i55 = int_is_true(i54)
+guard_false(i55, descr=<Guard0x105b571a0>) [i0, i1, i46, p2, i50, i48, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++250: i57 = int_rshift(i48, 4)
++254: guard_value(i50, 3, descr=<Guard0x105b57130>) [i0, i1, p2, i46, i57, i50, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++264: i59 = ptr_eq(p29, p20)
+guard_true(i59, descr=<Guard0x105b570c0>) [i0, i1, p2, i46, i57, p29, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++277: guard_value(i57, 0, descr=<Guard0x105b57050>) [i0, i1, p2, i46, i57, p20, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
+debug_merge_point(0, 0, '213 IS_ATOM')
++287: i62 = strgetitem(p33, 213)
++295: guard_value(i62, 48, descr=<Guard0x105b56fe0>) [i62, i0, i1, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++305: i65 = strgetitem(p33, 214)
++313: i67 = int_and(i65, 7)
++320: i69 = int_eq(i67, 7)
+guard_false(i69, descr=<Guard0x105b56f70>) [i65, i0, i1, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++330: i71 = int_and(i65, 8)
++337: i72 = int_is_true(i71)
+guard_false(i72, descr=<Guard0x105b56f00>) [i0, i1, p2, i65, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++347: i74 = int_rshift(i65, 4)
++351: i76 = strgetitem(p33, 215)
++359: i78 = int_and(i76, 7)
++366: i80 = int_eq(i78, 7)
+guard_false(i80, descr=<Guard0x105b56e90>) [i0, i1, i74, p2, i76, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++376: i82 = int_and(i76, 8)
++383: i83 = int_is_true(i82)
+guard_false(i83, descr=<Guard0x105b56e20>) [i0, i1, i74, p2, i78, i76, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++393: i85 = int_rshift(i76, 4)
++397: guard_value(i78, 3, descr=<Guard0x105b56db0>) [i0, i1, p2, i74, i85, i78, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++407: guard_value(i85, 2, descr=<Guard0x105b56d40>) [i0, i1, p2, i74, i85, p20, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
++417: guard_nonnull_class(p6, ConstClass(W_AtomObject), descr=<Guard0x105b56cd0>) [i0, i1, p2, i74, p6, p4, p5, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
+debug_merge_point(0, 0, '216 SELECT_VAL')
++443: i90 = strgetitem(p33, 216)
++451: guard_value(i90, 59, descr=<Guard0x105b56c60>) [i90, i0, i1, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++461: i93 = strgetitem(p33, 217)
++469: i95 = int_and(i93, 7)
++476: i97 = int_eq(i95, 7)
+guard_false(i97, descr=<Guard0x105b56bf0>) [i0, i1, p2, i93, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++486: i99 = int_and(i93, 8)
++493: i100 = int_is_true(i99)
+guard_false(i100, descr=<Guard0x105b56b80>) [i0, i1, p2, i95, i93, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++503: i102 = int_rshift(i93, 4)
++507: i104 = strgetitem(p33, 218)
++515: i106 = int_and(i104, 7)
++522: i108 = int_eq(i106, 7)
+guard_false(i108, descr=<Guard0x105b56b10>) [i104, i0, i1, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i95, i102]
++532: i110 = int_and(i104, 8)
++539: i111 = int_is_true(i110)
+guard_false(i111, descr=<Guard0x105b56aa0>) [i0, i1, p2, i104, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i95, i102]
++549: i113 = int_rshift(i104, 4)
++553: i115 = strgetitem(p33, 219)
++561: i117 = int_and(i115, 7)
++565: i119 = int_eq(i117, 7)
+guard_true(i119, descr=<Guard0x105b56a30>) [i0, i1, i113, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i95, i102]
++575: i121 = strgetitem(p33, 220)
++583: i123 = int_and(i121, 7)
++590: i125 = int_eq(i123, 7)
+guard_false(i125, descr=<Guard0x105b569c0>) [i0, i1, i113, p2, i121, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i95, i102]
++600: i127 = int_and(i121, 8)
++607: i128 = int_is_true(i127)
+guard_false(i128, descr=<Guard0x105b56950>) [i0, i1, i113, p2, i121, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i95, i102]
++617: i130 = int_rshift(i121, 4)
++621: i132 = int_rshift(i130, 1)
+p133 = new_array(i132, descr=<ArrayP 8>)
++743: i135 = int_ge(0, i132)
+guard_false(i135, descr=<Guard0x105b568e0>) [i0, i1, i113, p2, i132, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p133, i95, i102]
++753: i137 = strgetitem(p33, 221)
++761: i139 = int_and(i137, 7)
++772: i141 = int_eq(i139, 7)
+guard_false(i141, descr=<Guard0x105b56870>) [i0, i1, i113, p2, i137, i132, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p133, i95, i102]
++782: i143 = int_and(i137, 8)
++793: i144 = int_is_true(i143)
+guard_false(i144, descr=<Guard0x105b56800>) [i0, i1, i113, p2, i132, i137, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p133, i95, i102]
++803: i146 = int_rshift(i137, 4)
++814: i148 = strgetitem(p33, 222)
++829: i150 = int_and(i148, 7)
++840: i152 = int_eq(i150, 7)
+guard_false(i152, descr=<Guard0x105b56790>) [i0, i1, i113, p2, i148, i146, i132, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p133, i95, i102]
++850: i154 = int_and(i148, 8)
++861: i155 = int_is_true(i154)
+guard_true(i155, descr=<Guard0x105b56720>) [i0, i1, i113, p2, i146, i132, i148, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p133, i95, i102]
++871: i157 = int_and(i148, 16)
++882: i158 = int_is_true(i157)
+guard_false(i158, descr=<Guard0x105b566b0>) [i0, i1, i113, p2, i146, i132, i148, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p133, i95, i102]
++892: i160 = strgetitem(p33, 223)
++900: i162 = int_and(i148, 224)
++921: i164 = int_lshift(i162, 3)
++925: i165 = int_or(i164, i160)
++928: i167 = int_ge(1, i132)
+guard_false(i167, descr=<Guard0x105b56640>) [i0, i1, i113, p2, i132, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i165, i146, p133, i95, i102]
++938: i169 = strgetitem(p33, 224)
++946: i171 = int_and(i169, 7)
++957: i173 = int_eq(i171, 7)
+guard_false(i173, descr=<Guard0x105b565d0>) [i0, i1, i113, p2, i169, i132, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i165, i146, p133, i95, i102]
++967: i175 = int_and(i169, 8)
++978: i176 = int_is_true(i175)
+guard_false(i176, descr=<Guard0x105b56560>) [i0, i1, i113, p2, i132, i169, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i165, i146, p133, i95, i102]
++988: i178 = int_rshift(i169, 4)
++999: i180 = strgetitem(p33, 225)
++1007: i182 = int_and(i180, 7)
++1018: i184 = int_eq(i182, 7)
+guard_false(i184, descr=<Guard0x105b564f0>) [i0, i1, i113, p2, i180, i178, i132, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i165, i146, p133, i95, i102]
++1028: i186 = int_and(i180, 8)
++1039: i187 = int_is_true(i186)
+guard_true(i187, descr=<Guard0x105b56480>) [i0, i1, i113, p2, i178, i132, i180, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i165, i146, p133, i95, i102]
++1049: i189 = int_and(i180, 16)
++1060: i190 = int_is_true(i189)
+guard_false(i190, descr=<Guard0x105b56410>) [i0, i1, i113, p2, i178, i132, i180, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i165, i146, p133, i95, i102]
++1070: i192 = strgetitem(p33, 226)
++1078: i194 = int_and(i180, 224)
++1099: i196 = int_lshift(i194, 3)
++1103: i197 = int_or(i196, i192)
++1106: i199 = int_ge(2, i132)
+guard_true(i199, descr=<Guard0x105b563a0>) [i0, i1, i113, p2, i132, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, i197, i165, i146, p133, i95, i102]
++1116: i201 = int_eq(i95, 3)
+guard_true(i201, descr=<Guard0x105b56330>) [i0, i1, p2, i113, p133, i102, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, i197, i165, i146, None, None, None]
++1130: guard_value(i102, 2, descr=<Guard0x105b562c0>) [i0, i1, p2, i113, p133, i102, p20, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, i178, i197, i165, i146, None, None, None]
++1140: p204 = getfield_gc(p6, descr=<FieldP pyrlang.interpreter.datatypes.atom.W_AtomObject.inst_strval 8>)
++1151: i206 = int_sub(i146, 1)
++1155: i208 = int_lt(i206, 0)
+guard_false(i208, descr=<Guard0x105b56250>) [i0, i1, p2, i206, i165, i113, p133, p204, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, i197, None, i146, None, None, None]
++1165: p210 = getarrayitem_gc_pure(ConstPtr(ptr209), i206, descr=<ArrayP 8>)
++1179: i212 = call(ConstClass(ll_streq__rpy_stringPtr_rpy_stringPtr), p210, p204, descr=<Calli 1 rr EF=0 OS=24>)
++1320: guard_false(i212, descr=<Guard0x105b561e0>) [i0, i1, p2, i165, i113, p133, p204, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, i197, None, i146, None, None, None]
++1329: i214 = int_sub(i178, 1)
++1333: i216 = int_lt(i214, 0)
+guard_false(i216, descr=<Guard0x105b56170>) [i0, i1, p2, i214, i197, i113, p133, p204, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, None, i165, i146, None, None, None]
++1343: p218 = getarrayitem_gc_pure(ConstPtr(ptr217), i214, descr=<ArrayP 8>)
++1357: i219 = call(ConstClass(ll_streq__rpy_stringPtr_rpy_stringPtr), p218, p204, descr=<Calli 1 rr EF=0 OS=24>)
++1442: guard_true(i219, descr=<Guard0x105b56100>) [i0, i1, p2, i197, i113, p133, p204, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, None, i165, i146, None, None, None]
++1451: i221 = int_sub(i197, 1)
++1455: i223 = int_lt(i221, 0)
+guard_false(i223, descr=<Guard0x105b56090>) [i0, i1, p2, i221, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, i197, i165, i146, p133, None, None]
++1465: i224 = getarrayitem_gc(p27, i221, descr=<ArrayS 8>)
++1477: guard_value(i224, 239, descr=<Guard0x105b56020>) [i0, i1, i224, p30, p20, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, i178, i197, i165, i146, p133, None, None]
+debug_merge_point(0, 0, '239 ALLOCATE')
++1490: i226 = strgetitem(p33, 239)
++1505: guard_value(i226, 12, descr=<Guard0x1041a1f30>) [i226, i0, i1, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, i197, i165, i146, p133, None, None]
++1515: i229 = strgetitem(p33, 240)
++1523: i231 = int_and(i229, 7)
++1530: i233 = int_eq(i231, 7)
+guard_false(i233, descr=<Guard0x1041a1ec0>) [i229, i0, i1, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, i197, i165, i146, p133, None, None]
++1540: i235 = int_and(i229, 8)
++1547: i236 = int_is_true(i235)
+guard_false(i236, descr=<Guard0x1041a1e50>) [i0, i1, p2, i229, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, i197, i165, i146, p133, None, None]
++1557: i238 = int_rshift(i229, 4)
++1561: i240 = strgetitem(p33, 241)
++1569: i242 = int_and(i240, 7)
++1576: i244 = int_eq(i242, 7)
+guard_false(i244, descr=<Guard0x1041a1de0>) [i240, i238, i0, i1, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, i197, i165, i146, p133, None, None]
++1586: i246 = int_and(i240, 8)
++1593: i247 = int_is_true(i246)
+guard_false(i247, descr=<Guard0x1041a1d70>) [i238, i0, i1, p2, i240, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, i197, i165, i146, p133, None, None]
++1603: i249 = int_rshift(i240, 4)
++1603: i251 = int_ge(0, i238)
+guard_true(i251, descr=<Guard0x1041a1d00>) [i0, i1, p2, i238, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, i197, i165, i146, p133, None, None]
+debug_merge_point(0, 0, '242 MOVE')
++1613: i253 = strgetitem(p33, 242)
++1621: guard_value(i253, 64, descr=<Guard0x1041a1c90>) [i253, i0, i1, p2, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, i197, i165, i146, p133, None, None]
++1631: i256 = strgetitem(p33, 243)
++1639: i258 = int_and(i256, 7)
++1646: i260 = int_eq(i258, 7)
+guard_false(i260, descr=<Guard0x1041a1c20>) [i0, i1, p2, i256, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, i197, i165, i146, p133, None, None]
++1656: i262 = int_and(i256, 8)
++1663: i263 = int_is_true(i262)
+guard_false(i263, descr=<Guard0x1041a1bb0>) [i0, i1, p2, i258, i256, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, i197, i165, i146, p133, None, None]
++1673: i265 = int_rshift(i256, 4)
++1677: i267 = strgetitem(p33, 244)
++1685: i269 = int_and(i267, 7)
++1692: i271 = int_eq(i269, 7)
+guard_false(i271, descr=<Guard0x1041a1b40>) [i0, i1, p2, i267, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i258, i265, i178, i197, i165, i146, p133, None, None]
++1702: i273 = int_and(i267, 8)
++1709: i274 = int_is_true(i273)
+guard_false(i274, descr=<Guard0x1041a1ad0>) [i0, i1, p2, i269, i267, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i258, i265, i178, i197, i165, i146, p133, None, None]
++1719: i276 = int_rshift(i267, 4)
++1723: guard_value(i258, 3, descr=<Guard0x1041a1a60>) [i0, i1, p2, i265, i258, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i276, i269, None, None, i178, i197, i165, i146, p133, None, None]
++1733: guard_value(i265, 1, descr=<Guard0x1041a19f0>) [i0, i1, p2, i265, p20, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, i276, i269, None, None, i178, i197, i165, i146, p133, None, None]
++1743: i280 = int_eq(i269, 3)
+guard_true(i280, descr=<Guard0x1041a1980>) [i0, i1, p2, i276, p5, p4, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, i197, i165, i146, p133, None, None]
++1753: guard_value(i276, 0, descr=<Guard0x1041a1910>) [i0, i1, p2, i276, p5, p20, p4, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, None, None, None, None, i178, i197, i165, i146, p133, None, None]
+debug_merge_point(0, 0, '245 LINE')
++1763: i283 = strgetitem(p33, 245)
++1771: guard_value(i283, 153, descr=<Guard0x1041a18a0>) [i283, i0, i1, p2, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, i197, i165, i146, p133, None, None]
++1784: i286 = strgetitem(p33, 246)
++1792: i288 = int_and(i286, 7)
++1799: i290 = int_eq(i288, 7)
+guard_false(i290, descr=<Guard0x1041a1830>) [i286, i0, i1, p2, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, i197, i165, i146, p133, None, None]
++1809: i292 = int_and(i286, 8)
++1816: i293 = int_is_true(i292)
+guard_false(i293, descr=<Guard0x1041a17c0>) [i0, i1, p2, i286, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, i197, i165, i146, p133, None, None]
++1826: i295 = int_rshift(i286, 4)
+debug_merge_point(0, 0, '247 CALL')
++1830: i297 = strgetitem(p33, 247)
++1838: setfield_gc(ConstPtr(ptr32), i295, descr=<FieldS pyrlang.rpybeam.beam_code.CodeParser.inst_current_line 48>)
++1851: guard_value(i297, 4, descr=<Guard0x1041a1750>) [i297, i0, i1, p2, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, i197, i165, i146, p133, None, None]
++1861: i300 = strgetitem(p33, 248)
++1869: i302 = int_and(i300, 7)
++1876: i304 = int_eq(i302, 7)
+guard_false(i304, descr=<Guard0x1041a16e0>) [i300, i0, i1, p2, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, i197, i165, i146, p133, None, None]
++1886: i306 = int_and(i300, 8)
++1893: i307 = int_is_true(i306)
+guard_false(i307, descr=<Guard0x1041a1670>) [i0, i1, p2, i300, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, i197, i165, i146, p133, None, None]
++1903: i309 = int_rshift(i300, 4)
++1907: i311 = strgetitem(p33, 249)
++1915: i313 = int_and(i311, 7)
++1922: i315 = int_eq(i313, 7)
+guard_false(i315, descr=<Guard0x1041a1600>) [i311, i0, i1, i309, p2, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, i197, i165, i146, p133, None, None]
++1932: i317 = int_and(i311, 8)
++1939: i318 = int_is_true(i317)
+guard_false(i318, descr=<Guard0x1041a1590>) [i0, i1, i309, p2, i311, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, i197, i165, i146, p133, None, None]
++1949: i320 = int_rshift(i311, 4)
++1953: p321 = getfield_gc(p30, descr=<FieldP pyrlang.interpreter.register.Y_Register.inst_regs 8>)
++1964: i322 = getfield_gc(p321, descr=<FieldS list.length 8>)
++1968: i324 = int_add(i322, 1)
++1972: p325 = getfield_gc(p321, descr=<FieldP list.items 16>)
++1976: i326 = arraylen_gc(p325, descr=<ArrayP 8>)
++1980: i327 = int_lt(i326, i324)
++1991: cond_call(i327, ConstClass(_ll_list_resize_hint_really_look_inside_iff__listPtr_Signed_Bool), p321, i324, 1, descr=<Callv 0 rii EF=4>)
++2063: guard_no_exception(descr=<Guard0x1041a1520>) [i0, i1, p2, i320, i322, p321, i324, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, i197, i165, i146, p133, None, None]
++2083: p330 = getfield_gc(p321, descr=<FieldP list.items 16>)
+p332 = new_with_vtable(4297397248)
++2180: setfield_gc(p332, 250, descr=<FieldS pyrlang.interpreter.datatypes.inner.W_AddrObject.inst_addrval 8>)
++2236: setarrayitem_gc(p330, i322, p332, descr=<ArrayP 8>)
++2241: i335 = int_sub(i320, 1)
++2246: setfield_gc(p321, i324, descr=<FieldS list.length 8>)
++2258: i337 = int_lt(i335, 0)
+guard_false(i337, descr=<Guard0x1041a14b0>) [i0, i1, p2, i335, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, p133, i165, i197, i146]
++2268: i338 = getarrayitem_gc(p27, i335, descr=<ArrayS 8>)
++2273: guard_value(i338, 63, descr=<Guard0x1041a1440>) [i0, i1, i338, p30, p29, p2, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, p133, i165, i197, i146]
+debug_merge_point(0, 0, '63 MOVE')
++2283: i340 = strgetitem(p33, 63)
++2288: guard_value(i340, 64, descr=<Guard0x1041a13d0>) [i340, i0, i1, p2, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, p133, i165, i197, i146]
++2298: i343 = strgetitem(p33, 64)
++2303: i345 = int_and(i343, 7)
++2310: i347 = int_eq(i345, 7)
+guard_false(i347, descr=<Guard0x1041a1360>) [i0, i1, p2, i343, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, p133, i165, i197, i146]
++2320: i349 = int_and(i343, 8)
++2327: i350 = int_is_true(i349)
+guard_false(i350, descr=<Guard0x1041a12f0>) [i0, i1, p2, i345, i343, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i178, p133, i165, i197, i146]
++2337: i352 = int_rshift(i343, 4)
++2341: i354 = strgetitem(p33, 65)
++2346: i356 = int_and(i354, 7)
++2353: i358 = int_eq(i356, 7)
+guard_false(i358, descr=<Guard0x1041a1280>) [i0, i1, p2, i354, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i345, i352, i178, p133, i165, i197, i146]
++2363: i360 = int_and(i354, 8)
++2370: i361 = int_is_true(i360)
+guard_false(i361, descr=<Guard0x1041a1210>) [i0, i1, p2, i356, i354, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i345, i352, i178, p133, i165, i197, i146]
++2380: i363 = int_rshift(i354, 4)
++2384: guard_value(i345, 2, descr=<Guard0x1041a11a0>) [i0, i1, p2, i352, i345, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i356, i363, None, None, i178, p133, i165, i197, i146]
++2394: i365 = int_is_zero(i352)
+guard_true(i365, descr=<Guard0x1041a1130>) [i0, i1, p2, i352, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, i356, i363, None, None, i178, p133, i165, i197, i146]
++2404: i367 = int_eq(i356, 3)
+guard_true(i367, descr=<Guard0x1041a10c0>) [i0, i1, p2, i363, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, p133, i165, i197, i146]
++2414: guard_value(i363, 1, descr=<Guard0x1041a1050>) [i0, i1, p2, i363, p20, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, None, None, None, None, i178, p133, i165, i197, i146]
+debug_merge_point(0, 0, '66 CALL_ONLY')
++2424: i370 = strgetitem(p33, 66)
++2429: guard_value(i370, 6, descr=<Guard0x1041a0fe0>) [i370, i0, i1, p2, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, p133, i165, i197, i146]
++2439: i373 = strgetitem(p33, 67)
++2444: i375 = int_and(i373, 7)
++2451: i377 = int_eq(i375, 7)
+guard_false(i377, descr=<Guard0x1041a0f70>) [i373, i0, i1, p2, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, p133, i165, i197, i146]
++2461: i379 = int_and(i373, 8)
++2468: i380 = int_is_true(i379)
+guard_false(i380, descr=<Guard0x1041a0f00>) [i0, i1, p2, i373, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, p133, i165, i197, i146]
++2478: i382 = int_rshift(i373, 4)
++2478: i384 = strgetitem(p33, 68)
++2483: i386 = int_and(i384, 7)
++2490: i388 = int_eq(i386, 7)
+guard_false(i388, descr=<Guard0x1041a0e90>) [i384, i0, i1, p2, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, p133, i165, i197, i146]
++2500: i390 = int_and(i384, 8)
++2507: i391 = int_is_true(i390)
+guard_false(i391, descr=<Guard0x1041a0e20>) [i0, i1, p2, i384, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, p133, i165, i197, i146]
++2517: i393 = int_rshift(i384, 4)
++2521: i395 = int_sub(i393, 1)
++2525: i397 = int_lt(i395, 0)
+guard_false(i397, descr=<Guard0x1041a0db0>) [i0, i1, i395, p2, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, p133, i165, i197, i146]
++2535: i398 = getarrayitem_gc(p27, i395, descr=<ArrayS 8>)
++2540: i400 = int_sub(i1, 1)
++2551: guard_true(i0, descr=<Guard0x1041a0d40>) [i400, i398, p2, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, None, None, None, None, i178, p133, i165, i197, i146]
++2567: guard_value(i398, 79, descr=<Guard0x1041a0cd0>) [i400, i398, p30, p20, p2, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, None, None, None, None, i178, p133, i165, i197, i146]
+debug_merge_point(0, 0, '79 IS_NONEMPTY_LIST')
+p402 = new(descr=<SizeDescr 24>)
++2588: setfield_gc(p402, i146, descr=<FieldS tuple2.item0 8>)
++2599: setfield_gc(p402, i165, descr=<FieldS tuple2.item1 16>)
++2645: setarrayitem_gc(p133, 0, p402, descr=<ArrayP 8>)
+p404 = new(descr=<SizeDescr 24>)
++2660: setfield_gc(p404, i178, descr=<FieldS tuple2.item0 8>)
++2664: setfield_gc(p404, i197, descr=<FieldS tuple2.item1 16>)
++2696: setarrayitem_gc(p133, 1, p404, descr=<ArrayP 8>)
++2700: p406 = same_as(p30)
++2700: i407 = same_as(i295)
++2700: label(i400, p2, p20, p30, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, descr=TargetToken(4318171152))
+p409 = new_with_vtable(ConstClass(W_NilObject))
++2799: jump(i400, 1, p2, p20, p30, p5, p409, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, descr=TargetToken(4318167872))
++3018: --end of the loop--
+[2757572ae8b] jit-log-opt-bridge}
+[27575e7b3b7] {jit-log-opt-bridge
+# bridge out of Guard 0x101757980 with 175 ops
+[i0, p1, i2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
++59: guard_nonnull_class(p3, ConstClass(W_NilObject), descr=<Guard0x105b73bb0>) [i0, p1, i2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
++77: i22 = int_sub(i2, 1)
++88: i24 = int_lt(i22, 0)
+guard_false(i24, descr=<Guard0x105c01b40>) [i0, p1, i22, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
++98: p26 = getfield_gc(ConstPtr(ptr25), descr=<FieldP list.items 16>)
++111: i27 = getarrayitem_gc(p26, i22, descr=<ArrayS 8>)
++116: p28 = getfield_gc(p1, descr=<FieldP pyrlang.interpreter.interp.Process.inst_x_reg 40>)
++127: p29 = getfield_gc(p1, descr=<FieldP pyrlang.interpreter.interp.Process.inst_y_reg 48>)
++131: guard_value(i27, 98, descr=<Guard0x105c01ad0>) [i0, i27, p29, p28, p1, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
+debug_merge_point(0, 0, '98 IS_NIL')
++141: p32 = getfield_gc(ConstPtr(ptr31), descr=<FieldP pyrlang.rpybeam.beam_code.CodeParser.inst_code 32>)
++154: i33 = strgetitem(p32, 98)
++160: guard_value(i33, 52, descr=<Guard0x105c01a60>) [i33, i0, p1, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
++170: i36 = strgetitem(p32, 99)
++176: i38 = int_and(i36, 7)
++183: i40 = int_eq(i38, 7)
+guard_false(i40, descr=<Guard0x105c019f0>) [i36, i0, p1, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
++193: i42 = int_and(i36, 8)
++200: i43 = int_is_true(i42)
+guard_false(i43, descr=<Guard0x105c01980>) [i0, p1, i36, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
++210: i45 = int_rshift(i36, 4)
++214: i47 = strgetitem(p32, 100)
++220: i49 = int_and(i47, 7)
++227: i51 = int_eq(i49, 7)
+guard_false(i51, descr=<Guard0x105c01910>) [i0, i45, p1, i47, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
++237: i53 = int_and(i47, 8)
++244: i54 = int_is_true(i53)
+guard_false(i54, descr=<Guard0x105c018a0>) [i0, i45, p1, i49, i47, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
++254: i56 = int_rshift(i47, 4)
++258: guard_value(i49, 3, descr=<Guard0x105c01830>) [i0, p1, i45, i56, i49, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
++268: i58 = ptr_eq(p28, p18)
+guard_true(i58, descr=<Guard0x105c017c0>) [i0, p1, i45, i56, p28, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
++281: guard_value(i56, 0, descr=<Guard0x105c01750>) [i0, p1, i45, i56, p18, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p19]
+debug_merge_point(0, 0, '101 MOVE')
++291: i61 = strgetitem(p32, 101)
++297: guard_value(i61, 64, descr=<Guard0x105c016e0>) [i61, i0, p1, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
++307: i64 = strgetitem(p32, 102)
++313: i66 = int_and(i64, 7)
++320: i68 = int_eq(i66, 7)
+guard_false(i68, descr=<Guard0x105c01670>) [i0, p1, i64, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
++330: i70 = int_and(i64, 8)
++337: i71 = int_is_true(i70)
+guard_false(i71, descr=<Guard0x105c01600>) [i0, p1, i66, i64, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
++347: i73 = int_rshift(i64, 4)
++351: i75 = strgetitem(p32, 103)
++357: i77 = int_and(i75, 7)
++364: i79 = int_eq(i77, 7)
+guard_false(i79, descr=<Guard0x105c01590>) [i0, p1, i75, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i73, i66, p19]
++374: i81 = int_and(i75, 8)
++385: i82 = int_is_true(i81)
+guard_false(i82, descr=<Guard0x105c01520>) [i0, p1, i77, i75, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i73, i66, p19]
++395: i84 = int_rshift(i75, 4)
++406: guard_value(i66, 3, descr=<Guard0x105c014b0>) [i0, p1, i73, i66, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i84, i77, None, None, p19]
++416: guard_value(i73, 1, descr=<Guard0x105c01440>) [i0, p1, i73, p18, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i84, i77, None, None, p19]
++426: i89 = int_eq(i77, 3)
+guard_true(i89, descr=<Guard0x105c013d0>) [i0, p1, i84, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p19]
++436: guard_value(i84, 0, descr=<Guard0x105c01360>) [i0, p1, i84, p18, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, None, None, None, None, p19]
+debug_merge_point(0, 0, '104 RETURN')
++446: i92 = strgetitem(p32, 104)
++455: guard_value(i92, 19, descr=<Guard0x105c012f0>) [i92, i0, p1, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p19]
++465: p94 = getfield_gc(p29, descr=<FieldP pyrlang.interpreter.register.Y_Register.inst_regs 8>)
++469: i95 = getfield_gc(p94, descr=<FieldS list.length 8>)
++473: i96 = int_is_zero(i95)
+guard_false(i96, descr=<Guard0x105c01280>) [i0, p1, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p19]
++483: i98 = int_sub(i95, 1)
++487: p99 = getfield_gc(p94, descr=<FieldP list.items 16>)
++491: p100 = getarrayitem_gc(p99, i98, descr=<ArrayP 8>)
++496: setarrayitem_gc(p99, i98, ConstPtr(null), descr=<ArrayP 8>)
++505: i102 = arraylen_gc(p99, descr=<ArrayP 8>)
++509: i104 = int_rshift(i102, 1)
++512: i106 = int_sub(i104, 5)
++516: i107 = int_lt(i98, i106)
++527: cond_call(i107, ConstClass(_ll_list_resize_hint_really_look_inside_iff__listPtr_Signed_Bool), p94, i98, 0, descr=<Callv 0 rii EF=4>)
++598: guard_no_exception(descr=<Guard0x105c01210>) [i0, p100, p1, i98, p94, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p19]
++618: setfield_gc(p94, i98, descr=<FieldS list.length 8>)
++622: guard_nonnull_class(p100, 4297397248, descr=<Guard0x105c011a0>) [i0, p100, p1, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p19]
++640: i111 = getfield_gc(p100, descr=<FieldS pyrlang.interpreter.datatypes.inner.W_AddrObject.inst_addrval 8>)
++644: guard_value(i111, 250, descr=<Guard0x105c01130>) [i0, i111, p29, p28, p1, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p19]
+debug_merge_point(0, 0, '250 MOVE')
++657: i113 = strgetitem(p32, 250)
++666: guard_value(i113, 64, descr=<Guard0x105c010c0>) [i113, i0, p1, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p19]
++676: i116 = strgetitem(p32, 251)
++685: i118 = int_and(i116, 7)
++692: i120 = int_eq(i118, 7)
+guard_false(i120, descr=<Guard0x105c01050>) [i0, p1, i116, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p19]
++702: i122 = int_and(i116, 8)
++709: i123 = int_is_true(i122)
+guard_false(i123, descr=<Guard0x105c00fe0>) [i0, p1, i118, i116, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p19]
++719: i125 = int_rshift(i116, 4)
++723: i127 = strgetitem(p32, 252)
++732: i129 = int_and(i127, 7)
++739: i131 = int_eq(i129, 7)
+guard_false(i131, descr=<Guard0x105c00f70>) [i0, p1, i127, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i125, i118, None, None, None, None, p19]
++749: i133 = int_and(i127, 8)
++756: i134 = int_is_true(i133)
+guard_false(i134, descr=<Guard0x105c00f00>) [i0, p1, i129, i127, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i125, i118, None, None, None, None, p19]
++766: i136 = int_rshift(i127, 4)
++770: guard_value(i118, 2, descr=<Guard0x105c00e90>) [i0, p1, i125, i118, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i136, i129, None, None, None, None, None, None, p19]
++780: i138 = int_is_zero(i125)
+guard_false(i138, descr=<Guard0x105c00e20>) [i0, p1, i125, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i136, i129, None, None, None, None, None, None, p19]
++790: i140 = int_sub(i125, 1)
++794: i142 = int_lt(i140, 0)
+guard_false(i142, descr=<Guard0x105c00db0>) [i0, p1, i140, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i136, i129, None, None, None, None, None, None, p19]
++804: p144 = getarrayitem_gc_pure(ConstPtr(ptr143), i140, descr=<ArrayP 8>)
++818: i146 = int_eq(i129, 3)
+guard_true(i146, descr=<Guard0x105c00d40>) [i0, p1, i136, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p144, None, None, None, None, None, None, None, None, p19]
++828: guard_value(i136, 2, descr=<Guard0x105c00cd0>) [i0, p1, i136, p18, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p144, None, None, None, None, None, None, None, None, p19]
+debug_merge_point(0, 0, '253 MOVE')
++838: i149 = strgetitem(p32, 253)
++847: guard_value(i149, 64, descr=<Guard0x105c00c60>) [i149, i0, p1, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p4, p144, None, None, None, None, None, None, None, None, p19]
++857: i152 = strgetitem(p32, 254)
++866: i154 = int_and(i152, 7)
++873: i156 = int_eq(i154, 7)
+guard_false(i156, descr=<Guard0x105c00bf0>) [i0, p1, i152, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p4, p144, None, None, None, None, None, None, None, None, p19]
++883: i158 = int_and(i152, 8)
++890: i159 = int_is_true(i158)
+guard_false(i159, descr=<Guard0x105c00b80>) [i0, p1, i154, i152, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p4, p144, None, None, None, None, None, None, None, None, p19]
++900: i161 = int_rshift(i152, 4)
++904: i163 = strgetitem(p32, 255)
++913: i165 = int_and(i163, 7)
++920: i167 = int_eq(i165, 7)
+guard_false(i167, descr=<Guard0x105c00b10>) [i0, p1, i163, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i154, i161, p4, p144, None, None, None, None, None, None, None, None, p19]
++930: i169 = int_and(i163, 8)
++937: i170 = int_is_true(i169)
+guard_false(i170, descr=<Guard0x105c00aa0>) [i0, p1, i165, i163, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i154, i161, p4, p144, None, None, None, None, None, None, None, None, p19]
++947: i172 = int_rshift(i163, 4)
++951: guard_value(i154, 2, descr=<Guard0x105c00a30>) [i0, p1, i161, i154, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i172, i165, None, None, p4, p144, None, None, None, None, None, None, None, None, p19]
++961: i174 = int_is_zero(i161)
+guard_true(i174, descr=<Guard0x105c009c0>) [i0, p1, i161, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i172, i165, None, None, p4, p144, None, None, None, None, None, None, None, None, p19]
++971: i176 = int_eq(i165, 3)
+guard_true(i176, descr=<Guard0x105c00950>) [i0, p1, i172, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p4, p144, None, None, None, None, None, None, None, None, p19]
++981: guard_value(i172, 1, descr=<Guard0x105c008e0>) [i0, p1, i172, p18, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, None, None, None, None, p4, p144, None, None, None, None, None, None, None, None, p19]
+debug_merge_point(0, 0, '256 CALL_LAST')
++991: i179 = strgetitem(p32, 256)
++1000: guard_value(i179, 5, descr=<Guard0x105c00870>) [i179, i0, p1, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p4, p144, None, None, None, None, None, None, None, None, p19]
++1010: i182 = strgetitem(p32, 257)
++1019: i184 = int_and(i182, 7)
++1026: i186 = int_eq(i184, 7)
+guard_false(i186, descr=<Guard0x105c00800>) [i182, i0, p1, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p4, p144, None, None, None, None, None, None, None, None, p19]
++1036: i188 = int_and(i182, 8)
++1043: i189 = int_is_true(i188)
+guard_false(i189, descr=<Guard0x105c00790>) [i0, p1, i182, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p4, p144, None, None, None, None, None, None, None, None, p19]
++1053: i191 = int_rshift(i182, 4)
++1053: i193 = strgetitem(p32, 258)
++1062: i195 = int_and(i193, 7)
++1069: i197 = int_eq(i195, 7)
+guard_false(i197, descr=<Guard0x105c00720>) [i193, i0, p1, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p4, p144, None, None, None, None, None, None, None, None, p19]
++1079: i199 = int_and(i193, 8)
++1086: i200 = int_is_true(i199)
+guard_false(i200, descr=<Guard0x105c006b0>) [i0, p1, i193, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p4, p144, None, None, None, None, None, None, None, None, p19]
++1096: i202 = int_rshift(i193, 4)
++1100: i204 = strgetitem(p32, 259)
++1109: i206 = int_and(i204, 7)
++1116: i208 = int_eq(i206, 7)
+guard_false(i208, descr=<Guard0x105c00640>) [i204, i0, i202, p1, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p4, p144, None, None, None, None, None, None, None, None, p19]
++1126: i210 = int_and(i204, 8)
++1133: i211 = int_is_true(i210)
+guard_false(i211, descr=<Guard0x105c005d0>) [i0, i202, p1, i204, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p4, p144, None, None, None, None, None, None, None, None, p19]
++1143: i213 = int_rshift(i204, 4)
++1147: i215 = int_ge(0, i213)
+guard_true(i215, descr=<Guard0x105c00560>) [i0, i202, p1, i213, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p4, p144, None, None, None, None, None, None, None, None, p19]
++1157: i217 = int_sub(i202, 1)
++1161: i219 = int_lt(i217, 0)
+guard_false(i219, descr=<Guard0x105c004f0>) [i0, i217, p1, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, p4, p144, None, None, None, None, None, None, None, None, p19]
++1171: i220 = getarrayitem_gc(p26, i217, descr=<ArrayS 8>)
++1176: i222 = int_sub(i0, 1)
++1180: guard_value(i220, 156, descr=<Guard0x105c00480>) [i222, i220, p29, p18, p1, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, None, None, None, None, p4, p144, None, None, None, None, None, None, None, None, p19]
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
+p225 = new_with_vtable(4297397368)
+p227 = new_with_vtable(ConstClass(W_NilObject))
+p229 = new_with_vtable(ConstClass(W_AtomObject))
++1301: setfield_gc(p225, p4, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 8>)
++1305: setfield_gc(p225, p19, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 16>)
++1309: setfield_gc(p229, p144, descr=<FieldP pyrlang.interpreter.datatypes.atom.W_AtomObject.inst_strval 8>)
++1320: jump(i222, 1, p1, p18, p29, p225, p227, p229, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, descr=TargetToken(4318167552))
++1530: --end of the loop--
+[27575f65490] jit-log-opt-bridge}
+[27576595927] {jit-log-opt-bridge
+# bridge out of Guard 0x10168cf00 with 126 ops
+[i0, p1, i2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19]
++59: i21 = int_sub(i2, 1)
++70: i23 = int_lt(i21, 0)
+guard_false(i23, descr=<Guard0x105c01bb0>) [i0, p1, i21, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p18, p19, p17]
++80: p25 = getfield_gc(ConstPtr(ptr24), descr=<FieldP list.items 16>)
++93: i26 = getarrayitem_gc(p25, i21, descr=<ArrayS 8>)
++98: p27 = getfield_gc(p1, descr=<FieldP pyrlang.interpreter.interp.Process.inst_x_reg 40>)
++109: p28 = getfield_gc(p1, descr=<FieldP pyrlang.interpreter.interp.Process.inst_y_reg 48>)
++113: guard_value(i26, 194, descr=<Guard0x105caab80>) [i0, i26, p28, p27, p1, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p18, p19, p17]
+debug_merge_point(0, 0, '194 TEST_HEAP')
++126: p31 = getfield_gc(ConstPtr(ptr30), descr=<FieldP pyrlang.rpybeam.beam_code.CodeParser.inst_code 32>)
++139: i32 = strgetitem(p31, 194)
++147: guard_value(i32, 16, descr=<Guard0x105caab10>) [i32, i0, p1, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p18, p19, p17]
++157: i35 = strgetitem(p31, 195)
++165: i37 = int_and(i35, 7)
++172: i39 = int_eq(i37, 7)
+guard_false(i39, descr=<Guard0x105caaaa0>) [i0, p1, i35, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p18, p19, p17]
++182: i41 = int_and(i35, 8)
++193: i42 = int_is_true(i41)
+guard_false(i42, descr=<Guard0x105caaa30>) [i0, p1, i37, i35, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p18, p19, p17]
++203: i44 = int_rshift(i35, 4)
++203: i46 = strgetitem(p31, 196)
++211: i48 = int_and(i46, 7)
++218: i50 = int_eq(i48, 7)
+guard_false(i50, descr=<Guard0x105caa9c0>) [i0, p1, i46, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p18, p19, p17]
++228: i52 = int_and(i46, 8)
++239: i53 = int_is_true(i52)
+guard_false(i53, descr=<Guard0x105caa950>) [i0, p1, i48, i46, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p18, p19, p17]
++249: i55 = int_rshift(i46, 4)
+debug_merge_point(0, 0, '197 PUT_LIST')
++249: i57 = strgetitem(p31, 197)
++257: guard_value(i57, 69, descr=<Guard0x105caa8e0>) [i57, i0, p1, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p18, p19, p17]
++267: i60 = strgetitem(p31, 198)
++275: i62 = int_and(i60, 7)
++282: i64 = int_eq(i62, 7)
+guard_false(i64, descr=<Guard0x105caa870>) [i0, p1, i60, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p18, p19, p17]
++292: i66 = int_and(i60, 8)
++303: i67 = int_is_true(i66)
+guard_false(i67, descr=<Guard0x105caa800>) [i0, p1, i62, i60, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p18, p19, p17]
++313: i69 = int_rshift(i60, 4)
++324: i71 = strgetitem(p31, 199)
++339: i73 = int_and(i71, 7)
++350: i75 = int_eq(i73, 7)
+guard_false(i75, descr=<Guard0x105caa790>) [i0, p1, i71, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, i69, i62, p18, p19, p17]
++360: i77 = int_and(i71, 8)
++378: i78 = int_is_true(i77)
+guard_false(i78, descr=<Guard0x105caa720>) [i0, p1, i73, i71, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, i69, i62, p18, p19, p17]
++388: i80 = int_rshift(i71, 4)
++399: i82 = strgetitem(p31, 200)
++407: i84 = int_and(i82, 7)
++418: i86 = int_eq(i84, 7)
+guard_false(i86, descr=<Guard0x105caa6b0>) [i0, p1, i82, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, i73, i80, i69, i62, p18, p19, p17]
++428: i88 = int_and(i82, 8)
++446: i89 = int_is_true(i88)
+guard_false(i89, descr=<Guard0x105caa640>) [i0, p1, i84, i82, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, i73, i80, i69, i62, p18, p19, p17]
++456: i91 = int_rshift(i82, 4)
++467: i93 = int_eq(i62, 3)
+guard_true(i93, descr=<Guard0x105caa5d0>) [i0, p1, i69, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, i91, i84, i73, i80, None, None, p18, p19, p17]
++477: i95 = ptr_eq(p27, p16)
+guard_true(i95, descr=<Guard0x105caa560>) [i0, p1, i69, p27, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, i91, i84, i73, i80, None, None, p18, p19, p17]
++490: guard_value(i69, 3, descr=<Guard0x105caa4f0>) [i0, p1, i69, p16, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, i91, i84, i73, i80, None, None, p18, p19, p17]
++500: i98 = int_eq(i73, 3)
+guard_true(i98, descr=<Guard0x105caa480>) [i0, p1, p3, i80, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, i91, i84, None, None, None, None, p18, p19, p17]
++510: guard_value(i80, 1, descr=<Guard0x105caa410>) [i0, p1, p3, i80, p16, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, i91, i84, None, None, None, None, p18, p19, p17]
++520: guard_nonnull_class(p3, 4297397456, descr=<Guard0x105caa3a0>) [i0, p1, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, i91, i84, None, None, None, None, p18, p19, p17]
++545: i102 = int_eq(i84, 3)
+guard_true(i102, descr=<Guard0x105caa330>) [i0, p1, i91, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, None, None, None, None, None, None, p18, p19, p17]
++555: guard_value(i91, 1, descr=<Guard0x105caa2c0>) [i0, p1, i91, p16, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, None, None, None, None, None, None, p18, p19, p17]
+debug_merge_point(0, 0, '201 MOVE')
++565: i105 = strgetitem(p31, 201)
++573: guard_value(i105, 64, descr=<Guard0x105caa250>) [i105, i0, p1, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, None, None, None, None, None, None, p18, p19, p17]
++583: i108 = strgetitem(p31, 202)
++591: i110 = int_and(i108, 7)
++598: i112 = int_eq(i110, 7)
+guard_false(i112, descr=<Guard0x105caa1e0>) [i0, p1, i108, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, None, None, None, None, None, None, p18, p19, p17]
++608: i114 = int_and(i108, 8)
++615: i115 = int_is_true(i114)
+guard_false(i115, descr=<Guard0x105caa170>) [i0, p1, i110, i108, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, None, None, None, None, None, None, p18, p19, p17]
++625: i117 = int_rshift(i108, 4)
++629: i119 = strgetitem(p31, 203)
++637: i121 = int_and(i119, 7)
++644: i123 = int_eq(i121, 7)
+guard_false(i123, descr=<Guard0x105caa100>) [i0, p1, i119, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, i117, i110, None, None, None, None, None, None, p18, p19, p17]
++654: i125 = int_and(i119, 8)
++661: i126 = int_is_true(i125)
+guard_false(i126, descr=<Guard0x105caa090>) [i0, p1, i121, i119, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, i117, i110, None, None, None, None, None, None, p18, p19, p17]
++671: i128 = int_rshift(i119, 4)
++675: guard_value(i110, 3, descr=<Guard0x105caa020>) [i0, p1, i117, i110, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, i128, i121, None, None, None, None, None, None, None, None, p18, p19, p17]
++685: guard_value(i117, 4, descr=<Guard0x105ca1f30>) [i0, p1, i117, p16, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, i128, i121, None, None, None, None, None, None, None, None, p18, p19, p17]
++695: i132 = int_eq(i121, 3)
+guard_true(i132, descr=<Guard0x105ca1ec0>) [i0, p1, i128, p4, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, None, None, None, None, None, None, None, None, None, None, p18, p19, p17]
++705: guard_value(i128, 0, descr=<Guard0x105ca1e50>) [i0, p1, i128, p4, p16, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, None, None, None, None, None, None, None, None, None, None, p18, p19, p17]
+debug_merge_point(0, 0, '204 CALL_ONLY')
++715: i135 = strgetitem(p31, 204)
++723: guard_value(i135, 6, descr=<Guard0x105ca1de0>) [i135, i0, p1, p4, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, None, None, None, None, None, None, None, None, None, None, p18, p19, p17]
++733: i138 = strgetitem(p31, 205)
++741: i140 = int_and(i138, 7)
++748: i142 = int_eq(i140, 7)
+guard_false(i142, descr=<Guard0x105ca1d70>) [i138, i0, p1, p4, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, None, None, None, None, None, None, None, None, None, None, p18, p19, p17]
++758: i144 = int_and(i138, 8)
++765: i145 = int_is_true(i144)
+guard_false(i145, descr=<Guard0x105ca1d00>) [i0, p1, i138, p4, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, None, None, None, None, None, None, None, None, None, None, p18, p19, p17]
++775: i147 = int_rshift(i138, 4)
++775: i149 = strgetitem(p31, 206)
++783: i151 = int_and(i149, 7)
++790: i153 = int_eq(i151, 7)
+guard_false(i153, descr=<Guard0x105ca1c90>) [i149, i0, p1, p4, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, None, None, None, None, None, None, None, None, None, None, p18, p19, p17]
++800: i155 = int_and(i149, 8)
++807: i156 = int_is_true(i155)
+guard_false(i156, descr=<Guard0x105ca1c20>) [i0, p1, i149, p4, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, None, None, None, None, None, None, None, None, None, None, p18, p19, p17]
++817: i158 = int_rshift(i149, 4)
++821: i160 = int_sub(i158, 1)
++825: i162 = int_lt(i160, 0)
+guard_false(i162, descr=<Guard0x105ca1bb0>) [i0, i160, p1, p4, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, None, None, None, None, None, None, None, None, None, None, p18, p19, p17]
++835: i163 = getarrayitem_gc(p25, i160, descr=<ArrayS 8>)
++840: i165 = int_sub(i0, 1)
++844: guard_value(i163, 156, descr=<Guard0x105ca1b40>) [i165, i163, p28, p16, p1, p4, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, None, None, None, None, None, None, None, None, None, None, p18, p19, p17]
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
+p168 = new_with_vtable(4297397368)
+p170 = new_with_vtable(4297397368)
++947: setfield_gc(p168, p3, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 8>)
++958: setfield_gc(p170, p19, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 16>)
+p172 = new_with_vtable(ConstClass(W_AtomObject))
++973: setfield_gc(p170, p17, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 8>)
++977: setfield_gc(p168, p170, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 16>)
++981: setfield_gc(p172, p18, descr=<FieldP pyrlang.interpreter.datatypes.atom.W_AtomObject.inst_strval 8>)
++992: jump(i165, 1, p1, p16, p28, p4, p168, p172, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, descr=TargetToken(4318167552))
++1054: --end of the loop--
+[2757663daf9] jit-log-opt-bridge}
+[275783afb0e] {jit-log-opt-bridge
+# bridge out of Guard 0x104194e20 with 125 ops
+[i0, p1, i2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
++59: guard_nonnull_class(p3, ConstClass(W_NilObject), descr=<Guard0x105caabf0>) [i0, p1, i2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p20, p19]
++77: i23 = int_sub(i2, 1)
++81: i25 = int_lt(i23, 0)
+guard_false(i25, descr=<Guard0x105f63c90>) [i0, p1, i23, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p20, p19]
++91: p27 = getfield_gc(ConstPtr(ptr26), descr=<FieldP list.items 16>)
++104: i28 = getarrayitem_gc(p27, i23, descr=<ArrayS 8>)
++109: p29 = getfield_gc(p1, descr=<FieldP pyrlang.interpreter.interp.Process.inst_x_reg 40>)
++120: p30 = getfield_gc(p1, descr=<FieldP pyrlang.interpreter.interp.Process.inst_y_reg 48>)
++124: guard_value(i28, 194, descr=<Guard0x105f63c20>) [i0, i28, p30, p29, p1, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p20, p19]
+debug_merge_point(0, 0, '194 TEST_HEAP')
++137: p33 = getfield_gc(ConstPtr(ptr32), descr=<FieldP pyrlang.rpybeam.beam_code.CodeParser.inst_code 32>)
++150: i34 = strgetitem(p33, 194)
++158: guard_value(i34, 16, descr=<Guard0x105f63bb0>) [i34, i0, p1, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p20, p19]
++168: i37 = strgetitem(p33, 195)
++176: i39 = int_and(i37, 7)
++183: i41 = int_eq(i39, 7)
+guard_false(i41, descr=<Guard0x105f63b40>) [i0, p1, i37, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p20, p19]
++193: i43 = int_and(i37, 8)
++204: i44 = int_is_true(i43)
+guard_false(i44, descr=<Guard0x105f63ad0>) [i0, p1, i39, i37, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p20, p19]
++214: i46 = int_rshift(i37, 4)
++214: i48 = strgetitem(p33, 196)
++222: i50 = int_and(i48, 7)
++229: i52 = int_eq(i50, 7)
+guard_false(i52, descr=<Guard0x105f63a60>) [i0, p1, i48, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p20, p19]
++239: i54 = int_and(i48, 8)
++250: i55 = int_is_true(i54)
+guard_false(i55, descr=<Guard0x105f639f0>) [i0, p1, i50, i48, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p20, p19]
++260: i57 = int_rshift(i48, 4)
+debug_merge_point(0, 0, '197 PUT_LIST')
++260: i59 = strgetitem(p33, 197)
++268: guard_value(i59, 69, descr=<Guard0x105f63980>) [i59, i0, p1, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p20, p19]
++278: i62 = strgetitem(p33, 198)
++286: i64 = int_and(i62, 7)
++293: i66 = int_eq(i64, 7)
+guard_false(i66, descr=<Guard0x105f63910>) [i0, p1, i62, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p20, p19]
++303: i68 = int_and(i62, 8)
++314: i69 = int_is_true(i68)
+guard_false(i69, descr=<Guard0x105f638a0>) [i0, p1, i64, i62, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p20, p19]
++324: i71 = int_rshift(i62, 4)
++335: i73 = strgetitem(p33, 199)
++350: i75 = int_and(i73, 7)
++361: i77 = int_eq(i75, 7)
+guard_false(i77, descr=<Guard0x105f63830>) [i0, p1, i73, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i71, i64, p20, p19]
++371: i79 = int_and(i73, 8)
++389: i80 = int_is_true(i79)
+guard_false(i80, descr=<Guard0x105f637c0>) [i0, p1, i75, i73, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i71, i64, p20, p19]
++399: i82 = int_rshift(i73, 4)
++410: i84 = strgetitem(p33, 200)
++425: i86 = int_and(i84, 7)
++436: i88 = int_eq(i86, 7)
+guard_false(i88, descr=<Guard0x105f63750>) [i0, p1, i84, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i82, i75, i71, i64, p20, p19]
++446: i90 = int_and(i84, 8)
++457: i91 = int_is_true(i90)
+guard_false(i91, descr=<Guard0x105f636e0>) [i0, p1, i86, i84, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i82, i75, i71, i64, p20, p19]
++467: i93 = int_rshift(i84, 4)
++478: i95 = int_eq(i64, 3)
+guard_true(i95, descr=<Guard0x105f63670>) [i0, p1, i71, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i86, i93, i82, i75, None, None, p20, p19]
++488: i97 = ptr_eq(p29, p18)
+guard_true(i97, descr=<Guard0x105f63600>) [i0, p1, i71, p29, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i86, i93, i82, i75, None, None, p20, p19]
++501: guard_value(i71, 3, descr=<Guard0x105f63590>) [i0, p1, i71, p18, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i86, i93, i82, i75, None, None, p20, p19]
++511: i100 = int_eq(i75, 3)
+guard_true(i100, descr=<Guard0x105f63520>) [i0, p1, p6, i82, p4, p5, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i86, i93, None, None, None, None, p20, p19]
++521: guard_value(i82, 1, descr=<Guard0x105f634b0>) [i0, p1, p6, i82, p18, p4, p5, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i86, i93, None, None, None, None, p20, p19]
++531: guard_nonnull_class(p6, 4297397456, descr=<Guard0x105f63440>) [i0, p1, p6, p4, p5, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i86, i93, None, None, None, None, p20, p19]
++556: i104 = int_eq(i86, 3)
+guard_true(i104, descr=<Guard0x105f633d0>) [i0, p1, i93, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, None, None, p20, p19]
++566: guard_value(i93, 1, descr=<Guard0x105f63360>) [i0, p1, i93, p18, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, None, None, None, None, None, None, p20, p19]
+debug_merge_point(0, 0, '201 MOVE')
++576: i107 = strgetitem(p33, 201)
++584: guard_value(i107, 64, descr=<Guard0x105f632f0>) [i107, i0, p1, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, None, None, p20, p19]
++594: i110 = strgetitem(p33, 202)
++602: i112 = int_and(i110, 7)
++609: i114 = int_eq(i112, 7)
+guard_false(i114, descr=<Guard0x105f63280>) [i0, p1, i110, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, None, None, p20, p19]
++619: i116 = int_and(i110, 8)
++626: i117 = int_is_true(i116)
+guard_false(i117, descr=<Guard0x105f63210>) [i0, p1, i112, i110, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, None, None, p20, p19]
++636: i119 = int_rshift(i110, 4)
++640: i121 = strgetitem(p33, 203)
++648: i123 = int_and(i121, 7)
++655: i125 = int_eq(i123, 7)
+guard_false(i125, descr=<Guard0x105f631a0>) [i0, p1, i121, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i119, i112, None, None, None, None, None, None, p20, p19]
++665: i127 = int_and(i121, 8)
++672: i128 = int_is_true(i127)
+guard_false(i128, descr=<Guard0x105f63130>) [i0, p1, i123, i121, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i119, i112, None, None, None, None, None, None, p20, p19]
++682: i130 = int_rshift(i121, 4)
++686: guard_value(i112, 3, descr=<Guard0x105f630c0>) [i0, p1, i119, i112, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, i123, i130, None, None, None, None, None, None, None, None, p20, p19]
++696: guard_value(i119, 4, descr=<Guard0x105f63050>) [i0, p1, i119, p18, p4, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i123, i130, None, None, None, None, None, None, None, None, p20, p19]
++706: i134 = int_eq(i123, 3)
+guard_true(i134, descr=<Guard0x105f62fe0>) [i0, p1, i130, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, None, None, None, None, None, None, p20, p19]
++716: guard_value(i130, 0, descr=<Guard0x105f62f70>) [i0, p1, i130, p3, p18, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, None, None, None, None, None, None, None, None, None, None, p20, p19]
+debug_merge_point(0, 0, '204 CALL_ONLY')
++726: i137 = strgetitem(p33, 204)
++734: guard_value(i137, 6, descr=<Guard0x105f62f00>) [i137, i0, p1, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, None, None, None, None, None, None, p20, p19]
++744: i140 = strgetitem(p33, 205)
++752: i142 = int_and(i140, 7)
++759: i144 = int_eq(i142, 7)
+guard_false(i144, descr=<Guard0x105f62e90>) [i140, i0, p1, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, None, None, None, None, None, None, p20, p19]
++769: i146 = int_and(i140, 8)
++776: i147 = int_is_true(i146)
+guard_false(i147, descr=<Guard0x105f62e20>) [i0, p1, i140, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, None, None, None, None, None, None, p20, p19]
++786: i149 = int_rshift(i140, 4)
++786: i151 = strgetitem(p33, 206)
++794: i153 = int_and(i151, 7)
++801: i155 = int_eq(i153, 7)
+guard_false(i155, descr=<Guard0x105f62db0>) [i151, i0, p1, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, None, None, None, None, None, None, p20, p19]
++811: i157 = int_and(i151, 8)
++818: i158 = int_is_true(i157)
+guard_false(i158, descr=<Guard0x105f62d40>) [i0, p1, i151, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, None, None, None, None, None, None, p20, p19]
++828: i160 = int_rshift(i151, 4)
++832: i162 = int_sub(i160, 1)
++836: i164 = int_lt(i162, 0)
+guard_false(i164, descr=<Guard0x105f62cd0>) [i0, i162, p1, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, None, None, None, None, None, None, None, None, None, None, p20, p19]
++846: i165 = getarrayitem_gc(p27, i162, descr=<ArrayS 8>)
++851: i167 = int_sub(i0, 1)
++855: guard_value(i165, 156, descr=<Guard0x105f62c60>) [i167, i165, p30, p18, p1, p3, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, None, None, None, None, None, None, None, None, None, None, p20, p19]
+debug_merge_point(0, 0, '156 IS_NONEMPTY_LIST')
+p170 = new_with_vtable(4297397368)
+p172 = new_with_vtable(4297397368)
++958: setfield_gc(p170, p6, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 8>)
++962: setfield_gc(p172, p20, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 16>)
++966: setfield_gc(p172, p19, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_left 8>)
++970: setfield_gc(p170, p172, descr=<FieldP pyrlang.interpreter.datatypes.list.W_ListObject.inst_right 16>)
++974: jump(i167, 1, p1, p18, p30, p3, p170, p5, p6, p3, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, descr=TargetToken(4318167552))
++1050: --end of the loop--
+[275784741f2] jit-log-opt-bridge}
+[27c385c4ef8] {jit-backend-counts
+entry 0:841
+TargetToken(4318167552):60197
+TargetToken(4318167712):199988752
+entry 1:209
+TargetToken(4318167872):20000
+TargetToken(4318167952):399998957
+bridge 4318552432:19979
+TargetToken(4318169312):199969799
+bridge 4318611344:19792
+TargetToken(4318171152):19791
+bridge 4319443328:19793
+bridge 4318613248:19791
+bridge 4363734560:19773
+[27c385e8beb] jit-backend-counts}
