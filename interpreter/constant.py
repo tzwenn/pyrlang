@@ -17,3 +17,6 @@ PRIORITY_LOW = 4
 # how many times we skip a low priority process
 # before we execute it.
 LOW_PRIORITY_PROCESS_SKIP_TIMES = 5
+
+# use it to represent an undefined register tuple of (address, tag)
+INVALID_REG = (0,0)

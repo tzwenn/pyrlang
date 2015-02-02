@@ -38,6 +38,7 @@ def main(argv):
 	pid_provider = PidProvider()
 	scheduler = Scheduler(pid_provider)
 	brt = Process(pid_provider.create_pid(), scheduler, constant.PRIORITY_NORMAL)
+	scheduler.process_pool[brt.pid] = brt
 	cp = CodeParser(b, file_name)
 	func_addr = cp.get_func_addr_by_name(entry_func, len(args))
 	brt.init_entry_arguments(args)

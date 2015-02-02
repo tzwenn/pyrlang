@@ -1,5 +1,6 @@
 from pyrlang.utils.deque import Deque
 from pyrlang.interpreter import constant
+from pyrlang.rpybeam import pretty_print
 class Scheduler:
 	def __init__(self, pid_provider):
 		self.pid_provider = pid_provider
@@ -9,6 +10,9 @@ class Scheduler:
 		self.max_queue = Deque()
 		
 		# a pid => process dictionary
+		self.process_pool = {}
+
+		# pid => (process, cp, pc)
 		self.inactive_processes = {}
 
 		self.internal_message_queue = Deque()
@@ -49,6 +53,17 @@ class Scheduler:
 		else:
 			self.normal_queue.append(pcp)
 
+	def send_by_pid(self, pid, msg):
+		if pid in self.process_pool:
+			process = self.process_pool[pid]
+			process.append_message(msg)
+			#print "send msg %s to process %s"%(pretty_print.value_str(msg), pretty_print.value_str(pid))
+			if pid in self.inactive_processes:
+				self.push_to_priority_queue(self.inactive_processes[pid],
+						process.priority)
+				#print "found process %s in inactive_processes"%(pretty_print.value_str(pid))
+				del self.inactive_processes[pid]
+
 	def _handle_one_process_from_queue(self, queue):
 		pcp = queue.pop()
 		self._handle_one_process(queue, pcp)
@@ -59,6 +74,6 @@ class Scheduler:
 		if state == constant.STATE_SWITH:
 			queue.append((process, cp, pc))
 		elif state == constant.STATE_TERMINATE:
-			return
+			del self.process_pool[process.pid]
 		elif state == constant.STATE_HANG_UP:
 			self.inactive_processes[process.pid] = (process, cp, pc)

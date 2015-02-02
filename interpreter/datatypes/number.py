@@ -32,6 +32,12 @@ class W_IntObject(W_Root):
 	def clone(self):
 		return W_IntObject(self.intval)
 
+	def is_equal(self, other):
+		if isinstance(other, W_IntObject):
+			return self.intval == other.intval
+		else:
+			return False
+
 
 class W_FloatObject(W_Root):
 	def __init__(self, floatval):
@@ -56,3 +62,9 @@ class W_FloatObject(W_Root):
 
 	def clone(self):
 		return W_FloatObject(self.floatval)
+
+	def is_equal(self, other):
+		if isinstance(other, W_FloatObject):
+			return self.floatval == other.floatval
+		else:
+			return False

@@ -39,14 +39,19 @@ class ElementFunc_2(BaseBIF):
 	def invoke(self, args):
 		(index, tuple_val) = args
 		assert isinstance(tuple_val, W_TupleObject)
-		return tuple_val.element(index)
+		return tuple_val.element_from_int_obj(index)
 
 class GetModuleInfoFunc_1(BaseBIF):
 	def invoke(self,arg):
 		return W_FloatObject(3.1415926)
 
 class GetModuleInfoFunc_2(BaseBIF):
-	pass
+	def invoke(self,arg):
+		return W_FloatObject(2.3333333)
+
+class SelfFunc_0(BaseBIF):
+	def invoke(self, args):
+		return self.caller.pid
 
 class SpawnFunc_3(BaseFakeFunc):
 	def _invoke(self, module_name, func_name, args, cp, process):
@@ -77,7 +82,7 @@ class TupleSizeFunc_1(BaseBIF):
 	def invoke(self, args):
 		tuple_val = args[0]
 		assert isinstance(tuple_val, W_TupleObject)
-		return tuple_val.size()
+		return tuple_val.size_to_int_obj()
 
 class ModuleEntity(BaseModule):
 	_func_dict = { "+_2" : AddFunc,
@@ -88,6 +93,7 @@ class ModuleEntity(BaseModule):
 				  "element_2" : ElementFunc_2,
 				  "get_module_info_1" : GetModuleInfoFunc_1,
 				  "get_module_info_2" : GetModuleInfoFunc_2,
+				  "self_0" : SelfFunc_0,
 				  "spawn_3" : SpawnFunc_3,
 				  "tuple_size_1" : TupleSizeFunc_1}
 

@@ -7,3 +7,9 @@ class W_AtomObject(W_Root):
 
 	def clone(self):
 		return W_AtomObject(self.strval)
+
+	def is_equal(self, other):
+		if isinstance(other, W_AtomObject):
+			return self.strval == other.strval
+		else:
+			return False

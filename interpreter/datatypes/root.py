@@ -3,3 +3,6 @@ class W_Root:
 
 	def clone(self):
 		return W_Root()
+
+	def is_equal(self, other):
+		return False

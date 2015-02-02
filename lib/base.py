@@ -15,6 +15,9 @@ class BaseBIF(BaseFunc):
 	def invoke(self, args):
 		pass
 
+	def set_caller(self, caller):
+		self.caller = caller
+
 # for the BIF which is called with call_ext_*
 class BaseFakeFunc(BaseFunc):
 	def invoke(self, cp, pc, runtime):
