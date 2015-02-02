@@ -2,8 +2,10 @@ from pyrlang.utils.deque import Deque
 from pyrlang.interpreter import constant
 from pyrlang.rpybeam import pretty_print
 class Scheduler:
-	def __init__(self, pid_provider):
+	def __init__(self, pid_provider, is_single_run, reduction):
 		self.pid_provider = pid_provider
+		self.is_single_run = is_single_run
+		self.reduction = reduction
 		# the run able queue
 		self.normal_queue = Deque()
 		self.high_queue = Deque()
@@ -70,7 +72,7 @@ class Scheduler:
 
 	def _handle_one_process(self, queue, pcp):
 		(process, cp, pc) = pcp
-		(state, pc) = process.execute(cp, pc)
+		(state, pc) = process.execute(cp, pc, self.is_single_run, self.reduction)
 		if state == constant.STATE_SWITH:
 			queue.append((process, cp, pc))
 		elif state == constant.STATE_TERMINATE:

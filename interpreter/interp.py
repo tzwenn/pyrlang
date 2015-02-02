@@ -47,9 +47,9 @@ class Process:
 			self.x_reg.store(i, arg_lst[i])
 
 	@jit.unroll_safe
-	def execute(self, cp, func_addr, single = False):
+	def execute(self, cp, func_addr, single, reduction):
 		pc = func_addr
-		reduction = 2000
+		#print "execute in reduction %d"%(reduction)
 
 		while(True):
 			driver.jit_merge_point(pc = pc,
