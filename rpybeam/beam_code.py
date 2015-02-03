@@ -9,10 +9,9 @@ import pretty_print
 lib_module = ["erlang"]
 
 class CodeParser:
-	_immutable_fields_ = ['atoms[*]', 'labelTable']
+	_immutable_fields_ = ['file_name', 'atoms[*]', 'labelTable']
 
 	def __init__(self, beam, name, parent_cp = None):
-		self.position_key = 0
 		self.file_name = name
 		self.parent_cp = parent_cp
 		self.code = beam.getCode()
@@ -304,7 +303,7 @@ class CodeParser:
 	# label index should begin with 0
 	@jit.unroll_safe
 	def find_func_def_from_label(self, label_index):
-		for l_idx in range(label_index, len(self.labelTable) - 1):
+		for l_idx in range(label_index, len(self.labelTable) - 2):
 			pc = self.labelTable[l_idx]
 			pc, instr = self.parseInstr(pc)
 			if instr == opcodes.LINE:

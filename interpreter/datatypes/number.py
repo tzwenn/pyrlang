@@ -16,6 +16,10 @@ class W_IntObject(W_Root):
 		assert isinstance(other, W_IntObject)
 		return W_IntObject(self.intval - other.intval)
 
+	def rem(self, other):
+		assert isinstance(other, W_IntObject)
+		return W_IntObject(self.intval % other.intval)
+
 	def lt(self, other): 
 		assert isinstance(other, W_IntObject)
 		return self.intval < other.intval

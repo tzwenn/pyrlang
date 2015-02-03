@@ -49,6 +49,11 @@ class GetModuleInfoFunc_2(BaseBIF):
 	def invoke(self,arg):
 		return W_FloatObject(2.3333333)
 
+class RemFunc_2(BaseBIF):
+	def invoke(self, args):
+		(a,b) = args
+		return a.rem(b)
+
 class SelfFunc_0(BaseBIF):
 	def invoke(self, args):
 		return self.caller.pid
@@ -93,6 +98,7 @@ class ModuleEntity(BaseModule):
 				  "element_2" : ElementFunc_2,
 				  "get_module_info_1" : GetModuleInfoFunc_1,
 				  "get_module_info_2" : GetModuleInfoFunc_2,
+				  "rem_2" : RemFunc_2,
 				  "self_0" : SelfFunc_0,
 				  "spawn_3" : SpawnFunc_3,
 				  "tuple_size_1" : TupleSizeFunc_1}

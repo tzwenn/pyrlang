@@ -59,10 +59,9 @@ class Process:
 					s_self = self,
 					s_x_reg = self.x_reg,
 					s_y_reg = self.y_reg)
-			#print pretty_print.value_str(self.pid) + ": " + printable_loc(pc, cp)
+			#print pretty_print.value_str(self.pid) + ": " + printable_loc(pc, cp) + " reduction: " + str(reduction)
 			instr = ord(cp.code[pc])
 			pc = pc + 1
-			#print "execute instr: %s"%(opcodes.opnames[instr])
 			if instr == opcodes.LABEL: # 1
 				pc, _ = cp.parseInt(pc)
 
@@ -328,6 +327,11 @@ class Process:
 				if not single and reduction <= 0:
 					break
 
+			elif instr == opcodes.TRIM: # 136
+				pc, n = cp.parseInt(pc)
+				pc, remaining = cp.parseInt(pc)
+				self.trim(n, remaining)
+
 			elif instr == opcodes.LINE: # 153
 				pc, cp.current_line = cp.parseInt(pc)
 
@@ -485,6 +489,7 @@ class Process:
 				W_ListObject(W_TupleObject([W_AtomObject('line'), 
 					W_IntObject(line_number)])))])
 
+	@jit.unroll_safe
 	def apply_bif(self, cp, pc, fail, bif_index, rands, dst_reg):
 		# TODO: wrap them with try-catch to handle inner exception.
 		args = [self.get_basic_value(cp, rand) for rand in rands]
@@ -783,6 +788,11 @@ class Process:
 		label = cp.loc_table[index][2]
 		self.store_basereg((opcodes.TAG_XREG, 0), W_AddrObject(cp.label_to_addr(label)))
 
+	# 125
 	def gc_bif2(self, cp, pc, fail, alive, bif_index, rand1, rand2, dst_reg):
 		# TODO: maybe we can help GC with alive?
 		return self.bif2(cp, pc, fail, bif_index, rand1, rand2, dst_reg)
+
+	# 136
+	def trim(self, n, remaining):
+		self.deallcate(n)
