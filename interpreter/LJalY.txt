@@ -1,0 +1,30 @@
+diff --git a/interpreter/interp.py b/interpreter/interp.py
+index 9da813a..16840c8 100644
+--- a/interpreter/interp.py
++++ b/interpreter/interp.py
+@@ -50,6 +50,7 @@ class Process:
+        def execute(self, cp, func_addr, single, reduction):
+                pc = func_addr
+                #print "execute in reduction %d"%(reduction)
++               s_x_reg = self.x_reg
+ 
+                while(True):
+                        driver.jit_merge_point(pc = pc,
+@@ -57,7 +58,7 @@ class Process:
+                                        reduction = reduction,
+                                        single = single, 
+                                        s_self = self,
+-                                       s_x_reg = self.x_reg,
++                                       s_x_reg = s_x_reg,
+                                        s_y_reg = self.y_reg)
+                        #print pretty_print.value_str(self.pid) + ": " + printab
+                        instr = ord(cp.code[pc])
+@@ -92,7 +93,7 @@ class Process:
+                                                        reduction = reduction,
+                                                        single = single,
+                                                        s_self = self, 
+-                                                       s_x_reg = self.x_reg,
++                                                       s_x_reg = s_x_reg,
+                                                        s_y_reg = self.y_reg)
+ 
+                        elif instr == opcodes.CALL_EXT: # 7

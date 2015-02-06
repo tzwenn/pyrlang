@@ -72,7 +72,7 @@ class Scheduler:
 
 	def _handle_one_process(self, queue, pcp):
 		(process, cp, pc) = pcp
-		(state, pc) = process.execute(cp, pc, self.is_single_run, self.reduction)
+		(state, pc, cp) = process.execute(cp, pc, self.is_single_run, self.reduction)
 		if state == constant.STATE_SWITH:
 			queue.append((process, cp, pc))
 		elif state == constant.STATE_TERMINATE:

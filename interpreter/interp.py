@@ -23,8 +23,8 @@ def printable_loc(pc, cp):
 	return str(pc) + " " + opcodes.opnames[index].upper()
 
 driver = jit.JitDriver(greens = ['pc', 'cp'],
-		reds = ['reduction', 'single', 's_self', 's_x_reg', 's_y_reg'],
-		virtualizables = ['s_x_reg'],
+		reds = ['reduction', 'single', 's_self', 'x_reg', 's_y_reg'],
+		virtualizables = ['x_reg'],
 		get_printable_location=printable_loc)
 
 class Process:
@@ -49,6 +49,7 @@ class Process:
 	@jit.unroll_safe
 	def execute(self, cp, func_addr, single, reduction):
 		pc = func_addr
+		x_reg = self.x_reg
 		#print "execute in reduction %d"%(reduction)
 
 		while(True):
@@ -57,9 +58,9 @@ class Process:
 					reduction = reduction,
 					single = single, 
 					s_self = self,
-					s_x_reg = self.x_reg,
+					x_reg = x_reg,
 					s_y_reg = self.y_reg)
-			#print pretty_print.value_str(self.pid) + ": " + printable_loc(pc, cp) + " reduction: " + str(reduction)
+			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, cp) + " reduction: " + str(reduction)
 			instr = ord(cp.code[pc])
 			pc = pc + 1
 			if instr == opcodes.LABEL: # 1
@@ -75,9 +76,9 @@ class Process:
 				pc, label = cp.parseInt(pc)
 				pc, n = cp.parseInt(pc)
 				pc = self.call_last(cp, arity, label, n)
-				reduction -= 1
-				if not single and reduction <= 0:
-					break
+				#reduction -= 1
+				#if not single and reduction <= 0:
+					#break
 
 			elif instr == opcodes.CALL_ONLY: # 6
 				pc, arity = cp.parseInt(pc)
@@ -92,7 +93,7 @@ class Process:
 							reduction = reduction,
 							single = single,
 							s_self = self, 
-							s_x_reg = self.x_reg,
+							x_reg = x_reg,
 							s_y_reg = self.y_reg)
 
 			elif instr == opcodes.CALL_EXT: # 7
@@ -104,9 +105,9 @@ class Process:
 				else:
 					assert tag == opcodes.TAG_LABEL
 					pc = self._call_ext_bif(pc, cp, header_index)
-				reduction -= 1
-				if not single and reduction <= 0:
-					break
+				#reduction -= 1
+				#if not single and reduction <= 0:
+					#break
 
 			elif instr == opcodes.CALL_EXT_LAST: # 8
 				pc, real_arity = cp.parseInt(pc)
@@ -122,12 +123,12 @@ class Process:
 					# calling a bif means the dispatch loop 
 					# need a extra k_return semantics 
 					if self.y_reg.is_empty():
-						return (constant.STATE_TERMINATE, pc)
+						return (constant.STATE_TERMINATE, pc, cp)
 					else:
 						(cp, pc) = self.k_return(cp)
-				reduction -= 1
-				if not single and reduction <= 0:
-					break
+				#reduction -= 1
+				#if not single and reduction <= 0:
+					#break
 
 			elif instr == opcodes.BIF0: # 9
 				pc, bif_index = cp.parseInt(pc)
@@ -141,9 +142,9 @@ class Process:
 				pc, dst_reg = cp.parseBase(pc)
 				pc = self.bif1(cp, pc, fail, 
 						cp.import_header[bif_index][1], rand1, dst_reg)
-				reduction -= 1
-				if not single and reduction <= 0:
-					break
+				#reduction -= 1
+				#if not single and reduction <= 0:
+					#break
 
 			elif instr == opcodes.BIF2: # 11
 				pc, fail = cp.parseInt(pc)
@@ -153,9 +154,9 @@ class Process:
 				pc, dst_reg = cp.parseBase(pc)
 				pc = self.bif2(cp, pc, fail, 
 						cp.import_header[bif_index][1], rand1, rand2, dst_reg)
-				reduction -= 1
-				if not single and reduction <= 0:
-					break
+				#reduction -= 1
+				#if not single and reduction <= 0:
+					#break
 
 			elif instr == opcodes.ALLOCATE: # 12
 				pc, stack_need = cp.parseInt(pc)
@@ -182,7 +183,7 @@ class Process:
 
 			elif instr == opcodes.K_RETURN: # 19
 				if self.y_reg.is_empty():
-					return (constant.STATE_TERMINATE, pc)
+					return (constant.STATE_TERMINATE, pc, cp)
 				else:
 					(cp, pc) = self.k_return(cp)
 
@@ -204,7 +205,7 @@ class Process:
 			elif instr == opcodes.WAIT: # 25
 				pc, label = cp.parseInt(pc)
 				pc = self.wait(cp, label)
-				return (constant.STATE_HANG_UP, pc)
+				return (constant.STATE_HANG_UP, pc, cp)
 
 			elif instr == opcodes.IS_LT: # 39
 				pc, label = cp.parseInt(pc)
@@ -323,9 +324,9 @@ class Process:
 				pc, dst_reg = cp.parseBase(pc)
 				pc = self.gc_bif2(cp, pc, fail, alive, 
 						cp.import_header[bif_index][1], rand1, rand2, dst_reg)
-				reduction -= 1
-				if not single and reduction <= 0:
-					break
+				#reduction -= 1
+				#if not single and reduction <= 0:
+					#break
 
 			elif instr == opcodes.TRIM: # 136
 				pc, n = cp.parseInt(pc)
@@ -337,7 +338,7 @@ class Process:
 
 			else:
 				raise Exception("Unimplemented opcode: %d"%(instr))
-		return (constant.STATE_SWITH, pc)
+		return (constant.STATE_SWITH, pc, cp)
 
 	def _send_by_pid(self, pid, msg):
 		self.scheduler.send_by_pid(pid, msg)
@@ -504,7 +505,7 @@ class Process:
 		module_index = entry[0]
 		func_index = entry[1]
 		mod = cp.import_mods[module_index]
-		label = cp.export_header[func_index][2]
+		label = mod.export_header[func_index][2]
 		func_addr = mod.label_to_addr(label)
 		return mod, func_addr
 
