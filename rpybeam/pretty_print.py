@@ -49,8 +49,8 @@ def value_str(v):
 	elif isinstance(v, W_AtomObject):
 		return v.strval
 	elif isinstance(v, W_TupleObject):
-		vals = [value_str(e) for e in v.vals]
-		return "{%s}"%(", ".join(vals))
+		vals = get_tuple_vals(v)
+		return "{%s}"%(", ".join([value_str(t) for t in vals]))
 	elif isinstance(v, W_PidObject):
 		(node_num, process_num, serial) = get_pid_contents(v)
 		return "<%d.%d.%d>"%(node_num, process_num, serial)
@@ -69,7 +69,7 @@ def value_str(v):
 			s.append("...")
 		else:
 			s.append(value_str(v.head()))
-		return "[%s]"%(", ".join(s))
+		return "[%s]"%(",".join(s))
 
 def print_value(v):
 	print value_str(v)

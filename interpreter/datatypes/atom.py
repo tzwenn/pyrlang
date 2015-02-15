@@ -13,3 +13,6 @@ class W_AtomObject(W_Root):
 			return self.strval == other.strval
 		else:
 			return False
+
+	def to_list(self):
+		return [ord(c) for c in self.strval]

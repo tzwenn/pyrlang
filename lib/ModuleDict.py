@@ -1,7 +1,9 @@
 from pyrlang.lib import ErlangModule
+from pyrlang.lib import ListsModule
 
 module_dict = {
-		"erlang" : ErlangModule.ModuleEntity
+		"erlang" : ErlangModule.ModuleEntity,
+		"lists" : ListsModule.ModuleEntity,
 		}
 
 def is_bif_from_tuple(name_entry):

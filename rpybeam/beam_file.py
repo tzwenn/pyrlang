@@ -65,7 +65,6 @@ class BeamRoot(BaseNode):
 		self.locTChunk = None
 		while(True):
 			flag = self._readString(stream, 4)
-			#print flag
 			if flag == 'Atom':
 				self.atomChunk = AtomChunk(stream)
 			elif flag == 'Code':
@@ -208,6 +207,7 @@ class LocTChunk(Chunk):
 			e = InnerEntry(stream)
 			self.readlen += e.readlen
 			self.entries.append(e)
+		self.discardRemain(stream)
 
 	def asArray(self):
 		return [entry.asArray() for entry in self.entries]
@@ -227,6 +227,7 @@ class LitTChunk(Chunk):
 		substream = RStringIO()
 		substream.write(data)
 		substream.seek(0)
+		readed = self.readlen
 
 		self.count = self.readInt4(substream)
 		self.term_list = []
@@ -235,6 +236,7 @@ class LitTChunk(Chunk):
 			magic = self.readUCInt(substream)
 			assert(magic == 0x83)
 			self.term_list.append(self.create_term(substream))
+		self.readlen = readed
 		self.discardRemain(stream)
 
 	def decompress(self,s):

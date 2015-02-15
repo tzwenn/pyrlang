@@ -14,6 +14,11 @@ class W_TupleObject(W_Root):
 		assert isinstance(index, int)
 		return self.vals[index]
 
+	def setelement(self, index, v):
+		new_lst = list(self.vals)
+		new_lst[index] = v
+		return W_TupleObject(new_lst)
+
 	def size_to_int_obj(self):
 		return W_IntObject(self.size())
 
