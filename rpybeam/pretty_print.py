@@ -1,5 +1,5 @@
 from beam_file import *
-from pyrlang.interpreter.datatypes.number import W_IntObject, W_FloatObject
+from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObject, W_FloatObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
@@ -40,8 +40,8 @@ def print_hex(s):
 	print res
 
 def value_str(v):
-	if isinstance(v, W_IntObject):
-		return "%d"%(v.intval)
+	if isinstance(v, W_AbstractIntObject):
+		return v.str()
 	elif isinstance(v, W_FloatObject):
 		return "%f"%(v.floatval)
 	elif isinstance(v, W_NilObject):

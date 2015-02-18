@@ -8,7 +8,7 @@ from pyrlang.interpreter.register import X_Register, Y_Register
 from pyrlang.interpreter.cont_stack import ContinuationStack
 from pyrlang.interpreter.datatypes.root import W_Root
 from pyrlang.interpreter.datatypes.pid import W_PidObject
-from pyrlang.interpreter.datatypes.number import W_IntObject, W_FloatObject
+from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObject, W_FloatObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject, W_CodeParserWrapperObject 
@@ -351,6 +351,12 @@ class Process:
 				else:
 					assert tag == opcodes.TAG_LABEL
 					pc = self._call_ext_bif(pc, cp, header_index)
+					# calling a bif means the dispatch loop 
+					# need a extra k_return semantics 
+					if self.y_reg.is_empty():
+						return (constant.STATE_TERMINATE, pc, cp)
+					else:
+						(cp, pc) = self.k_return(cp)
 
 			elif instr == opcodes.MAKE_FUN2: # 103
 				pc, index = cp.parseInt(pc)
@@ -581,17 +587,21 @@ class Process:
 
 ########################################################################
 
+	# 4
 	def call(self, pc, cp, arity, label):
 		self.y_reg.push(W_TupleObject([W_CodeParserWrapperObject(cp), W_AddrObject(pc)]))
 		return cp.label_to_addr(label)
 
+	# 5
 	def call_last(self, cp, arity, label, n):
 		self.deallcate(n)
 		return cp.label_to_addr(label)
 
+	# 6
 	def call_only(self, cp, arity, label):
 		return cp.label_to_addr(label)
 
+	# 7
 	def call_ext(self, cp, pc, entry, real_arity):
 		# TODO: add some check for two arities
 		self.y_reg.push(W_TupleObject([W_CodeParserWrapperObject(cp), W_AddrObject(pc)]))
@@ -707,7 +717,7 @@ class Process:
 	def is_eq(self, pc, cp, label, v1, v2):
 		w_v1 = self.get_basic_value(cp, v1)
 		w_v2 = self.get_basic_value(cp, v2)
-		if isinstance(w_v1, W_IntObject) or isinstance(w_v1, W_FloatObject):
+		if isinstance(w_v1, W_AbstractIntObject) or isinstance(w_v1, W_FloatObject):
 			if w_v1.is_rough_equal(w_v2):
 				return pc
 			else:
@@ -731,7 +741,7 @@ class Process:
 
 	# 45
 	def is_integer(self, pc, cp, label, test_v):
-		return self.not_jump(pc, cp, label, test_v, W_IntObject)
+		return self.not_jump(pc, cp, label, test_v, W_AbstractIntObject)
 
 	# 46
 	def is_float(self, pc, cp, label, test_v):

@@ -8,6 +8,12 @@ from pyrlang.rpybeam import pretty_print
 from pyrlang.utils import eterm_operators
 from pyrlang.interpreter import constant
 
+def WrapEtermBoolean(flag):
+	if flag:
+		return W_AtomObject('true')
+	else:
+		return W_AtomObject('false')
+
 class AddFunc(BaseBIF):
 	def invoke(self, args):
 		(a,b) = args
@@ -23,7 +29,6 @@ class AtomToListFunc_1(BaseFakeFunc):
 class DivFunc_2(BaseBIF):
 	def invoke(self, args):
 		(a,b) = args
-		assert isinstance(a, W_IntObject)
 		return a.div(b)
 
 class SubFunc(BaseBIF):
@@ -39,10 +44,15 @@ class MulFunc(BaseBIF):
 class EqualExtFunc_2(BaseBIF):
 	def invoke(self, args):
 		(a,b) = args
-		if a.is_equal(b):
-			return W_AtomObject('true')
+		return WrapEtermBoolean(a.is_equal(b))
+
+class EqualFunc_2(BaseBIF):
+	def invoke(self, args):
+		(a,b) = args
+		if isinstance(a, W_AbstractIntObject) or isinstance(a , W_FloatObject):
+			return WrapEtermBoolean(a.is_rough_equal(b))
 		else:
-			return W_AtomObject('false')
+			return WrapEtermBoolean(a.is_equal(b))
 
 # just a hook 
 class ErrorFunc_1(BaseFakeFunc):
@@ -83,9 +93,14 @@ class GetModuleInfoFunc_2(BaseBIF):
 class IntegerToListFunc_1(BaseFakeFunc):
 	def invoke(self, cp, pc, process):
 		i_obj = process.x_reg.get(0)
-		assert isinstance(i_obj, W_IntObject)
+		assert isinstance(i_obj, W_AbstractIntObject)
 		lst = i_obj.to_list()
 		return eterm_operators.build_list_object([W_IntObject(v) for v in lst])
+
+class IsAtomFunc_1(BaseBIF):
+	def invoke(self, args):
+		a_obj = args[0]
+		return WrapEtermBoolean(isinstance(a_obj, W_AtomObject))
 
 class LengthFunc_1(BaseFakeFunc):
 	def invoke(self, cp, pc, process):
@@ -177,6 +192,7 @@ class ModuleEntity(BaseModule):
 				  "-_2" : SubFunc,
 				  "*_2" : MulFunc,
 				  "=:=_2" : EqualExtFunc_2,
+				  "==_2" : EqualFunc_2,
 				  "error_1" : ErrorFunc_1,
 				  "error_2" : ErrorFunc_2,
 				  "display_1" : DisplayFunc_1,
@@ -185,6 +201,7 @@ class ModuleEntity(BaseModule):
 				  "get_module_info_1" : GetModuleInfoFunc_1,
 				  "get_module_info_2" : GetModuleInfoFunc_2,
 				  "integer_to_list_1" : IntegerToListFunc_1,
+				  "is_atom_1" : IsAtomFunc_1,
 				  "length_1" : LengthFunc_1,
 				  "nif_error_1" : NifErrorFunc_1,
 				  "++_2" : ListAppendFunc_2,

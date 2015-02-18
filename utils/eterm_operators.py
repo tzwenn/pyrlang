@@ -1,4 +1,4 @@
-from pyrlang.interpreter.datatypes.number import W_IntObject, W_FloatObject
+from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObject, W_BigIntObject, W_FloatObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
@@ -29,8 +29,8 @@ def get_atom_val(v):
 	return v.strval
 
 def get_int_val(v):
-	assert isinstance(v, W_IntObject)
-	return v.intval
+	assert isinstance(v, W_AbstractIntObject)
+	return v.toint()
 
 def get_pid_contents(v):
 	assert isinstance(v, W_PidObject)

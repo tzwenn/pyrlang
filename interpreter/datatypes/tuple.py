@@ -1,5 +1,5 @@
 from root import W_Root
-from number import W_IntObject
+from number import W_IntObject, W_AbstractIntObject
 
 class W_TupleObject(W_Root):
 	def __init__(self, vals):
@@ -7,8 +7,8 @@ class W_TupleObject(W_Root):
 		self.vals = vals
 
 	def element_from_int_obj(self, index):
-		assert isinstance(index, W_IntObject)
-		return self.element(index.intval)
+		assert isinstance(index, W_AbstractIntObject)
+		return self.element(index.toint())
 
 	def element(self, index):
 		assert isinstance(index, int)
