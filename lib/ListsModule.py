@@ -1,8 +1,10 @@
 from pyrlang.lib.base import BaseModule, BaseBIF, BaseFakeFunc
 from pyrlang.interpreter.datatypes.list import W_NilObject, W_ListObject
 from pyrlang.utils import eterm_operators
+from rpython.rlib import jit
 
 class ReverseFunc_2(BaseFakeFunc):
+	@jit.unroll_safe
 	def invoke(self, cp, pc, process):
 		v = process.x_reg.get(0)
 		tail_list = process.x_reg.get(1)

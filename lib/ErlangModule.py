@@ -3,10 +3,11 @@ from pyrlang.interpreter import fail_class
 from pyrlang.interpreter.datatypes.number import *
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
-from pyrlang.interpreter.datatypes.list import W_NilObject, W_ListObject
+from pyrlang.interpreter.datatypes.list import W_NilObject, W_ListObject, W_StrListObject
 from pyrlang.rpybeam import pretty_print
 from pyrlang.utils import eterm_operators
 from pyrlang.interpreter import constant
+from rpython.rlib import jit
 
 def WrapEtermBoolean(flag):
 	if flag:
@@ -20,11 +21,22 @@ class AddFunc(BaseBIF):
 		return a.add(b)
 
 class AtomToListFunc_1(BaseFakeFunc):
+	@jit.unroll_safe
 	def invoke(self, cp, pc, process):
 		a_obj = process.x_reg.get(0)
 		assert isinstance(a_obj, W_AtomObject)
 		lst = a_obj.to_list()
-		return eterm_operators.build_list_object([W_IntObject(v) for v in lst])
+		return eterm_operators.build_strlist_object([W_IntObject(v) for v in lst])
+
+class BslFunc_2(BaseBIF):
+	def invoke(self, args):
+		(a,b) = args
+		return a.lshift(b)
+
+class BsrFunc_2(BaseBIF):
+	def invoke(self, args):
+		(a,b) = args
+		return a.rshift(b)
 
 class DivFunc_2(BaseBIF):
 	def invoke(self, args):
@@ -91,11 +103,12 @@ class GetModuleInfoFunc_2(BaseBIF):
 		return W_FloatObject(2.3333333)
 
 class IntegerToListFunc_1(BaseFakeFunc):
+	@jit.unroll_safe
 	def invoke(self, cp, pc, process):
 		i_obj = process.x_reg.get(0)
 		assert isinstance(i_obj, W_AbstractIntObject)
-		lst = i_obj.to_list()
-		return eterm_operators.build_list_object([W_IntObject(v) for v in lst])
+		s = i_obj.str()
+		return eterm_operators.build_strlist_object([W_IntObject(ord(v)) for v in s])
 
 class IsAtomFunc_1(BaseBIF):
 	def invoke(self, args):
@@ -119,6 +132,7 @@ class ListAppendFunc_2(BaseFakeFunc):
 			return lst2
 
 class ListFilterFunc_2(BaseBIF):
+	@jit.unroll_safe
 	def invoke(self,args):
 		(lst1, lst2) = args
 		contents1 = eterm_operators.get_list_contents(lst1)
@@ -188,6 +202,8 @@ class TupleSizeFunc_1(BaseBIF):
 class ModuleEntity(BaseModule):
 	_func_dict = { "+_2" : AddFunc,
 				  "atom_to_list_1" : AtomToListFunc_1,
+				  "bsl_2" : BslFunc_2,
+				  "bsr_2" : BsrFunc_2,
 				  "div_2" : DivFunc_2,
 				  "-_2" : SubFunc,
 				  "*_2" : MulFunc,

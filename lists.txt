@@ -1,0 +1,8049 @@
+# Module: lists
+#
+# Atoms: 
+#	lists
+#	keyfind
+#	undef
+#	erlang
+#	nif_error
+#	keymember
+#	keysearch
+#	member
+#	reverse
+#	append
+#	++
+#	subtract
+#	--
+#	nth
+#	-
+#	nthtail
+#	prefix
+#	false
+#	true
+#	suffix
+#	length
+#	=:=
+#	droplast
+#	last
+#	seq
+#	+
+#	seq_loop
+#	div
+#	*
+#	sum
+#	duplicate
+#	min
+#	max
+#	sublist
+#	sublist_2
+#	delete
+#	zip
+#	unzip
+#	zip3
+#	unzip3
+#	zipwith
+#	zipwith3
+#	sort
+#	sort_1
+#	merge
+#	merge3
+#	rmerge3
+#	rmerge
+#	concat
+#	thing_to_list
+#	integer_to_list
+#	float_to_list
+#	atom_to_list
+#	flatten
+#	do_flatten
+#	flatlength
+#	keydelete
+#	keydelete3
+#	element
+#	keyreplace
+#	keyreplace3
+#	keytake
+#	value
+#	keystore
+#	keystore2
+#	keysort
+#	keysort_1
+#	keymerge
+#	rkeymerge
+#	ukeysort
+#	ukeysort_1
+#	ukeymerge
+#	rukeymerge
+#	keymap
+#	setelement
+#	usort
+#	usort_1
+#	umerge
+#	rumerge
+#	umerge3
+#	rumerge3
+#	all
+#	any
+#	map
+#	flatmap
+#	foldl
+#	foldr
+#	filter
+#	partition
+#	filtermap
+#	zf
+#	foreach
+#	ok
+#	mapfoldl
+#	mapfoldr
+#	takewhile
+#	dropwhile
+#	splitwith
+#	split
+#	error
+#	badarg
+#	split_1
+#	split_1_1
+#	split_2
+#	split_2_1
+#	mergel
+#	rmergel
+#	merge3_1
+#	merge3_2
+#	merge3_12_3
+#	merge3_21_3
+#	rmerge3_1
+#	rmerge3_2
+#	rmerge3_12_3
+#	rmerge3_21_3
+#	merge2_1
+#	merge2_2
+#	rmerge2_1
+#	rmerge2_2
+#	usplit_1
+#	asc
+#	usplit_1_1
+#	usplit_2
+#	desc
+#	usplit_2_1
+#	umergel
+#	rumergel
+#	umerge3_1
+#	umerge3_2
+#	umerge3_12_3
+#	umerge3_21_3
+#	rumerge3_1
+#	rumerge3_2
+#	rumerge3_12_3
+#	rumerge3_21_3
+#	umerge2_1
+#	umerge2_2
+#	rumerge2_1
+#	rumerge2_2
+#	keysplit_1
+#	keysplit_1_1
+#	keysplit_2
+#	keysplit_2_1
+#	keymergel
+#	rkeymergel
+#	keymerge3_1
+#	keymerge3_2
+#	keymerge3_12_3
+#	keymerge3_21_3
+#	rkeymerge3_1
+#	rkeymerge3_2
+#	rkeymerge3_12_3
+#	rkeymerge3_21_3
+#	keymerge2_1
+#	keymerge2_2
+#	rkeymerge2_1
+#	rkeymerge2_2
+#	ukeysplit_1
+#	ukeysplit_1_1
+#	ukeysplit_2
+#	ukeymergel
+#	rukeymergel
+#	ukeymerge3_1
+#	ukeymerge3_2
+#	ukeymerge3_12_3
+#	ukeymerge3_21_3
+#	rukeymerge3_1
+#	rukeymerge3_2
+#	rukeymerge3_12_3
+#	rukeymerge3_21_3
+#	ukeymerge2_1
+#	ukeymerge2_2
+#	rukeymerge2_1
+#	rukeymerge2_2
+#	fsplit_1
+#	fsplit_1_1
+#	fsplit_2
+#	fsplit_2_1
+#	fmergel
+#	rfmergel
+#	fmerge2_1
+#	fmerge2_2
+#	rfmerge2_1
+#	rfmerge2_2
+#	ufsplit_1
+#	ufsplit_1_1
+#	ufsplit_2
+#	ufmergel
+#	rufmergel
+#	ufmerge2_1
+#	ufmerge2_2
+#	rufmerge2_1
+#	rufmerge2_2
+#	module_info
+#	get_module_info
+#	-filter/2-lc$^0/1-0-
+#	function_clause
+#	-concat/1-fun-0-
+#
+# Exports:
+#	module_info/1 L1033
+#	module_info/0 L1031
+#	split/2 L413
+#	splitwith/2 L405
+#	dropwhile/2 L399
+#	takewhile/2 L393
+#	mapfoldr/3 L388
+#	mapfoldl/3 L383
+#	foreach/2 L380
+#	zf/2 L378
+#	filtermap/2 L371
+#	partition/2 L363
+#	filter/2 L361
+#	foldr/3 L358
+#	foldl/3 L355
+#	flatmap/2 L352
+#	map/2 L349
+#	any/2 L343
+#	all/2 L337
+#	rumerge/2 L334
+#	umerge/2 L331
+#	rumerge3/3 L327
+#	umerge3/3 L323
+#	umerge/1 L321
+#	usort/1 L298
+#	rumerge/3 L295
+#	umerge/3 L292
+#	usort/2 L279
+#	rmerge/3 L276
+#	merge/3 L273
+#	sort/2 L266
+#	keymap/3 L263
+#	rukeymerge/3 L259
+#	ukeymerge/3 L255
+#	ukeysort/2 L231
+#	rkeymerge/3 L227
+#	keymerge/3 L223
+#	keysort/2 L203
+#	keystore/4 L197
+#	keytake/3 L191
+#	keyreplace/4 L185
+#	keydelete/3 L179
+#	flatlength/1 L173
+#	flatten/2 L167
+#	flatten/1 L165
+#	concat/1 L158
+#	rmerge/2 L155
+#	merge/2 L152
+#	rmerge3/3 L148
+#	merge3/3 L144
+#	merge/1 L142
+#	sort/1 L123
+#	zipwith3/4 L120
+#	zipwith/3 L117
+#	unzip3/1 L112
+#	zip3/3 L109
+#	unzip/1 L104
+#	zip/2 L101
+#	delete/2 L97
+#	sublist/2 L91
+#	sublist/3 L89
+#	max/1 L83
+#	min/1 L77
+#	duplicate/2 L72
+#	sum/1 L67
+#	seq/3 L55
+#	seq/2 L47
+#	last/1 L42
+#	droplast/1 L39
+#	suffix/2 L36
+#	prefix/2 L32
+#	nthtail/2 L28
+#	nth/2 L25
+#	reverse/1 L20
+#	subtract/2 L18
+#	append/1 L14
+#	append/2 L12
+#	reverse/2 L10
+#	member/2 L8
+#	keysearch/3 L6
+#	keymember/3 L4
+#	keyfind/3 L2
+#
+# Imports:
+#	erlang:nif_error/1
+#	erlang:++/2
+#	erlang:--/2
+#	lists:reverse/2
+#	erlang:-/2
+#	erlang:length/1
+#	erlang:=:=/2
+#	erlang:+/2
+#	erlang:div/2
+#	erlang:*/2
+#	erlang:integer_to_list/1
+#	erlang:float_to_list/1
+#	erlang:atom_to_list/1
+#	erlang:element/2
+#	erlang:setelement/3
+#	erlang:error/2
+#	erlang:get_module_info/1
+#	erlang:get_module_info/2
+#
+# Attributes:
+#	vsn:	[126253210273804497200583865567816672397L]
+#
+# CompileInfo:
+#	source:	'/net/isildur/ldisk/daily_build/17_prebuild_opu_o.2014-12-09_21/otp_src_17/lib/stdlib/src/lists.erl'
+#	version:	'5.0.2'
+#	options:	[('outdir', '/net/isildur/ldisk/daily_build/17_prebuild_opu_o.2014-12-09_21/otp_src_17/lib/stdlib/src/../ebin'), ('i', '/net/isildur/ldisk/daily_build/17_prebuild_opu_o.2014-12-09_21/otp_src_17/lib/stdlib/src/../include'), ('i', '/net/isildur/ldisk/daily_build/17_prebuild_opu_o.2014-12-09_21/otp_src_17/lib/stdlib/src/../../kernel/include'), 'warnings_as_errors', 'debug_info']
+#	time:	(2014, 12, 9, 20, 56, 45)
+
+L1:
+ 	#line 1
+	#function lists:keyfind/3
+L2:
+	move undef, x(0)
+ 	#line 2
+	call_ext_only erlang:nif_error/1 1
+L3:
+ 	#line 3
+	#function lists:keymember/3
+L4:
+	move undef, x(0)
+ 	#line 4
+	call_ext_only erlang:nif_error/1 1
+L5:
+ 	#line 5
+	#function lists:keysearch/3
+L6:
+	move undef, x(0)
+ 	#line 6
+	call_ext_only erlang:nif_error/1 1
+L7:
+ 	#line 7
+	#function lists:member/2
+L8:
+	move undef, x(0)
+ 	#line 8
+	call_ext_only erlang:nif_error/1 1
+L9:
+ 	#line 9
+	#function lists:reverse/2
+L10:
+	move undef, x(0)
+ 	#line 10
+	call_ext_only erlang:nif_error/1 1
+L11:
+ 	#line 11
+	#function lists:append/2
+L12:
+ 	#line 11
+	call_ext_only erlang:++/2 2
+L13:
+ 	#line 12
+	#function lists:append/1
+L14:
+	is_nonempty_list L16, x(0)
+	get_list x(0), x(1), x(2)
+	is_nil L15, x(2)
+	move x(1), x(0)
+	return 
+L15:
+	allocate 1, 3
+	move x(2), x(0)
+	move x(1), y(0)
+ 	#line 13
+	call 1, L14
+	move x(0), x(1)
+	move y(0), x(0)
+ 	#line 13
+	call_ext_last erlang:++/2 2 1
+L16:
+	is_nil L13, x(0)
+	return 
+L17:
+ 	#line 14
+	#function lists:subtract/2
+L18:
+ 	#line 14
+	call_ext_only erlang:--/2 2
+L19:
+ 	#line 15
+	#function lists:reverse/1
+L20:
+	is_nonempty_list L23, x(0)
+	get_list x(0), x(1), x(2)
+	is_nonempty_list L22, x(2)
+	get_list x(2), x(3), x(4)
+	is_nil L21, x(4)
+	test_heap 4, 4
+	put_list x(1), nil, x(1)
+	put_list x(3), x(1), x(0)
+	return 
+L21:
+	test_heap 4, 5
+	put_list x(1), nil, x(2)
+	put_list x(3), x(2), x(1)
+	move x(4), x(0)
+ 	#line 16
+	call_ext_only lists:reverse/2 2
+L22:
+	is_nil L19, x(2)
+	return 
+L23:
+	is_nil L19, x(0)
+	return 
+L24:
+ 	#line 17
+	#function lists:nth/2
+L25:
+	is_eq_exact L26, x(0), #1
+	is_nonempty_list L24, x(1)
+	get_list x(1), x(0), x(3)
+	return 
+L26:
+	is_nonempty_list L24, x(1)
+	get_list x(1), x(2), x(3)
+	is_lt L24, #1, x(0)
+ 	#line 18
+	gc_bif2 L0, 4, 4, x(0), #1, x(0)
+	move x(3), x(1)
+	call_only 2, L25
+L27:
+ 	#line 19
+	#function lists:nthtail/2
+L28:
+	is_eq_exact L29, x(0), #1
+	is_nonempty_list L30, x(1)
+	get_list x(1), x(2), x(0)
+	return 
+L29:
+	is_nonempty_list L30, x(1)
+	get_list x(1), x(2), x(3)
+	is_lt L30, #1, x(0)
+ 	#line 20
+	gc_bif2 L0, 4, 4, x(0), #1, x(0)
+	move x(3), x(1)
+	call_only 2, L28
+L30:
+	is_eq_exact L27, x(0), #0
+	is_list L27, x(1)
+	move x(1), x(0)
+	return 
+L31:
+ 	#line 21
+	#function lists:prefix/2
+L32:
+	is_nonempty_list L34, x(0)
+	get_list x(0), x(2), x(3)
+	is_nonempty_list L33, x(1)
+	get_list x(1), x(4), x(5)
+	is_eq_exact L33, x(4), x(2)
+	move x(5), x(1)
+	move x(3), x(0)
+	call_only 2, L32
+L33:
+	is_list L31, x(1)
+	move false, x(0)
+	return 
+L34:
+	is_nil L31, x(0)
+	is_list L31, x(1)
+	move true, x(0)
+	return 
+L35:
+ 	#line 22
+	#function lists:suffix/2
+L36:
+	allocate_zero 1, 2
+ 	#line 23
+	gc_bif1 L0, 2, 5, x(1), x(2)
+ 	#line 23
+	gc_bif1 L0, 3, 5, x(0), x(3)
+ 	#line 23
+	gc_bif2 L0, 4, 4, x(2), x(3), x(2)
+	is_ge L37, x(2), #0
+	move x(0), y(0)
+	move x(2), x(0)
+ 	#line 24
+	call 2, L28
+	bif2 L0, 6, x(0), y(0), x(0)
+	deallocate 1
+	return 
+L37:
+	move false, x(0)
+	deallocate 1
+	return 
+L38:
+ 	#line 25
+	#function lists:droplast/1
+L39:
+	is_nonempty_list L38, x(0)
+	get_list x(0), x(1), x(2)
+	is_nil L40, x(2)
+	move nil, x(0)
+	return 
+L40:
+	allocate 1, 3
+	move x(2), x(0)
+	move x(1), y(0)
+ 	#line 26
+	call 1, L39
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L41:
+ 	#line 27
+	#function lists:last/1
+L42:
+	is_nonempty_list L41, x(0)
+	get_list x(0), x(0), x(1)
+	call_only 2, L44
+L43:
+ 	#line 28
+	#function lists:last/2
+L44:
+	is_nonempty_list L45, x(1)
+	get_list x(1), x(0), x(1)
+	call_only 2, L44
+L45:
+	is_nil L43, x(1)
+	return 
+L46:
+ 	#line 29
+	#function lists:seq/2
+L47:
+	gc_bif2 L46, 2, 4, x(0), #1, x(2)
+	is_integer L46, x(0)
+	is_integer L46, x(1)
+	is_ge L46, x(1), x(2)
+ 	#line 30
+	gc_bif2 L0, 2, 4, x(1), x(0), x(0)
+ 	#line 30
+	gc_bif2 L0, 2, 7, x(0), #1, x(0)
+	move nil, x(2)
+	call_only 3, L49
+L48:
+ 	#line 31
+	#function lists:seq_loop/3
+L49:
+	is_ge L50, x(0), #4
+ 	#line 32
+	gc_bif2 L0, 3, 4, x(0), #4, x(0)
+ 	#line 32
+	gc_bif2 L0, 3, 4, x(1), #4, x(3)
+ 	#line 32
+	gc_bif2 L0, 4, 4, x(1), #3, x(4)
+ 	#line 32
+	gc_bif2 L0, 5, 4, x(1), #2, x(5)
+ 	#line 32
+	gc_bif2 L0, 6, 4, x(1), #1, x(6)
+	test_heap 8, 7
+	put_list x(1), x(2), x(7)
+	put_list x(6), x(7), x(6)
+	put_list x(5), x(6), x(5)
+	put_list x(4), x(5), x(2)
+	move x(3), x(1)
+	call_only 3, L49
+L50:
+	is_ge L51, x(0), #2
+ 	#line 33
+	gc_bif2 L0, 3, 4, x(0), #2, x(0)
+ 	#line 33
+	gc_bif2 L0, 3, 4, x(1), #2, x(3)
+ 	#line 33
+	gc_bif2 L0, 4, 4, x(1), #1, x(4)
+	test_heap 4, 5
+	put_list x(1), x(2), x(5)
+	put_list x(4), x(5), x(2)
+	move x(3), x(1)
+	call_only 3, L49
+L51:
+	is_integer L48, x(0)
+	select_val x(0), L48, [
+		(#1, L52),
+		(#0, L53)
+	]
+L52:
+	test_heap 2, 3
+	put_list x(1), x(2), x(0)
+	return 
+L53:
+	move x(2), x(0)
+	return 
+L54:
+ 	#line 34
+	#function lists:seq/3
+L55:
+	is_integer L54, x(0)
+	is_integer L54, x(1)
+	is_integer L54, x(2)
+	gc_bif2 L56, 3, 4, x(0), x(2), x(3)
+	is_lt L56, #0, x(2)
+	is_lt L57, x(1), x(3)
+L56:
+	gc_bif2 L58, 3, 4, x(0), x(2), x(3)
+	is_lt L58, x(2), #0
+	is_ge L58, x(3), x(1)
+L57:
+ 	#line 35
+	gc_bif2 L0, 3, 4, x(1), x(0), x(1)
+ 	#line 35
+	gc_bif2 L0, 3, 7, x(1), x(2), x(1)
+ 	#line 35
+	gc_bif2 L0, 3, 8, x(1), x(2), x(1)
+ 	#line 36
+	gc_bif2 L0, 3, 4, x(1), #1, x(3)
+ 	#line 36
+	gc_bif2 L0, 4, 9, x(2), x(3), x(3)
+ 	#line 36
+	gc_bif2 L0, 4, 7, x(3), x(0), x(0)
+	move nil, x(3)
+	move x(1), x(4)
+	move x(0), x(1)
+	move x(4), x(0)
+	call_only 4, L61
+L58:
+	is_eq_exact L59, x(2), #0
+	is_eq_exact L59, x(0), x(1)
+	move x(0), x(1)
+	move nil, x(3)
+	move #1, x(0)
+	call_only 4, L61
+L59:
+ 	#line 37
+	if_end 
+L60:
+ 	#line 38
+	#function lists:seq_loop/4
+L61:
+	is_ge L62, x(0), #4
+ 	#line 39
+	gc_bif2 L0, 4, 4, x(1), x(2), x(4)
+ 	#line 39
+	gc_bif2 L0, 5, 4, x(4), x(2), x(5)
+ 	#line 39
+	gc_bif2 L0, 6, 4, x(5), x(2), x(6)
+ 	#line 40
+	gc_bif2 L0, 7, 4, x(0), #4, x(0)
+ 	#line 40
+	gc_bif2 L0, 7, 4, x(6), x(2), x(7)
+	test_heap 8, 8
+	put_list x(1), x(3), x(8)
+	put_list x(4), x(8), x(4)
+	put_list x(5), x(4), x(4)
+	put_list x(6), x(4), x(3)
+	move x(7), x(1)
+	call_only 4, L61
+L62:
+	is_ge L63, x(0), #2
+ 	#line 41
+	gc_bif2 L0, 4, 4, x(1), x(2), x(4)
+ 	#line 42
+	gc_bif2 L0, 5, 4, x(0), #2, x(0)
+ 	#line 42
+	gc_bif2 L0, 5, 4, x(4), x(2), x(5)
+	test_heap 4, 6
+	put_list x(1), x(3), x(6)
+	put_list x(4), x(6), x(3)
+	move x(5), x(1)
+	call_only 4, L61
+L63:
+	is_integer L60, x(0)
+	select_val x(0), L60, [
+		(#1, L64),
+		(#0, L65)
+	]
+L64:
+	test_heap 2, 4
+	put_list x(1), x(3), x(0)
+	return 
+L65:
+	move x(3), x(0)
+	return 
+L66:
+ 	#line 43
+	#function lists:sum/1
+L67:
+	move #0, x(1)
+	call_only 2, L69
+L68:
+ 	#line 44
+	#function lists:sum/2
+L69:
+	is_nonempty_list L70, x(0)
+	get_list x(0), x(2), x(3)
+ 	#line 44
+	gc_bif2 L0, 4, 7, x(1), x(2), x(1)
+	move x(3), x(0)
+	call_only 2, L69
+L70:
+	is_nil L68, x(0)
+	move x(1), x(0)
+	return 
+L71:
+ 	#line 45
+	#function lists:duplicate/2
+L72:
+	is_integer L71, x(0)
+	is_ge L71, x(0), #0
+	move nil, x(2)
+	call_only 3, L74
+L73:
+ 	#line 46
+	#function lists:duplicate/3
+L74:
+	is_eq_exact L75, x(0), #0
+	move x(2), x(0)
+	return 
+L75:
+ 	#line 47
+	gc_bif2 L0, 3, 4, x(0), #1, x(0)
+	test_heap 2, 3
+	put_list x(1), x(2), x(2)
+	call_only 3, L74
+L76:
+ 	#line 48
+	#function lists:min/1
+L77:
+	is_nonempty_list L76, x(0)
+	get_list x(0), x(1), x(0)
+	call_only 2, L79
+L78:
+ 	#line 49
+	#function lists:min/2
+L79:
+	is_nonempty_list L81, x(0)
+	get_list x(0), x(2), x(3)
+	is_lt L80, x(2), x(1)
+	move x(2), x(1)
+	move x(3), x(0)
+	call_only 2, L79
+L80:
+	move x(3), x(0)
+	call_only 2, L79
+L81:
+	is_nil L78, x(0)
+	move x(1), x(0)
+	return 
+L82:
+ 	#line 50
+	#function lists:max/1
+L83:
+	is_nonempty_list L82, x(0)
+	get_list x(0), x(1), x(0)
+	call_only 2, L85
+L84:
+ 	#line 51
+	#function lists:max/2
+L85:
+	is_nonempty_list L87, x(0)
+	get_list x(0), x(2), x(3)
+	is_lt L86, x(1), x(2)
+	move x(2), x(1)
+	move x(3), x(0)
+	call_only 2, L85
+L86:
+	move x(3), x(0)
+	call_only 2, L85
+L87:
+	is_nil L84, x(0)
+	move x(1), x(0)
+	return 
+L88:
+ 	#line 52
+	#function lists:sublist/3
+L89:
+	is_integer L88, x(2)
+	is_ge L88, x(2), #0
+	allocate_zero 1, 3
+ 	#line 53
+	gc_bif2 L0, 3, 4, x(1), #1, x(3)
+	move x(0), x(1)
+	move x(3), x(0)
+	move x(2), y(0)
+ 	#line 53
+	call 2, L28
+	move y(0), x(1)
+	call_last 2, L91, 1
+L90:
+ 	#line 54
+	#function lists:sublist/2
+L91:
+	is_integer L90, x(1)
+	is_list L90, x(0)
+	call_only 2, L93
+L92:
+ 	#line 55
+	#function lists:sublist_2/2
+L93:
+	is_nonempty_list L94, x(0)
+	get_list x(0), x(2), x(3)
+	is_lt L94, #0, x(1)
+	allocate_zero 1, 4
+ 	#line 56
+	gc_bif2 L0, 4, 4, x(1), #1, x(1)
+	move x(3), x(0)
+	move x(2), y(0)
+ 	#line 56
+	call 2, L93
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L94:
+	is_eq_exact L95, x(1), #0
+	move nil, x(0)
+	return 
+L95:
+	is_list L92, x(0)
+	is_lt L92, #0, x(1)
+	move nil, x(0)
+	return 
+L96:
+ 	#line 57
+	#function lists:delete/2
+L97:
+	is_nonempty_list L99, x(1)
+	get_list x(1), x(2), x(3)
+	is_eq_exact L98, x(2), x(0)
+	move x(3), x(0)
+	return 
+L98:
+	allocate 1, 4
+	move x(3), x(1)
+	move x(2), y(0)
+ 	#line 58
+	call 2, L97
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L99:
+	is_nil L96, x(1)
+	move nil, x(0)
+	return 
+L100:
+ 	#line 59
+	#function lists:zip/2
+L101:
+	is_nonempty_list L102, x(0)
+	get_list x(0), x(2), x(3)
+	is_nonempty_list L100, x(1)
+	allocate 2, 4
+	get_list x(1), y(1), x(1)
+	move x(3), x(0)
+	move x(2), y(0)
+ 	#line 59
+	call 2, L101
+	test_heap 5, 1
+	put_tuple 2, x(1)
+	put y(0)
+	put y(1)
+	put_list x(1), x(0), x(0)
+	deallocate 2
+	return 
+L102:
+	is_nil L100, x(0)
+	is_nil L100, x(1)
+	move nil, x(0)
+	return 
+L103:
+ 	#line 60
+	#function lists:unzip/1
+L104:
+	move nil, x(2)
+	move nil, x(1)
+	call_only 3, L106
+L105:
+ 	#line 61
+	#function lists:unzip/3
+L106:
+	is_nonempty_list L107, x(0)
+	get_list x(0), x(3), x(4)
+	is_tuple L105, x(3)
+	test_arity L105, x(3), 2
+	test_heap 4, 5
+	get_tuple_element x(3), 0, x(5)
+	get_tuple_element x(3), 1, x(6)
+	put_list x(5), x(1), x(1)
+	put_list x(6), x(2), x(2)
+	move x(4), x(0)
+	call_only 3, L106
+L107:
+	is_nil L105, x(0)
+	allocate 1, 3
+	move x(1), x(0)
+	move x(2), y(0)
+ 	#line 62
+	call 1, L20
+	move x(0), x(1)
+	move y(0), x(0)
+	move x(1), y(0)
+ 	#line 62
+	call 1, L20
+	test_heap 3, 1
+	put_tuple 2, x(1)
+	put y(0)
+	put x(0)
+	move x(1), x(0)
+	deallocate 1
+	return 
+L108:
+ 	#line 63
+	#function lists:zip3/3
+L109:
+	is_nonempty_list L110, x(0)
+	get_list x(0), x(3), x(4)
+	is_nonempty_list L108, x(1)
+	get_list x(1), x(5), x(6)
+	is_nonempty_list L108, x(2)
+	allocate 3, 7
+	get_list x(2), y(2), x(2)
+	move x(6), x(1)
+	move x(4), x(0)
+	move x(3), y(0)
+	move x(5), y(1)
+ 	#line 63
+	call 3, L109
+	test_heap 6, 1
+	put_tuple 3, x(1)
+	put y(0)
+	put y(1)
+	put y(2)
+	put_list x(1), x(0), x(0)
+	deallocate 3
+	return 
+L110:
+	is_nil L108, x(0)
+	is_nil L108, x(1)
+	is_nil L108, x(2)
+	move nil, x(0)
+	return 
+L111:
+ 	#line 64
+	#function lists:unzip3/1
+L112:
+	move nil, x(2)
+	move nil, x(3)
+	move nil, x(1)
+	call_only 4, L114
+L113:
+ 	#line 65
+	#function lists:unzip3/4
+L114:
+	is_nonempty_list L115, x(0)
+	get_list x(0), x(4), x(5)
+	is_tuple L113, x(4)
+	test_arity L113, x(4), 3
+	test_heap 6, 6
+	get_tuple_element x(4), 0, x(6)
+	get_tuple_element x(4), 1, x(7)
+	get_tuple_element x(4), 2, x(8)
+	put_list x(6), x(1), x(1)
+	put_list x(7), x(2), x(2)
+	put_list x(8), x(3), x(3)
+	move x(5), x(0)
+	call_only 4, L114
+L115:
+	is_nil L113, x(0)
+	allocate 2, 4
+	move x(1), x(0)
+	move x(2), y(0)
+	move x(3), y(1)
+ 	#line 66
+	call 1, L20
+	move x(0), x(1)
+	move y(0), x(0)
+	move x(1), y(0)
+ 	#line 66
+	call 1, L20
+	move x(0), x(1)
+	move y(1), x(0)
+	move x(1), y(1)
+ 	#line 66
+	call 1, L20
+	test_heap 4, 1
+	put_tuple 3, x(1)
+	put y(0)
+	put y(1)
+	put x(0)
+	move x(1), x(0)
+	deallocate 2
+	return 
+L116:
+ 	#line 67
+	#function lists:zipwith/3
+L117:
+	is_nonempty_list L118, x(1)
+	get_list x(1), x(3), x(4)
+	is_nonempty_list L116, x(2)
+	allocate 3, 5
+	get_list x(2), x(1), y(2)
+	move x(0), x(2)
+	move x(3), x(0)
+	move x(2), y(0)
+	move x(4), y(1)
+ 	#line 67
+	call_fun 2
+	move x(0), x(3)
+	move y(1), x(1)
+	move y(2), x(2)
+	move y(0), x(0)
+	move x(3), y(2)
+	trim 2, 1
+ 	#line 67
+	call 3, L117
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L118:
+	is_nil L116, x(1)
+	is_nil L116, x(2)
+	is_function2 L116, x(0), #2
+	move nil, x(0)
+	return 
+L119:
+ 	#line 68
+	#function lists:zipwith3/4
+L120:
+	is_nonempty_list L121, x(1)
+	get_list x(1), x(4), x(5)
+	is_nonempty_list L119, x(2)
+	get_list x(2), x(6), x(7)
+	is_nonempty_list L119, x(3)
+	allocate 4, 8
+	get_list x(3), x(2), y(3)
+	move x(6), x(1)
+	move x(0), x(3)
+	move x(4), x(0)
+	move x(3), y(0)
+	move x(5), y(1)
+	move x(7), y(2)
+ 	#line 69
+	call_fun 3
+	move x(0), x(4)
+	move y(2), x(2)
+	move y(1), x(1)
+	move y(3), x(3)
+	move y(0), x(0)
+	move x(4), y(3)
+	trim 3, 1
+ 	#line 69
+	call 4, L120
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L121:
+	is_nil L119, x(1)
+	is_nil L119, x(2)
+	is_nil L119, x(3)
+	is_function2 L119, x(0), #3
+	move nil, x(0)
+	return 
+L122:
+ 	#line 70
+	#function lists:sort/1
+L123:
+	is_nonempty_list L135, x(0)
+	get_list x(0), x(1), x(2)
+	is_nonempty_list L134, x(2)
+	get_list x(2), x(3), x(4)
+	is_ge L129, x(3), x(1)
+	is_nonempty_list L126, x(4)
+	get_list x(4), x(2), x(5)
+	is_nil L127, x(5)
+	is_ge L124, x(2), x(3)
+	return 
+L124:
+	is_ge L125, x(2), x(1)
+	test_heap 6, 4
+	put_list x(3), nil, x(0)
+	put_list x(2), x(0), x(2)
+	put_list x(1), x(2), x(0)
+	return 
+L125:
+	test_heap 6, 4
+	put_list x(3), nil, x(0)
+	put_list x(1), x(0), x(1)
+	put_list x(2), x(1), x(0)
+	return 
+L126:
+	is_nil L127, x(4)
+	return 
+L127:
+	is_eq L128, x(1), x(3)
+	test_heap 2, 5
+	put_list x(1), nil, x(2)
+	move x(4), x(1)
+	move x(3), x(0)
+	call_only 3, L137
+L128:
+	move x(4), x(2)
+	move nil, x(4)
+	move x(1), x(0)
+	move x(3), x(1)
+	move nil, x(3)
+	call_only 5, L422
+L129:
+	is_nonempty_list L132, x(4)
+	get_list x(4), x(0), x(2)
+	is_nil L133, x(2)
+	is_ge L130, x(0), x(1)
+	test_heap 4, 5
+	put_list x(1), x(4), x(1)
+	put_list x(3), x(1), x(0)
+	return 
+L130:
+	is_ge L131, x(0), x(3)
+	test_heap 6, 4
+	put_list x(1), nil, x(1)
+	put_list x(0), x(1), x(1)
+	put_list x(3), x(1), x(0)
+	return 
+L131:
+	test_heap 6, 4
+	put_list x(1), nil, x(1)
+	put_list x(3), x(1), x(1)
+	put_list x(0), x(1), x(0)
+	return 
+L132:
+	is_nil L133, x(4)
+	test_heap 4, 4
+	put_list x(1), nil, x(1)
+	put_list x(3), x(1), x(0)
+	return 
+L133:
+	move x(4), x(2)
+	move nil, x(4)
+	move x(1), x(0)
+	move x(3), x(1)
+	move nil, x(3)
+	call_only 5, L434
+L134:
+	is_nil L122, x(2)
+	return 
+L135:
+	is_nil L122, x(0)
+	return 
+L136:
+ 	#line 71
+	#function lists:sort_1/3
+L137:
+	is_nonempty_list L140, x(1)
+	get_list x(1), x(3), x(4)
+	is_eq L138, x(0), x(3)
+	test_heap 2, 5
+	put_list x(0), x(2), x(2)
+	move x(4), x(1)
+	move x(3), x(0)
+	call_only 3, L137
+L138:
+	is_lt L139, x(0), x(3)
+	move x(3), x(1)
+	move x(2), x(3)
+	move x(4), x(2)
+	move nil, x(4)
+	call_only 5, L422
+L139:
+	move x(3), x(1)
+	move x(2), x(3)
+	move x(4), x(2)
+	move nil, x(4)
+	call_only 5, L434
+L140:
+	is_nil L136, x(1)
+	test_heap 2, 3
+	put_list x(0), nil, x(1)
+	move x(2), x(0)
+ 	#line 72
+	call_ext_only lists:reverse/2 2
+L141:
+ 	#line 73
+	#function lists:merge/1
+L142:
+	move nil, x(1)
+	call_only 2, L446
+L143:
+ 	#line 74
+	#function lists:merge3/3
+L144:
+	is_nil L145, x(1)
+	move x(2), x(1)
+	call_only 2, L152
+L145:
+	is_nil L146, x(2)
+	call_only 2, L152
+L146:
+	is_nonempty_list L143, x(1)
+	get_list x(1), x(3), x(4)
+	is_nonempty_list L143, x(2)
+	allocate 0, 5
+	get_list x(2), x(5), x(6)
+	move x(3), x(2)
+	move x(4), x(3)
+	move x(5), x(4)
+	move x(6), x(5)
+	move nil, x(1)
+ 	#line 75
+	call 6, L461
+	move nil, x(1)
+ 	#line 75
+	call_ext_last lists:reverse/2 2 0
+L147:
+ 	#line 76
+	#function lists:rmerge3/3
+L148:
+	is_nil L149, x(1)
+	move x(2), x(1)
+	call_only 2, L155
+L149:
+	is_nil L150, x(2)
+	call_only 2, L155
+L150:
+	is_nonempty_list L147, x(1)
+	get_list x(1), x(3), x(4)
+	is_nonempty_list L147, x(2)
+	allocate 0, 5
+	get_list x(2), x(5), x(6)
+	move x(3), x(2)
+	move x(4), x(3)
+	move x(5), x(4)
+	move x(6), x(5)
+	move nil, x(1)
+ 	#line 77
+	call 6, L483
+	move nil, x(1)
+ 	#line 77
+	call_ext_last lists:reverse/2 2 0
+L151:
+ 	#line 78
+	#function lists:merge/2
+L152:
+	is_nonempty_list L153, x(1)
+	allocate 0, 2
+	get_list x(1), x(1), x(2)
+	move nil, x(3)
+ 	#line 79
+	call 4, L505
+	move nil, x(1)
+ 	#line 79
+	call_ext_last lists:reverse/2 2 0
+L153:
+	is_nil L151, x(1)
+	return 
+L154:
+ 	#line 80
+	#function lists:rmerge/2
+L155:
+	is_nonempty_list L156, x(1)
+	allocate 0, 2
+	get_list x(1), x(1), x(2)
+	move nil, x(3)
+ 	#line 81
+	call 4, L513
+	move nil, x(1)
+ 	#line 81
+	call_ext_last lists:reverse/2 2 0
+L156:
+	is_nil L154, x(1)
+	return 
+L157:
+ 	#line 82
+	#function lists:concat/1
+L158:
+	allocate 1, 1
+	move x(0), y(0)
+	make_fun2 0
+	move y(0), x(1)
+	call_last 2, L352, 1
+L159:
+ 	#line 83
+	#function lists:thing_to_list/1
+L160:
+	is_integer L161, x(0)
+ 	#line 83
+	call_ext_only erlang:integer_to_list/1 1
+L161:
+	is_float L162, x(0)
+ 	#line 84
+	call_ext_only erlang:float_to_list/1 1
+L162:
+	is_atom L163, x(0)
+ 	#line 85
+	call_ext_only erlang:atom_to_list/1 1
+L163:
+	is_list L159, x(0)
+	return 
+L164:
+ 	#line 86
+	#function lists:flatten/1
+L165:
+	is_list L164, x(0)
+	move nil, x(1)
+	call_only 2, L169
+L166:
+ 	#line 87
+	#function lists:flatten/2
+L167:
+	is_list L166, x(0)
+	is_list L166, x(1)
+	call_only 2, L169
+L168:
+ 	#line 88
+	#function lists:do_flatten/2
+L169:
+	is_nonempty_list L171, x(0)
+	get_list x(0), x(2), x(3)
+	is_list L170, x(2)
+	allocate 1, 4
+	move x(3), x(0)
+	move x(2), y(0)
+ 	#line 89
+	call 2, L169
+	move x(0), x(1)
+	move y(0), x(0)
+	call_last 2, L169, 1
+L170:
+	allocate 1, 4
+	move x(3), x(0)
+	move x(2), y(0)
+ 	#line 90
+	call 2, L169
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L171:
+	is_nil L168, x(0)
+	move x(1), x(0)
+	return 
+L172:
+ 	#line 91
+	#function lists:flatlength/1
+L173:
+	move #0, x(1)
+	call_only 2, L175
+L174:
+ 	#line 92
+	#function lists:flatlength/2
+L175:
+	is_nonempty_list L177, x(0)
+	get_list x(0), x(2), x(3)
+	is_list L176, x(2)
+	allocate 1, 4
+	move x(3), x(0)
+	move x(2), y(0)
+ 	#line 93
+	call 2, L175
+	move x(0), x(1)
+	move y(0), x(0)
+	call_last 2, L175, 1
+L176:
+ 	#line 94
+	gc_bif2 L0, 4, 7, x(1), #1, x(1)
+	move x(3), x(0)
+	call_only 2, L175
+L177:
+	is_nil L174, x(0)
+	move x(1), x(0)
+	return 
+L178:
+ 	#line 95
+	#function lists:keydelete/3
+L179:
+	is_integer L178, x(1)
+	is_lt L178, #0, x(1)
+	call_only 3, L181
+L180:
+ 	#line 96
+	#function lists:keydelete3/3
+L181:
+	is_nonempty_list L183, x(2)
+	get_list x(2), x(3), x(4)
+	bif2 L182, 13, x(1), x(3), x(5)
+	is_eq L182, x(5), x(0)
+	move x(4), x(0)
+	return 
+L182:
+	allocate 1, 5
+	move x(4), x(2)
+	move x(3), y(0)
+ 	#line 97
+	call 3, L181
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L183:
+	is_nil L180, x(2)
+	move nil, x(0)
+	return 
+L184:
+ 	#line 98
+	#function lists:keyreplace/4
+L185:
+	is_integer L184, x(1)
+	is_lt L184, #0, x(1)
+	is_tuple L184, x(3)
+	call_only 4, L187
+L186:
+ 	#line 99
+	#function lists:keyreplace3/4
+L187:
+	is_nonempty_list L189, x(2)
+	get_list x(2), x(4), x(5)
+	bif2 L188, 13, x(1), x(4), x(6)
+	is_eq L188, x(6), x(0)
+	test_heap 2, 6
+	put_list x(3), x(5), x(0)
+	return 
+L188:
+	allocate 1, 6
+	move x(5), x(2)
+	move x(4), y(0)
+ 	#line 100
+	call 4, L187
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L189:
+	is_nil L186, x(2)
+	move nil, x(0)
+	return 
+L190:
+ 	#line 101
+	#function lists:keytake/3
+L191:
+	is_integer L190, x(1)
+	is_lt L190, #0, x(1)
+	move nil, x(3)
+	call_only 4, L193
+L192:
+ 	#line 102
+	#function lists:keytake/4
+L193:
+	is_nonempty_list L195, x(2)
+	get_list x(2), x(4), x(5)
+	bif2 L194, 13, x(1), x(4), x(6)
+	is_eq L194, x(6), x(0)
+	allocate 1, 6
+	move x(5), x(1)
+	move x(3), x(0)
+	move x(4), y(0)
+ 	#line 103
+	call_ext lists:reverse/2 2
+	test_heap 4, 1
+	put_tuple 3, x(1)
+	put value
+	put y(0)
+	put x(0)
+	move x(1), x(0)
+	deallocate 1
+	return 
+L194:
+	test_heap 2, 6
+	put_list x(4), x(3), x(3)
+	move x(5), x(2)
+	call_only 4, L193
+L195:
+	is_nil L192, x(2)
+	move false, x(0)
+	return 
+L196:
+ 	#line 104
+	#function lists:keystore/4
+L197:
+	is_integer L196, x(1)
+	is_lt L196, #0, x(1)
+	is_tuple L196, x(3)
+	call_only 4, L199
+L198:
+ 	#line 105
+	#function lists:keystore2/4
+L199:
+	is_nonempty_list L201, x(2)
+	get_list x(2), x(4), x(5)
+	bif2 L200, 13, x(1), x(4), x(6)
+	is_eq L200, x(6), x(0)
+	test_heap 2, 6
+	put_list x(3), x(5), x(0)
+	return 
+L200:
+	allocate 1, 6
+	move x(5), x(2)
+	move x(4), y(0)
+ 	#line 106
+	call 4, L199
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L201:
+	is_nil L198, x(2)
+	test_heap 2, 4
+	put_list x(3), nil, x(0)
+	return 
+L202:
+ 	#line 107
+	#function lists:keysort/2
+L203:
+	is_integer L202, x(0)
+	is_lt L202, #0, x(0)
+	is_nonempty_list L215, x(1)
+	get_list x(1), x(2), x(3)
+	is_nonempty_list L214, x(3)
+	get_list x(3), x(4), x(5)
+ 	#line 108
+	bif2 L0, 13, x(0), x(2), x(3)
+ 	#line 108
+	bif2 L0, 13, x(0), x(4), x(6)
+	is_ge L209, x(6), x(3)
+	is_nonempty_list L206, x(5)
+	get_list x(5), x(7), x(8)
+	is_nil L207, x(8)
+ 	#line 109
+	bif2 L0, 13, x(0), x(7), x(0)
+	is_ge L204, x(0), x(6)
+	move x(1), x(0)
+	return 
+L204:
+	is_ge L205, x(0), x(3)
+	test_heap 6, 8
+	put_list x(4), nil, x(0)
+	put_list x(7), x(0), x(1)
+	put_list x(2), x(1), x(0)
+	return 
+L205:
+	test_heap 6, 8
+	put_list x(4), nil, x(0)
+	put_list x(2), x(0), x(1)
+	put_list x(7), x(1), x(0)
+	return 
+L206:
+	is_nil L207, x(5)
+	move x(1), x(0)
+	return 
+L207:
+	is_eq L208, x(2), x(4)
+	test_heap 2, 7
+	put_list x(2), nil, x(7)
+	move x(6), x(2)
+	move x(5), x(3)
+	move x(4), x(1)
+	move x(7), x(4)
+	call_only 5, L218
+L208:
+	move nil, x(7)
+	move x(2), x(1)
+	move x(3), x(2)
+	move x(4), x(3)
+	move x(6), x(4)
+	move nil, x(6)
+	call_only 8, L654
+L209:
+	is_nonempty_list L212, x(5)
+	get_list x(5), x(1), x(7)
+	is_nil L213, x(7)
+ 	#line 110
+	bif2 L0, 13, x(0), x(1), x(0)
+	is_ge L210, x(0), x(3)
+	test_heap 4, 6
+	put_list x(2), x(5), x(1)
+	put_list x(4), x(1), x(0)
+	return 
+L210:
+	is_ge L211, x(0), x(6)
+	test_heap 6, 5
+	put_list x(2), nil, x(0)
+	put_list x(1), x(0), x(1)
+	put_list x(4), x(1), x(0)
+	return 
+L211:
+	test_heap 6, 5
+	put_list x(2), nil, x(0)
+	put_list x(4), x(0), x(2)
+	put_list x(1), x(2), x(0)
+	return 
+L212:
+	is_nil L213, x(5)
+	test_heap 4, 5
+	put_list x(2), nil, x(1)
+	put_list x(4), x(1), x(0)
+	return 
+L213:
+	move nil, x(7)
+	move x(2), x(1)
+	move x(3), x(2)
+	move x(4), x(3)
+	move x(6), x(4)
+	move nil, x(6)
+	call_only 8, L666
+L214:
+	is_nil L216, x(3)
+	move x(1), x(0)
+	return 
+L215:
+	is_nil L216, x(1)
+	move x(1), x(0)
+	return 
+L216:
+ 	#line 111
+	case_end x(1)
+L217:
+ 	#line 112
+	#function lists:keysort_1/5
+L218:
+	is_nonempty_list L221, x(3)
+	get_list x(3), x(5), x(6)
+	is_eq L219, x(1), x(5)
+	test_heap 2, 7
+	put_list x(1), x(4), x(4)
+	move x(6), x(3)
+	move x(5), x(1)
+	call_only 5, L218
+L219:
+ 	#line 113
+	bif2 L0, 13, x(0), x(5), x(3)
+	is_ge L220, x(3), x(2)
+	move nil, x(7)
+	move x(5), x(8)
+	move x(6), x(5)
+	move x(4), x(6)
+	move x(3), x(4)
+	move x(8), x(3)
+	call_only 8, L654
+L220:
+	move nil, x(7)
+	move x(5), x(8)
+	move x(6), x(5)
+	move x(4), x(6)
+	move x(3), x(4)
+	move x(8), x(3)
+	call_only 8, L666
+L221:
+	is_nil L217, x(3)
+	test_heap 2, 5
+	put_list x(1), nil, x(1)
+	move x(4), x(0)
+ 	#line 114
+	call_ext_only lists:reverse/2 2
+L222:
+ 	#line 115
+	#function lists:keymerge/3
+L223:
+	is_integer L222, x(0)
+	is_lt L222, #0, x(0)
+	allocate 0, 3
+	is_nonempty_list L224, x(2)
+	get_list x(2), x(3), x(4)
+ 	#line 116
+	bif2 L0, 13, x(0), x(3), x(2)
+	move nil, x(5)
+ 	#line 117
+	call 6, L737
+	move nil, x(1)
+ 	#line 118
+	call_ext_last lists:reverse/2 2 0
+L224:
+	is_nil L225, x(2)
+	move x(1), x(0)
+	deallocate 0
+	return 
+L225:
+ 	#line 119
+	case_end x(2)
+L226:
+ 	#line 120
+	#function lists:rkeymerge/3
+L227:
+	is_integer L226, x(0)
+	is_lt L226, #0, x(0)
+	allocate 0, 3
+	is_nonempty_list L228, x(2)
+	get_list x(2), x(3), x(4)
+ 	#line 121
+	bif2 L0, 13, x(0), x(3), x(2)
+	move nil, x(5)
+ 	#line 122
+	call 6, L745
+	move nil, x(1)
+ 	#line 123
+	call_ext_last lists:reverse/2 2 0
+L228:
+	is_nil L229, x(2)
+	move x(1), x(0)
+	deallocate 0
+	return 
+L229:
+ 	#line 124
+	case_end x(2)
+L230:
+ 	#line 125
+	#function lists:ukeysort/2
+L231:
+	is_integer L230, x(0)
+	is_lt L230, #0, x(0)
+	is_nonempty_list L247, x(1)
+	get_list x(1), x(2), x(3)
+	is_nonempty_list L246, x(3)
+	get_list x(3), x(4), x(5)
+ 	#line 126
+	bif2 L0, 13, x(0), x(2), x(3)
+ 	#line 126
+	bif2 L0, 13, x(0), x(4), x(6)
+	is_eq L232, x(3), x(6)
+	move x(2), x(1)
+	move x(3), x(2)
+	move x(5), x(3)
+	call_only 4, L250
+L232:
+	is_lt L239, x(3), x(6)
+	is_nonempty_list L237, x(5)
+	get_list x(5), x(7), x(8)
+	is_nil L238, x(8)
+ 	#line 127
+	bif2 L0, 13, x(0), x(7), x(0)
+	is_eq L233, x(6), x(0)
+	test_heap 4, 5
+	put_list x(4), nil, x(1)
+	put_list x(2), x(1), x(0)
+	return 
+L233:
+	is_lt L234, x(6), x(0)
+	test_heap 6, 8
+	put_list x(7), nil, x(0)
+	put_list x(4), x(0), x(1)
+	put_list x(2), x(1), x(0)
+	return 
+L234:
+	is_eq L235, x(0), x(3)
+	test_heap 4, 5
+	put_list x(4), nil, x(1)
+	put_list x(2), x(1), x(0)
+	return 
+L235:
+	is_ge L236, x(0), x(3)
+	test_heap 6, 8
+	put_list x(4), nil, x(0)
+	put_list x(7), x(0), x(1)
+	put_list x(2), x(1), x(0)
+	return 
+L236:
+	test_heap 6, 8
+	put_list x(4), nil, x(0)
+	put_list x(2), x(0), x(1)
+	put_list x(7), x(1), x(0)
+	return 
+L237:
+	is_nil L238, x(5)
+	move x(1), x(0)
+	return 
+L238:
+	move nil, x(7)
+	move x(2), x(1)
+	move x(3), x(2)
+	move x(4), x(3)
+	move x(6), x(4)
+	move nil, x(6)
+	call_only 8, L753
+L239:
+	is_nonempty_list L244, x(5)
+	get_list x(5), x(1), x(7)
+	is_nil L245, x(7)
+ 	#line 128
+	bif2 L0, 13, x(0), x(1), x(0)
+	is_eq L240, x(3), x(0)
+	test_heap 4, 5
+	put_list x(2), nil, x(1)
+	put_list x(4), x(1), x(0)
+	return 
+L240:
+	is_lt L241, x(3), x(0)
+	test_heap 6, 5
+	put_list x(1), nil, x(0)
+	put_list x(2), x(0), x(1)
+	put_list x(4), x(1), x(0)
+	return 
+L241:
+	is_eq L242, x(6), x(0)
+	test_heap 4, 5
+	put_list x(2), nil, x(1)
+	put_list x(4), x(1), x(0)
+	return 
+L242:
+	is_ge L243, x(0), x(6)
+	test_heap 6, 5
+	put_list x(2), nil, x(0)
+	put_list x(1), x(0), x(1)
+	put_list x(4), x(1), x(0)
+	return 
+L243:
+	test_heap 6, 5
+	put_list x(2), nil, x(0)
+	put_list x(4), x(0), x(2)
+	put_list x(1), x(2), x(0)
+	return 
+L244:
+	is_nil L245, x(5)
+	test_heap 4, 5
+	put_list x(2), nil, x(1)
+	put_list x(4), x(1), x(0)
+	return 
+L245:
+	test_heap 2, 7
+	put_list x(2), nil, x(7)
+	move x(6), x(2)
+	move x(5), x(3)
+	move x(4), x(1)
+	move x(7), x(4)
+	call_only 5, L770
+L246:
+	is_nil L248, x(3)
+	move x(1), x(0)
+	return 
+L247:
+	is_nil L248, x(1)
+	move x(1), x(0)
+	return 
+L248:
+ 	#line 129
+	case_end x(1)
+L249:
+ 	#line 130
+	#function lists:ukeysort_1/4
+L250:
+	is_nonempty_list L253, x(3)
+	get_list x(3), x(4), x(5)
+ 	#line 131
+	bif2 L0, 13, x(0), x(4), x(3)
+	is_eq L251, x(2), x(3)
+	move x(5), x(3)
+	call_only 4, L250
+L251:
+	is_lt L252, x(2), x(3)
+	move nil, x(7)
+	move nil, x(6)
+	move x(4), x(8)
+	move x(3), x(4)
+	move x(8), x(3)
+	call_only 8, L753
+L252:
+	test_heap 2, 6
+	put_list x(1), nil, x(6)
+	move x(3), x(2)
+	move x(5), x(3)
+	move x(4), x(1)
+	move x(6), x(4)
+	call_only 5, L770
+L253:
+	is_nil L249, x(3)
+	test_heap 2, 2
+	put_list x(1), nil, x(0)
+	return 
+L254:
+ 	#line 132
+	#function lists:ukeymerge/3
+L255:
+	is_integer L254, x(0)
+	is_lt L254, #0, x(0)
+	allocate 0, 3
+	is_nonempty_list L256, x(1)
+	get_list x(1), x(3), x(6)
+ 	#line 133
+	bif2 L0, 13, x(0), x(3), x(1)
+	move nil, x(5)
+	move x(2), x(4)
+	move x(1), x(2)
+	move x(6), x(1)
+ 	#line 134
+	call 6, L850
+	move nil, x(1)
+ 	#line 135
+	call_ext_last lists:reverse/2 2 0
+L256:
+	is_nil L257, x(1)
+	move x(2), x(0)
+	deallocate 0
+	return 
+L257:
+ 	#line 136
+	case_end x(1)
+L258:
+ 	#line 137
+	#function lists:rukeymerge/3
+L259:
+	is_integer L258, x(0)
+	is_lt L258, #0, x(0)
+	allocate 0, 3
+	is_nonempty_list L260, x(2)
+	get_list x(2), x(3), x(4)
+ 	#line 138
+	bif2 L0, 13, x(0), x(3), x(2)
+	move x(3), x(5)
+	move x(4), x(3)
+	move nil, x(4)
+ 	#line 139
+	call 6, L854
+	move nil, x(1)
+ 	#line 140
+	call_ext_last lists:reverse/2 2 0
+L260:
+	is_nil L261, x(2)
+	move x(1), x(0)
+	deallocate 0
+	return 
+L261:
+ 	#line 141
+	case_end x(2)
+L262:
+ 	#line 142
+	#function lists:keymap/3
+L263:
+	is_nonempty_list L264, x(2)
+	allocate_zero 4, 3
+	get_list x(2), x(3), y(3)
+ 	#line 143
+	bif2 L0, 13, x(1), x(3), x(2)
+	move x(1), y(1)
+	move x(0), x(1)
+	move x(2), x(0)
+	move x(3), y(0)
+	move x(1), y(2)
+ 	#line 143
+	call_fun 1
+	move y(0), x(1)
+	move x(0), x(2)
+	trim 1, 3
+	move y(0), x(0)
+ 	#line 143
+	call_ext erlang:setelement/3 3
+	move x(0), x(3)
+	move y(0), x(1)
+	move y(2), x(2)
+	move y(1), x(0)
+	move x(3), y(2)
+	trim 2, 1
+ 	#line 143
+	call 3, L263
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L264:
+	is_nil L262, x(2)
+	is_integer L262, x(1)
+	is_ge L262, x(1), #1
+	is_function2 L262, x(0), #1
+	move nil, x(0)
+	return 
+L265:
+ 	#line 144
+	#function lists:sort/2
+L266:
+	is_nonempty_list L270, x(1)
+	get_list x(1), x(2), x(3)
+	is_nonempty_list L269, x(3)
+	allocate 4, 4
+	get_list x(3), x(1), y(2)
+	move x(2), x(3)
+	move x(0), x(2)
+	move x(3), x(0)
+	move x(2), y(0)
+	move x(0), y(1)
+	move x(1), y(3)
+ 	#line 145
+	call_fun 2
+	is_atom L271, x(0)
+	select_val x(0), L271, [
+		(true, L267),
+		(false, L268)
+	]
+L267:
+	move y(2), x(3)
+	move y(0), x(2)
+	move nil, x(4)
+	move y(1), x(1)
+	move nil, x(5)
+	move y(3), x(0)
+	call_last 6, L864, 4
+L268:
+	move y(2), x(3)
+	move y(0), x(2)
+	move nil, x(4)
+	move y(1), x(1)
+	move nil, x(5)
+	move y(3), x(0)
+	call_last 6, L886, 4
+L269:
+	is_nil L265, x(3)
+	is_function2 L265, x(0), #2
+	move x(1), x(0)
+	return 
+L270:
+	is_nil L265, x(1)
+	is_function2 L265, x(0), #2
+	move nil, x(0)
+	return 
+L271:
+ 	#line 145
+	case_end x(0)
+L272:
+ 	#line 146
+	#function lists:merge/3
+L273:
+	is_nonempty_list L274, x(2)
+	get_list x(2), x(3), x(4)
+	is_function2 L272, x(0), #2
+	allocate 0, 5
+	move x(0), x(2)
+	move x(1), x(0)
+	move x(3), x(1)
+	move x(4), x(3)
+	move nil, x(4)
+ 	#line 147
+	call 5, L919
+	move nil, x(1)
+ 	#line 147
+	call_ext_last lists:reverse/2 2 0
+L274:
+	is_nil L272, x(2)
+	is_function2 L272, x(0), #2
+	move x(1), x(0)
+	return 
+L275:
+ 	#line 148
+	#function lists:rmerge/3
+L276:
+	is_nonempty_list L277, x(2)
+	get_list x(2), x(3), x(4)
+	is_function2 L275, x(0), #2
+	allocate 0, 5
+	move x(0), x(2)
+	move x(1), x(0)
+	move x(3), x(1)
+	move x(4), x(3)
+	move nil, x(4)
+ 	#line 149
+	call 5, L931
+	move nil, x(1)
+ 	#line 149
+	call_ext_last lists:reverse/2 2 0
+L277:
+	is_nil L275, x(2)
+	is_function2 L275, x(0), #2
+	move x(1), x(0)
+	return 
+L278:
+ 	#line 150
+	#function lists:usort/2
+L279:
+	is_nonempty_list L281, x(1)
+	get_list x(1), x(2), x(3)
+	is_nil L280, x(3)
+	is_function2 L278, x(0), #2
+	move x(1), x(0)
+	return 
+L280:
+	is_function2 L278, x(0), #2
+	move x(2), x(1)
+	move x(3), x(2)
+	call_only 3, L283
+L281:
+	is_nil L278, x(1)
+	is_function2 L278, x(0), #2
+	move x(1), x(0)
+	return 
+L282:
+ 	#line 151
+	#function lists:usort_1/3
+L283:
+	is_nonempty_list L282, x(2)
+	allocate 4, 3
+	get_list x(2), x(3), y(2)
+	move x(0), x(2)
+	move x(1), x(0)
+	move x(3), x(1)
+	move x(0), y(0)
+	move x(2), y(1)
+	move x(1), y(3)
+ 	#line 152
+	call_fun 2
+	is_atom L290, x(0)
+	select_val x(0), L290, [
+		(false, L284),
+		(true, L285)
+	]
+L284:
+	test_heap 2, 0
+	put_list y(0), nil, x(3)
+	move y(2), x(1)
+	move y(1), x(2)
+	move y(3), x(0)
+	call_last 4, L977, 4
+L285:
+	move y(0), x(1)
+	move y(1), x(2)
+	move y(3), x(0)
+ 	#line 153
+	call_fun 2
+	is_atom L289, x(0)
+	select_val x(0), L289, [
+		(true, L286),
+		(false, L288)
+	]
+L286:
+	is_nil L287, y(2)
+	test_heap 2, 0
+	put_list y(0), nil, x(0)
+	deallocate 4
+	return 
+L287:
+	move y(0), x(1)
+	move y(2), x(2)
+	move y(1), x(0)
+	call_last 3, L283, 4
+L288:
+	move y(2), x(3)
+	move y(1), x(2)
+	move nil, x(4)
+	move y(0), x(1)
+	move nil, x(5)
+	move y(3), x(0)
+	call_last 6, L943, 4
+L289:
+ 	#line 153
+	case_end x(0)
+L290:
+ 	#line 152
+	case_end x(0)
+L291:
+ 	#line 154
+	#function lists:umerge/3
+L292:
+	is_nonempty_list L293, x(1)
+	get_list x(1), x(3), x(4)
+	is_function2 L291, x(0), #2
+	allocate 0, 5
+	move x(4), x(1)
+	move nil, x(4)
+	move x(3), x(5)
+	move x(2), x(3)
+	move x(0), x(2)
+	move x(5), x(0)
+ 	#line 155
+	call 5, L1007
+	move nil, x(1)
+ 	#line 155
+	call_ext_last lists:reverse/2 2 0
+L293:
+	is_nil L291, x(1)
+	is_function2 L291, x(0), #2
+	move x(2), x(0)
+	return 
+L294:
+ 	#line 156
+	#function lists:rumerge/3
+L295:
+	is_nonempty_list L296, x(2)
+	get_list x(2), x(3), x(4)
+	is_function2 L294, x(0), #2
+	allocate 0, 5
+	move x(0), x(2)
+	move x(1), x(0)
+	move x(3), x(1)
+	move x(4), x(3)
+	move nil, x(4)
+ 	#line 157
+	call 5, L1013
+	move nil, x(1)
+ 	#line 157
+	call_ext_last lists:reverse/2 2 0
+L296:
+	is_nil L294, x(2)
+	is_function2 L294, x(0), #2
+	move x(1), x(0)
+	return 
+L297:
+ 	#line 158
+	#function lists:usort/1
+L298:
+	is_nonempty_list L314, x(0)
+	get_list x(0), x(1), x(2)
+	is_nonempty_list L313, x(2)
+	get_list x(2), x(3), x(4)
+	is_lt L305, x(1), x(3)
+	is_nonempty_list L303, x(4)
+	get_list x(4), x(2), x(5)
+	is_nil L304, x(5)
+	is_lt L299, x(3), x(2)
+	return 
+L299:
+	is_eq L300, x(3), x(2)
+	test_heap 4, 4
+	put_list x(3), nil, x(2)
+	put_list x(1), x(2), x(0)
+	return 
+L300:
+	is_lt L301, x(2), x(1)
+	test_heap 6, 4
+	put_list x(3), nil, x(0)
+	put_list x(1), x(0), x(1)
+	put_list x(2), x(1), x(0)
+	return 
+L301:
+	is_eq L302, x(2), x(1)
+	test_heap 4, 4
+	put_list x(3), nil, x(2)
+	put_list x(1), x(2), x(0)
+	return 
+L302:
+	test_heap 6, 4
+	put_list x(3), nil, x(0)
+	put_list x(2), x(0), x(2)
+	put_list x(1), x(2), x(0)
+	return 
+L303:
+	is_nil L304, x(4)
+	return 
+L304:
+	move x(4), x(2)
+	move nil, x(4)
+	move x(1), x(0)
+	move x(3), x(1)
+	move nil, x(3)
+	call_only 5, L521
+L305:
+	is_lt L312, x(3), x(1)
+	is_nonempty_list L310, x(4)
+	get_list x(4), x(0), x(2)
+	is_nil L311, x(2)
+	is_lt L306, x(1), x(0)
+	test_heap 4, 5
+	put_list x(1), x(4), x(1)
+	put_list x(3), x(1), x(0)
+	return 
+L306:
+	is_eq L307, x(1), x(0)
+	test_heap 4, 4
+	put_list x(1), nil, x(1)
+	put_list x(3), x(1), x(0)
+	return 
+L307:
+	is_lt L308, x(0), x(3)
+	test_heap 6, 4
+	put_list x(1), nil, x(1)
+	put_list x(3), x(1), x(1)
+	put_list x(0), x(1), x(0)
+	return 
+L308:
+	is_eq L309, x(0), x(3)
+	test_heap 4, 4
+	put_list x(1), nil, x(1)
+	put_list x(3), x(1), x(0)
+	return 
+L309:
+	test_heap 6, 4
+	put_list x(1), nil, x(1)
+	put_list x(0), x(1), x(1)
+	put_list x(3), x(1), x(0)
+	return 
+L310:
+	is_nil L311, x(4)
+	test_heap 4, 4
+	put_list x(1), nil, x(1)
+	put_list x(3), x(1), x(0)
+	return 
+L311:
+	move x(4), x(2)
+	move nil, x(4)
+	move x(1), x(0)
+	move x(3), x(1)
+	move nil, x(3)
+	call_only 5, L538
+L312:
+	move x(1), x(0)
+	move x(4), x(1)
+	call_only 2, L316
+L313:
+	is_nil L297, x(2)
+	return 
+L314:
+	is_nil L297, x(0)
+	return 
+L315:
+ 	#line 159
+	#function lists:usort_1/2
+L316:
+	is_nonempty_list L319, x(1)
+	get_list x(1), x(2), x(3)
+	is_eq L317, x(0), x(2)
+	move x(3), x(1)
+	call_only 2, L316
+L317:
+	is_lt L318, x(0), x(2)
+	move nil, x(4)
+	move x(2), x(1)
+	move x(3), x(2)
+	move nil, x(3)
+	call_only 5, L521
+L318:
+	move nil, x(4)
+	move x(2), x(1)
+	move x(3), x(2)
+	move nil, x(3)
+	call_only 5, L538
+L319:
+	is_nil L315, x(1)
+	test_heap 2, 1
+	put_list x(0), nil, x(0)
+	return 
+L320:
+ 	#line 160
+	#function lists:umerge/1
+L321:
+	call_only 1, L555
+L322:
+ 	#line 161
+	#function lists:umerge3/3
+L323:
+	is_nil L324, x(1)
+	move x(2), x(1)
+	call_only 2, L331
+L324:
+	is_nil L325, x(2)
+	call_only 2, L331
+L325:
+	is_nonempty_list L322, x(1)
+	get_list x(1), x(3), x(4)
+	is_nonempty_list L322, x(2)
+	allocate_heap 0, 2, 5
+	get_list x(2), x(5), x(6)
+	put_list x(3), x(5), x(1)
+	move x(5), x(7)
+	move x(6), x(5)
+	move x(7), x(6)
+	move x(4), x(2)
+	move nil, x(4)
+ 	#line 162
+	call 7, L576
+	move nil, x(1)
+ 	#line 162
+	call_ext_last lists:reverse/2 2 0
+L326:
+ 	#line 163
+	#function lists:rumerge3/3
+L327:
+	is_nil L328, x(1)
+	move x(2), x(1)
+	call_only 2, L334
+L328:
+	is_nil L329, x(2)
+	call_only 2, L334
+L329:
+	is_nonempty_list L326, x(1)
+	get_list x(1), x(3), x(4)
+	is_nonempty_list L326, x(2)
+	allocate 0, 5
+	get_list x(2), x(5), x(6)
+	move x(3), x(2)
+	move nil, x(3)
+	move x(4), x(1)
+	move x(6), x(4)
+ 	#line 164
+	call 6, L606
+	move nil, x(1)
+ 	#line 164
+	call_ext_last lists:reverse/2 2 0
+L330:
+ 	#line 165
+	#function lists:umerge/2
+L331:
+	is_nonempty_list L332, x(0)
+	allocate 0, 2
+	get_list x(0), x(3), x(0)
+	move nil, x(2)
+ 	#line 166
+	call 4, L640
+	move nil, x(1)
+ 	#line 166
+	call_ext_last lists:reverse/2 2 0
+L332:
+	is_nil L330, x(0)
+	move x(1), x(0)
+	return 
+L333:
+ 	#line 167
+	#function lists:rumerge/2
+L334:
+	is_nonempty_list L335, x(1)
+	allocate 0, 2
+	get_list x(1), x(3), x(1)
+	move nil, x(2)
+ 	#line 168
+	call 4, L644
+	move nil, x(1)
+ 	#line 168
+	call_ext_last lists:reverse/2 2 0
+L335:
+	is_nil L333, x(1)
+	return 
+L336:
+ 	#line 169
+	#function lists:all/2
+L337:
+	is_nonempty_list L340, x(1)
+	allocate 2, 2
+	get_list x(1), x(2), y(1)
+	move x(0), x(1)
+	move x(2), x(0)
+	move x(1), y(0)
+ 	#line 170
+	call_fun 1
+	is_atom L341, x(0)
+	select_val x(0), L341, [
+		(true, L338),
+		(false, L339)
+	]
+L338:
+	move y(1), x(1)
+	move y(0), x(0)
+	call_last 2, L337, 2
+L339:
+	deallocate 2
+	return 
+L340:
+	is_nil L336, x(1)
+	is_function2 L336, x(0), #1
+	move true, x(0)
+	return 
+L341:
+ 	#line 170
+	case_end x(0)
+L342:
+ 	#line 171
+	#function lists:any/2
+L343:
+	is_nonempty_list L346, x(1)
+	allocate 2, 2
+	get_list x(1), x(2), y(1)
+	move x(0), x(1)
+	move x(2), x(0)
+	move x(1), y(0)
+ 	#line 172
+	call_fun 1
+	is_atom L347, x(0)
+	select_val x(0), L347, [
+		(false, L344),
+		(true, L345)
+	]
+L344:
+	move y(1), x(1)
+	move y(0), x(0)
+	call_last 2, L343, 2
+L345:
+	deallocate 2
+	return 
+L346:
+	is_nil L342, x(1)
+	is_function2 L342, x(0), #1
+	move false, x(0)
+	return 
+L347:
+ 	#line 172
+	case_end x(0)
+L348:
+ 	#line 173
+	#function lists:map/2
+L349:
+	is_nonempty_list L350, x(1)
+	allocate 2, 2
+	get_list x(1), x(2), y(1)
+	move x(0), x(1)
+	move x(2), x(0)
+	move x(1), y(0)
+ 	#line 174
+	call_fun 1
+	move x(0), x(2)
+	move y(1), x(1)
+	move y(0), x(0)
+	move x(2), y(1)
+	trim 1, 1
+ 	#line 174
+	call 2, L349
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L350:
+	is_nil L348, x(1)
+	is_function2 L348, x(0), #1
+	move nil, x(0)
+	return 
+L351:
+ 	#line 175
+	#function lists:flatmap/2
+L352:
+	is_nonempty_list L353, x(1)
+	allocate 2, 2
+	get_list x(1), x(2), y(1)
+	move x(0), x(1)
+	move x(2), x(0)
+	move x(1), y(0)
+ 	#line 176
+	call_fun 1
+	move x(0), x(2)
+	move y(1), x(1)
+	move y(0), x(0)
+	move x(2), y(1)
+	trim 1, 1
+ 	#line 176
+	call 2, L352
+	move x(0), x(1)
+	move y(0), x(0)
+ 	#line 176
+	call_ext_last erlang:++/2 2 1
+L353:
+	is_nil L351, x(1)
+	is_function2 L351, x(0), #1
+	move nil, x(0)
+	return 
+L354:
+ 	#line 177
+	#function lists:foldl/3
+L355:
+	is_nonempty_list L356, x(2)
+	allocate 2, 3
+	get_list x(2), x(3), y(1)
+	move x(0), x(2)
+	move x(3), x(0)
+	move x(2), y(0)
+ 	#line 178
+	call_fun 2
+	move x(0), x(1)
+	move y(1), x(2)
+	move y(0), x(0)
+	call_last 3, L355, 2
+L356:
+	is_nil L354, x(2)
+	is_function2 L354, x(0), #2
+	move x(1), x(0)
+	return 
+L357:
+ 	#line 179
+	#function lists:foldr/3
+L358:
+	is_nonempty_list L359, x(2)
+	allocate 2, 3
+	get_list x(2), y(1), x(2)
+	move x(0), y(0)
+ 	#line 180
+	call 3, L358
+	move x(0), x(1)
+	move y(0), x(2)
+	move y(1), x(0)
+ 	#line 180
+	call_fun 2
+	deallocate 2
+	return 
+L359:
+	is_nil L357, x(2)
+	is_function2 L357, x(0), #2
+	move x(1), x(0)
+	return 
+L360:
+ 	#line 181
+	#function lists:filter/2
+L361:
+	is_function2 L360, x(0), #1
+	move x(1), x(2)
+	move x(0), x(1)
+	move x(2), x(0)
+	call_only 2, L1035
+L362:
+ 	#line 182
+	#function lists:partition/2
+L363:
+	move nil, x(3)
+	move nil, x(2)
+	call_only 4, L365
+L364:
+ 	#line 183
+	#function lists:partition/4
+L365:
+	is_nonempty_list L368, x(1)
+	allocate 5, 4
+	get_list x(1), x(4), y(3)
+	move x(0), x(1)
+	move x(4), x(0)
+	move x(3), y(0)
+	move x(2), y(1)
+	move x(1), y(2)
+	move x(0), y(4)
+ 	#line 184
+	call_fun 1
+	is_atom L369, x(0)
+	select_val x(0), L369, [
+		(false, L366),
+		(true, L367)
+	]
+L366:
+	test_heap 2, 0
+	put_list y(4), y(0), x(3)
+	move y(3), x(1)
+	move y(1), x(2)
+	move y(2), x(0)
+	call_last 4, L365, 5
+L367:
+	test_heap 2, 0
+	put_list y(4), y(1), x(2)
+	move y(3), x(1)
+	move y(0), x(3)
+	move y(2), x(0)
+	call_last 4, L365, 5
+L368:
+	is_nil L364, x(1)
+	is_function2 L364, x(0), #1
+	allocate 1, 4
+	move x(2), x(0)
+	move x(3), y(0)
+ 	#line 185
+	call 1, L20
+	move x(0), x(1)
+	move y(0), x(0)
+	move x(1), y(0)
+ 	#line 185
+	call 1, L20
+	test_heap 3, 1
+	put_tuple 2, x(1)
+	put y(0)
+	put x(0)
+	move x(1), x(0)
+	deallocate 1
+	return 
+L369:
+ 	#line 184
+	case_end x(0)
+L370:
+ 	#line 186
+	#function lists:filtermap/2
+L371:
+	is_nonempty_list L375, x(1)
+	allocate 3, 2
+	get_list x(1), x(2), y(1)
+	move x(0), x(1)
+	move x(2), x(0)
+	move x(1), y(0)
+	move x(0), y(2)
+ 	#line 187
+	call_fun 1
+	is_tuple L372, x(0)
+	test_arity L376, x(0), 2
+	get_tuple_element x(0), 0, x(1)
+	get_tuple_element x(0), 1, x(2)
+	is_eq_exact L376, x(1), true
+	move y(1), x(1)
+	move y(0), x(0)
+	move x(2), y(2)
+	trim 2, 1
+ 	#line 188
+	call 2, L371
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L372:
+	is_atom L376, x(0)
+	select_val x(0), L376, [
+		(false, L373),
+		(true, L374)
+	]
+L373:
+	move y(1), x(1)
+	move y(0), x(0)
+	call_last 2, L371, 3
+L374:
+	move y(1), x(1)
+	move y(0), x(0)
+	trim 2, 1
+ 	#line 189
+	call 2, L371
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L375:
+	is_nil L370, x(1)
+	is_function2 L370, x(0), #1
+	move nil, x(0)
+	return 
+L376:
+ 	#line 187
+	case_end x(0)
+L377:
+ 	#line 190
+	#function lists:zf/2
+L378:
+	call_only 2, L371
+L379:
+ 	#line 191
+	#function lists:foreach/2
+L380:
+	is_nonempty_list L381, x(1)
+	allocate 2, 2
+	get_list x(1), x(2), y(1)
+	move x(0), x(1)
+	move x(2), x(0)
+	move x(1), y(0)
+ 	#line 192
+	call_fun 1
+	move y(1), x(1)
+	move y(0), x(0)
+	call_last 2, L380, 2
+L381:
+	is_nil L379, x(1)
+	is_function2 L379, x(0), #1
+	move ok, x(0)
+	return 
+L382:
+ 	#line 193
+	#function lists:mapfoldl/3
+L383:
+	is_nonempty_list L384, x(2)
+	allocate 2, 3
+	get_list x(2), x(3), y(1)
+	move x(0), x(2)
+	move x(3), x(0)
+	move x(2), y(0)
+ 	#line 194
+	call_fun 2
+	is_tuple L386, x(0)
+	test_arity L386, x(0), 2
+	get_tuple_element x(0), 0, x(3)
+	get_tuple_element x(0), 1, x(1)
+	move y(1), x(2)
+	move y(0), x(0)
+	move x(3), y(1)
+	trim 1, 1
+ 	#line 195
+	call 3, L383
+	is_tuple L385, x(0)
+	test_arity L385, x(0), 2
+	test_heap 5, 1
+	get_tuple_element x(0), 0, x(1)
+	get_tuple_element x(0), 1, x(2)
+	put_list y(0), x(1), x(1)
+	put_tuple 2, x(0)
+	put x(1)
+	put x(2)
+	deallocate 1
+	return 
+L384:
+	is_nil L382, x(2)
+	is_function2 L382, x(0), #2
+	test_heap 3, 2
+	put_tuple 2, x(0)
+	put nil
+	put x(1)
+	return 
+L385:
+ 	#line 195
+	badmatch x(0)
+L386:
+ 	#line 194
+	badmatch x(0)
+L387:
+ 	#line 196
+	#function lists:mapfoldr/3
+L388:
+	is_nonempty_list L389, x(2)
+	allocate 2, 3
+	get_list x(2), y(1), x(2)
+	move x(0), y(0)
+ 	#line 197
+	call 3, L388
+	is_tuple L391, x(0)
+	test_arity L391, x(0), 2
+	get_tuple_element x(0), 0, x(3)
+	get_tuple_element x(0), 1, x(1)
+	move y(0), x(2)
+	move y(1), x(0)
+	move x(3), y(1)
+	trim 1, 1
+ 	#line 198
+	call_fun 2
+	is_tuple L390, x(0)
+	test_arity L390, x(0), 2
+	test_heap 5, 1
+	get_tuple_element x(0), 0, x(1)
+	get_tuple_element x(0), 1, x(2)
+	put_list x(1), y(0), x(1)
+	put_tuple 2, x(0)
+	put x(1)
+	put x(2)
+	deallocate 1
+	return 
+L389:
+	is_nil L387, x(2)
+	is_function2 L387, x(0), #2
+	test_heap 3, 2
+	put_tuple 2, x(0)
+	put nil
+	put x(1)
+	return 
+L390:
+ 	#line 198
+	badmatch x(0)
+L391:
+ 	#line 197
+	badmatch x(0)
+L392:
+ 	#line 199
+	#function lists:takewhile/2
+L393:
+	is_nonempty_list L396, x(1)
+	allocate 3, 2
+	get_list x(1), x(2), y(1)
+	move x(0), x(1)
+	move x(2), x(0)
+	move x(1), y(0)
+	move x(0), y(2)
+ 	#line 200
+	call_fun 1
+	is_atom L397, x(0)
+	select_val x(0), L397, [
+		(true, L394),
+		(false, L395)
+	]
+L394:
+	move y(1), x(1)
+	move y(0), x(0)
+	trim 2, 1
+ 	#line 201
+	call 2, L393
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L395:
+	move nil, x(0)
+	deallocate 3
+	return 
+L396:
+	is_nil L392, x(1)
+	is_function2 L392, x(0), #1
+	move nil, x(0)
+	return 
+L397:
+ 	#line 200
+	case_end x(0)
+L398:
+ 	#line 202
+	#function lists:dropwhile/2
+L399:
+	is_nonempty_list L402, x(1)
+	allocate 3, 2
+	get_list x(1), x(2), y(2)
+	move x(1), y(0)
+	move x(0), x(1)
+	move x(2), x(0)
+	move x(1), y(1)
+ 	#line 203
+	call_fun 1
+	is_atom L403, x(0)
+	select_val x(0), L403, [
+		(false, L400),
+		(true, L401)
+	]
+L400:
+	move y(0), x(0)
+	deallocate 3
+	return 
+L401:
+	move y(2), x(1)
+	move y(1), x(0)
+	call_last 2, L399, 3
+L402:
+	is_nil L398, x(1)
+	is_function2 L398, x(0), #1
+	move nil, x(0)
+	return 
+L403:
+ 	#line 203
+	case_end x(0)
+L404:
+ 	#line 204
+	#function lists:splitwith/2
+L405:
+	is_function2 L404, x(0), #1
+	move nil, x(2)
+	call_only 3, L407
+L406:
+ 	#line 205
+	#function lists:splitwith/3
+L407:
+	is_nonempty_list L410, x(1)
+	allocate 4, 3
+	get_list x(1), x(3), y(2)
+	move x(0), x(1)
+	move x(3), x(0)
+	move x(2), y(0)
+	move x(1), y(1)
+	move x(0), y(3)
+ 	#line 206
+	call_fun 1
+	is_atom L411, x(0)
+	select_val x(0), L411, [
+		(true, L408),
+		(false, L409)
+	]
+L408:
+	test_heap 2, 0
+	put_list y(3), y(0), x(2)
+	move y(2), x(1)
+	move y(1), x(0)
+	call_last 3, L407, 4
+L409:
+	move y(0), x(0)
+	trim 2, 2
+ 	#line 207
+	call 1, L20
+	test_heap 5, 1
+	put_list y(1), y(0), x(1)
+	put_tuple 2, x(2)
+	put x(0)
+	put x(1)
+	move x(2), x(0)
+	deallocate 2
+	return 
+L410:
+	is_nil L406, x(1)
+	is_function2 L406, x(0), #1
+	allocate 0, 3
+	move x(2), x(0)
+ 	#line 208
+	call 1, L20
+	test_heap 3, 1
+	put_tuple 2, x(1)
+	put x(0)
+	put nil
+	move x(1), x(0)
+	deallocate 0
+	return 
+L411:
+ 	#line 206
+	case_end x(0)
+L412:
+ 	#line 209
+	#function lists:split/2
+L413:
+	is_integer L416, x(0)
+	is_ge L416, x(0), #0
+	is_list L416, x(1)
+	allocate 2, 2
+	move nil, x(2)
+	move x(1), y(0)
+	move x(0), y(1)
+ 	#line 210
+	call 3, L418
+	is_tuple L414, x(0)
+	test_arity L414, x(0), 2
+	deallocate 2
+	return 
+L414:
+	is_atom L415, x(0)
+	test_heap 4, 1
+	put_list y(0), nil, x(2)
+	put_list y(1), x(2), x(1)
+ 	#line 211
+	call_ext erlang:error/2 2
+L415:
+ 	#line 210
+	case_end x(0)
+L416:
+	test_heap 4, 2
+	put_list x(1), nil, x(2)
+	put_list x(0), x(2), x(1)
+	move badarg, x(0)
+ 	#line 212
+	call_ext erlang:error/2 2
+L417:
+ 	#line 213
+	#function lists:split/3
+L418:
+	is_eq_exact L419, x(0), #0
+	allocate 1, 3
+	move x(1), y(0)
+	move nil, x(1)
+	move x(2), x(0)
+ 	#line 214
+	call_ext lists:reverse/2 2
+	test_heap 3, 1
+	put_tuple 2, x(1)
+	put x(0)
+	put y(0)
+	move x(1), x(0)
+	deallocate 1
+	return 
+L419:
+	is_nonempty_list L420, x(1)
+	get_list x(1), x(3), x(4)
+ 	#line 215
+	gc_bif2 L0, 5, 4, x(0), #1, x(0)
+	test_heap 2, 5
+	put_list x(3), x(2), x(2)
+	move x(4), x(1)
+	call_only 3, L418
+L420:
+	is_nil L417, x(1)
+	move badarg, x(0)
+	return 
+L421:
+ 	#line 216
+	#function lists:split_1/5
+L422:
+	is_nonempty_list L426, x(2)
+	get_list x(2), x(5), x(6)
+	is_ge L423, x(5), x(1)
+	test_heap 2, 7
+	put_list x(0), x(3), x(3)
+	move x(6), x(2)
+	move x(1), x(0)
+	move x(5), x(1)
+	call_only 5, L422
+L423:
+	is_ge L424, x(5), x(0)
+	test_heap 2, 7
+	put_list x(0), x(3), x(3)
+	move x(6), x(2)
+	move x(5), x(0)
+	call_only 5, L422
+L424:
+	is_nil L425, x(3)
+	test_heap 2, 7
+	put_list x(5), nil, x(3)
+	move x(6), x(2)
+	call_only 5, L422
+L425:
+	move x(6), x(2)
+	call_only 6, L428
+L426:
+	is_nil L421, x(2)
+	test_heap 6, 5
+	put_list x(0), x(3), x(0)
+	put_list x(1), x(0), x(2)
+	put_list x(2), x(4), x(0)
+	move nil, x(1)
+	call_only 2, L456
+L427:
+ 	#line 217
+	#function lists:split_1_1/6
+L428:
+	is_nonempty_list L432, x(2)
+	get_list x(2), x(6), x(7)
+	is_ge L429, x(6), x(1)
+	test_heap 2, 8
+	put_list x(0), x(3), x(3)
+	move x(7), x(2)
+	move x(1), x(0)
+	move x(6), x(1)
+	call_only 6, L428
+L429:
+	is_ge L430, x(6), x(0)
+	test_heap 2, 8
+	put_list x(0), x(3), x(3)
+	move x(7), x(2)
+	move x(6), x(0)
+	call_only 6, L428
+L430:
+	is_ge L431, x(6), x(5)
+	test_heap 6, 8
+	put_list x(0), x(3), x(8)
+	put_list x(1), x(8), x(8)
+	put_list x(8), x(4), x(4)
+	move x(7), x(2)
+	move x(6), x(1)
+	move nil, x(3)
+	move x(5), x(0)
+	call_only 5, L422
+L431:
+	test_heap 6, 8
+	put_list x(0), x(3), x(8)
+	put_list x(1), x(8), x(8)
+	put_list x(8), x(4), x(4)
+	move x(7), x(2)
+	move x(5), x(1)
+	move nil, x(3)
+	move x(6), x(0)
+	call_only 5, L422
+L432:
+	is_nil L427, x(2)
+	test_heap 10, 6
+	put_list x(0), x(3), x(0)
+	put_list x(1), x(0), x(0)
+	put_list x(0), x(4), x(2)
+	put_list x(5), nil, x(3)
+	put_list x(3), x(2), x(0)
+	move nil, x(1)
+	call_only 2, L456
+L433:
+ 	#line 218
+	#function lists:split_2/5
+L434:
+	is_nonempty_list L438, x(2)
+	get_list x(2), x(5), x(6)
+	is_ge L435, x(1), x(5)
+	test_heap 2, 7
+	put_list x(0), x(3), x(3)
+	move x(6), x(2)
+	move x(1), x(0)
+	move x(5), x(1)
+	call_only 5, L434
+L435:
+	is_ge L436, x(0), x(5)
+	test_heap 2, 7
+	put_list x(0), x(3), x(3)
+	move x(6), x(2)
+	move x(5), x(0)
+	call_only 5, L434
+L436:
+	is_nil L437, x(3)
+	test_heap 2, 7
+	put_list x(5), nil, x(3)
+	move x(6), x(2)
+	call_only 5, L434
+L437:
+	move x(6), x(2)
+	call_only 6, L440
+L438:
+	is_nil L433, x(2)
+	test_heap 6, 5
+	put_list x(0), x(3), x(0)
+	put_list x(1), x(0), x(2)
+	put_list x(2), x(4), x(0)
+	move nil, x(1)
+	call_only 2, L446
+L439:
+ 	#line 219
+	#function lists:split_2_1/6
+L440:
+	is_nonempty_list L444, x(2)
+	get_list x(2), x(6), x(7)
+	is_ge L441, x(1), x(6)
+	test_heap 2, 8
+	put_list x(0), x(3), x(3)
+	move x(7), x(2)
+	move x(1), x(0)
+	move x(6), x(1)
+	call_only 6, L440
+L441:
+	is_ge L442, x(0), x(6)
+	test_heap 2, 8
+	put_list x(0), x(3), x(3)
+	move x(7), x(2)
+	move x(6), x(0)
+	call_only 6, L440
+L442:
+	is_lt L443, x(6), x(5)
+	test_heap 6, 8
+	put_list x(0), x(3), x(8)
+	put_list x(1), x(8), x(8)
+	put_list x(8), x(4), x(4)
+	move x(7), x(2)
+	move x(6), x(1)
+	move nil, x(3)
+	move x(5), x(0)
+	call_only 5, L434
+L443:
+	test_heap 6, 8
+	put_list x(0), x(3), x(8)
+	put_list x(1), x(8), x(8)
+	put_list x(8), x(4), x(4)
+	move x(7), x(2)
+	move x(5), x(1)
+	move nil, x(3)
+	move x(6), x(0)
+	call_only 5, L434
+L444:
+	is_nil L439, x(2)
+	test_heap 10, 6
+	put_list x(0), x(3), x(0)
+	put_list x(1), x(0), x(0)
+	put_list x(0), x(4), x(2)
+	put_list x(5), nil, x(3)
+	put_list x(3), x(2), x(0)
+	move nil, x(1)
+	call_only 2, L446
+L445:
+ 	#line 220
+	#function lists:mergel/2
+L446:
+	is_nonempty_list L453, x(0)
+	get_list x(0), x(2), x(3)
+	is_nil L447, x(2)
+	move x(3), x(0)
+	call_only 2, L446
+L447:
+	is_nonempty_list L451, x(3)
+	get_list x(3), x(4), x(5)
+	is_nonempty_list L449, x(4)
+	get_list x(4), x(6), x(7)
+	is_nonempty_list L448, x(5)
+	get_list x(5), x(8), x(9)
+	is_nonempty_list L450, x(8)
+	allocate 2, 10
+	get_list x(8), x(4), x(5)
+	move x(1), y(0)
+	move x(7), x(3)
+	move nil, x(1)
+	move x(2), x(0)
+	move x(6), x(2)
+	move x(9), y(1)
+ 	#line 221
+	call 6, L461
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move y(1), x(0)
+	call_last 2, L446, 2
+L448:
+	is_nil L450, x(5)
+	allocate 1, 8
+	move x(1), y(0)
+	move x(6), x(1)
+	move nil, x(3)
+	move x(2), x(0)
+	move x(7), x(2)
+ 	#line 222
+	call 4, L505
+	test_heap 2, 1
+	put_list x(0), y(0), x(0)
+	move nil, x(1)
+	call_last 2, L456, 1
+L449:
+	is_nil L450, x(4)
+	test_heap 2, 6
+	put_list x(2), x(5), x(0)
+	call_only 2, L446
+L450:
+	is_nonempty_list L445, x(5)
+	get_list x(5), x(6), x(7)
+	is_nil L445, x(6)
+	test_heap 4, 8
+	put_list x(4), x(7), x(3)
+	put_list x(2), x(3), x(0)
+	call_only 2, L446
+L451:
+	is_nil L445, x(3)
+	is_nil L452, x(1)
+	move x(2), x(0)
+	return 
+L452:
+	allocate 1, 3
+	move x(1), y(0)
+	move nil, x(1)
+	move x(2), x(0)
+ 	#line 223
+	call_ext lists:reverse/2 2
+	test_heap 2, 1
+	put_list x(0), y(0), x(0)
+	move nil, x(1)
+	call_last 2, L456, 1
+L453:
+	is_nil L445, x(0)
+	is_nil L454, x(1)
+	move nil, x(0)
+	return 
+L454:
+	move x(1), x(0)
+	move nil, x(1)
+	call_only 2, L456
+L455:
+ 	#line 224
+	#function lists:rmergel/2
+L456:
+	is_nonempty_list L459, x(0)
+	get_list x(0), x(2), x(3)
+	is_nonempty_list L458, x(2)
+	get_list x(2), x(4), x(5)
+	is_nonempty_list L458, x(3)
+	get_list x(3), x(6), x(7)
+	is_nonempty_list L457, x(6)
+	get_list x(6), x(8), x(9)
+	is_nonempty_list L457, x(7)
+	allocate 2, 10
+	get_list x(7), x(0), y(1)
+	move x(1), y(0)
+	move x(8), x(2)
+	move nil, x(1)
+	move x(9), x(3)
+ 	#line 225
+	call 6, L483
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move y(1), x(0)
+	call_last 2, L456, 2
+L457:
+	is_nil L458, x(7)
+	allocate 1, 7
+	move x(1), y(0)
+	move x(5), x(2)
+	move x(4), x(1)
+	move nil, x(3)
+	move x(6), x(0)
+ 	#line 226
+	call 4, L513
+	test_heap 2, 1
+	put_list x(0), y(0), x(0)
+	move nil, x(1)
+	call_last 2, L446, 1
+L458:
+	is_nil L455, x(3)
+	allocate 1, 3
+	move x(1), y(0)
+	move nil, x(1)
+	move x(2), x(0)
+ 	#line 227
+	call_ext lists:reverse/2 2
+	test_heap 2, 1
+	put_list x(0), y(0), x(0)
+	move nil, x(1)
+	call_last 2, L446, 1
+L459:
+	is_nil L455, x(0)
+	move x(1), x(0)
+	move nil, x(1)
+	call_only 2, L446
+L460:
+ 	#line 228
+	#function lists:merge3_1/6
+L461:
+	is_nonempty_list L465, x(0)
+	get_list x(0), x(6), x(7)
+	is_ge L463, x(2), x(6)
+	is_ge L462, x(4), x(6)
+	test_heap 2, 8
+	put_list x(6), x(1), x(1)
+	move x(7), x(0)
+	call_only 6, L461
+L462:
+	test_heap 2, 8
+	put_list x(4), x(1), x(4)
+	move x(6), x(1)
+	move x(7), x(0)
+	call_only 6, L475
+L463:
+	is_ge L464, x(4), x(2)
+	test_heap 2, 8
+	put_list x(2), x(1), x(2)
+	move x(6), x(1)
+	move x(7), x(0)
+	call_only 6, L468
+L464:
+	test_heap 2, 8
+	put_list x(4), x(1), x(4)
+	move x(6), x(1)
+	move x(7), x(0)
+	call_only 6, L479
+L465:
+	is_nil L460, x(0)
+	is_ge L466, x(4), x(2)
+	test_heap 2, 6
+	put_list x(2), x(1), x(6)
+	move x(4), x(1)
+	move x(5), x(2)
+	move x(3), x(0)
+	move x(6), x(3)
+	call_only 4, L505
+L466:
+	move x(3), x(0)
+	move x(1), x(3)
+	move x(4), x(1)
+	move x(2), x(4)
+	move x(5), x(2)
+	call_only 5, L509
+L467:
+ 	#line 229
+	#function lists:merge3_2/6
+L468:
+	is_nonempty_list L472, x(3)
+	get_list x(3), x(6), x(7)
+	is_ge L470, x(6), x(1)
+	is_ge L469, x(4), x(1)
+	test_heap 2, 8
+	put_list x(1), x(2), x(1)
+	move x(7), x(3)
+	move x(6), x(2)
+	call_only 6, L461
+L469:
+	test_heap 2, 8
+	put_list x(4), x(2), x(4)
+	move x(7), x(3)
+	move x(6), x(2)
+	call_only 6, L475
+L470:
+	is_ge L471, x(4), x(6)
+	test_heap 2, 8
+	put_list x(6), x(2), x(2)
+	move x(7), x(3)
+	call_only 6, L468
+L471:
+	test_heap 2, 8
+	put_list x(4), x(2), x(4)
+	move x(7), x(3)
+	move x(6), x(2)
+	call_only 6, L479
+L472:
+	is_nil L467, x(3)
+	is_ge L473, x(4), x(1)
+	test_heap 2, 6
+	put_list x(1), x(2), x(3)
+	move x(5), x(2)
+	move x(4), x(1)
+	call_only 4, L505
+L473:
+	move x(2), x(3)
+	move x(5), x(2)
+	move x(4), x(6)
+	move x(1), x(4)
+	move x(6), x(1)
+	call_only 5, L509
+L474:
+ 	#line 230
+	#function lists:merge3_12_3/6
+L475:
+	is_nonempty_list L477, x(5)
+	get_list x(5), x(6), x(7)
+	is_ge L476, x(6), x(1)
+	test_heap 2, 8
+	put_list x(1), x(4), x(1)
+	move x(7), x(5)
+	move x(6), x(4)
+	call_only 6, L461
+L476:
+	test_heap 2, 8
+	put_list x(6), x(4), x(4)
+	move x(7), x(5)
+	call_only 6, L475
+L477:
+	is_nil L474, x(5)
+	test_heap 2, 5
+	put_list x(1), x(4), x(4)
+	move x(2), x(1)
+	move x(3), x(2)
+	move x(4), x(3)
+	call_only 4, L505
+L478:
+ 	#line 231
+	#function lists:merge3_21_3/6
+L479:
+	is_nonempty_list L481, x(5)
+	get_list x(5), x(6), x(7)
+	is_ge L480, x(6), x(2)
+	test_heap 2, 8
+	put_list x(2), x(4), x(2)
+	move x(7), x(5)
+	move x(6), x(4)
+	call_only 6, L468
+L480:
+	test_heap 2, 8
+	put_list x(6), x(4), x(4)
+	move x(7), x(5)
+	call_only 6, L479
+L481:
+	is_nil L478, x(5)
+	move x(2), x(5)
+	move x(3), x(2)
+	move x(4), x(3)
+	move x(1), x(4)
+	move x(5), x(1)
+	call_only 5, L509
+L482:
+ 	#line 232
+	#function lists:rmerge3_1/6
+L483:
+	is_nonempty_list L487, x(0)
+	get_list x(0), x(6), x(7)
+	is_ge L485, x(2), x(6)
+	is_ge L484, x(4), x(2)
+	test_heap 2, 8
+	put_list x(4), x(1), x(4)
+	move x(6), x(1)
+	move x(7), x(0)
+	call_only 6, L497
+L484:
+	test_heap 2, 8
+	put_list x(2), x(1), x(2)
+	move x(6), x(1)
+	move x(7), x(0)
+	call_only 6, L490
+L485:
+	is_ge L486, x(4), x(6)
+	test_heap 2, 8
+	put_list x(4), x(1), x(4)
+	move x(6), x(1)
+	move x(7), x(0)
+	call_only 6, L501
+L486:
+	test_heap 2, 8
+	put_list x(6), x(1), x(1)
+	move x(7), x(0)
+	call_only 6, L483
+L487:
+	is_nil L482, x(0)
+	is_ge L488, x(4), x(2)
+	move x(3), x(0)
+	move x(1), x(3)
+	move x(4), x(1)
+	move x(2), x(4)
+	move x(5), x(2)
+	call_only 5, L517
+L488:
+	test_heap 2, 6
+	put_list x(2), x(1), x(6)
+	move x(4), x(1)
+	move x(5), x(2)
+	move x(3), x(0)
+	move x(6), x(3)
+	call_only 4, L513
+L489:
+ 	#line 233
+	#function lists:rmerge3_2/6
+L490:
+	is_nonempty_list L494, x(3)
+	get_list x(3), x(6), x(7)
+	is_ge L492, x(6), x(1)
+	is_ge L491, x(4), x(6)
+	test_heap 2, 8
+	put_list x(4), x(2), x(4)
+	move x(7), x(3)
+	move x(6), x(2)
+	call_only 6, L497
+L491:
+	test_heap 2, 8
+	put_list x(6), x(2), x(2)
+	move x(7), x(3)
+	call_only 6, L490
+L492:
+	is_ge L493, x(4), x(1)
+	test_heap 2, 8
+	put_list x(4), x(2), x(4)
+	move x(7), x(3)
+	move x(6), x(2)
+	call_only 6, L501
+L493:
+	test_heap 2, 8
+	put_list x(1), x(2), x(1)
+	move x(7), x(3)
+	move x(6), x(2)
+	call_only 6, L483
+L494:
+	is_nil L489, x(3)
+	is_ge L495, x(4), x(1)
+	move x(2), x(3)
+	move x(5), x(2)
+	move x(4), x(6)
+	move x(1), x(4)
+	move x(6), x(1)
+	call_only 5, L517
+L495:
+	test_heap 2, 6
+	put_list x(1), x(2), x(3)
+	move x(5), x(2)
+	move x(4), x(1)
+	call_only 4, L513
+L496:
+ 	#line 234
+	#function lists:rmerge3_12_3/6
+L497:
+	is_nonempty_list L499, x(5)
+	get_list x(5), x(6), x(7)
+	is_ge L498, x(6), x(2)
+	test_heap 2, 8
+	put_list x(6), x(4), x(4)
+	move x(7), x(5)
+	call_only 6, L497
+L498:
+	test_heap 2, 8
+	put_list x(2), x(4), x(2)
+	move x(7), x(5)
+	move x(6), x(4)
+	call_only 6, L490
+L499:
+	is_nil L496, x(5)
+	move x(2), x(5)
+	move x(3), x(2)
+	move x(4), x(3)
+	move x(1), x(4)
+	move x(5), x(1)
+	call_only 5, L517
+L500:
+ 	#line 235
+	#function lists:rmerge3_21_3/6
+L501:
+	is_nonempty_list L503, x(5)
+	get_list x(5), x(6), x(7)
+	is_ge L502, x(6), x(1)
+	test_heap 2, 8
+	put_list x(6), x(4), x(4)
+	move x(7), x(5)
+	call_only 6, L501
+L502:
+	test_heap 2, 8
+	put_list x(1), x(4), x(1)
+	move x(7), x(5)
+	move x(6), x(4)
+	call_only 6, L483
+L503:
+	is_nil L500, x(5)
+	test_heap 2, 5
+	put_list x(1), x(4), x(4)
+	move x(2), x(1)
+	move x(3), x(2)
+	move x(4), x(3)
+	call_only 4, L513
+L504:
+ 	#line 236
+	#function lists:merge2_1/4
+L505:
+	is_nonempty_list L507, x(0)
+	get_list x(0), x(4), x(5)
+	is_ge L506, x(1), x(4)
+	test_heap 2, 6
+	put_list x(4), x(3), x(3)
+	move x(5), x(0)
+	call_only 4, L505
+L506:
+	move x(5), x(0)
+	call_only 5, L509
+L507:
+	is_nil L504, x(0)
+	test_heap 2, 4
+	put_list x(1), x(3), x(1)
+	move x(2), x(0)
+ 	#line 237
+	call_ext_only lists:reverse/2 2
+L508:
+ 	#line 238
+	#function lists:merge2_2/5
+L509:
+	is_nonempty_list L511, x(2)
+	get_list x(2), x(5), x(6)
+	is_ge L510, x(5), x(4)
+	test_heap 4, 7
+	put_list x(1), x(3), x(7)
+	put_list x(4), x(7), x(3)
+	move x(6), x(2)
+	move x(5), x(1)
+	call_only 4, L505
+L510:
+	test_heap 2, 7
+	put_list x(1), x(3), x(3)
+	move x(6), x(2)
+	move x(5), x(1)
+	call_only 5, L509
+L511:
+	is_nil L508, x(2)
+	test_heap 4, 5
+	put_list x(1), x(3), x(2)
+	put_list x(4), x(2), x(1)
+ 	#line 239
+	call_ext_only lists:reverse/2 2
+L512:
+ 	#line 240
+	#function lists:rmerge2_1/4
+L513:
+	is_nonempty_list L515, x(0)
+	get_list x(0), x(4), x(5)
+	is_ge L514, x(1), x(4)
+	move x(5), x(0)
+	call_only 5, L517
+L514:
+	test_heap 2, 6
+	put_list x(4), x(3), x(3)
+	move x(5), x(0)
+	call_only 4, L513
+L515:
+	is_nil L512, x(0)
+	test_heap 2, 4
+	put_list x(1), x(3), x(1)
+	move x(2), x(0)
+ 	#line 241
+	call_ext_only lists:reverse/2 2
+L516:
+ 	#line 242
+	#function lists:rmerge2_2/5
+L517:
+	is_nonempty_list L519, x(2)
+	get_list x(2), x(5), x(6)
+	is_ge L518, x(5), x(4)
+	test_heap 2, 7
+	put_list x(1), x(3), x(3)
+	move x(6), x(2)
+	move x(5), x(1)
+	call_only 5, L517
+L518:
+	test_heap 4, 7
+	put_list x(1), x(3), x(7)
+	put_list x(4), x(7), x(3)
+	move x(6), x(2)
+	move x(5), x(1)
+	call_only 4, L513
+L519:
+	is_nil L516, x(2)
+	test_heap 4, 5
+	put_list x(1), x(3), x(2)
+	put_list x(4), x(2), x(1)
+ 	#line 243
+	call_ext_only lists:reverse/2 2
+L520:
+ 	#line 244
+	#function lists:usplit_1/5
+L521:
+	is_nonempty_list L527, x(2)
+	get_list x(2), x(5), x(6)
+	is_lt L522, x(1), x(5)
+	test_heap 2, 7
+	put_list x(0), x(3), x(3)
+	move x(6), x(2)
+	move x(1), x(0)
+	move x(5), x(1)
+	call_only 5, L521
+L522:
+	is_eq L523, x(5), x(1)
+	move x(6), x(2)
+	call_only 5, L521
+L523:
+	is_lt L524, x(0), x(5)
+	test_heap 2, 7
+	put_list x(0), x(3), x(3)
+	move x(6), x(2)
+	move x(5), x(0)
+	call_only 5, L521
+L524:
+	is_eq L525, x(5), x(0)
+	move x(6), x(2)
+	call_only 5, L521
+L525:
+	is_nil L526, x(3)
+	test_heap 2, 7
+	put_list x(5), nil, x(3)
+	move x(6), x(2)
+	call_only 5, L521
+L526:
+	move x(6), x(2)
+	call_only 6, L529
+L527:
+	is_nil L520, x(2)
+	test_heap 6, 5
+	put_list x(0), x(3), x(0)
+	put_list x(1), x(0), x(3)
+	put_list x(3), x(4), x(0)
+	move asc, x(2)
+	move nil, x(1)
+	call_only 3, L569
+L528:
+ 	#line 245
+	#function lists:usplit_1_1/6
+L529:
+	is_nonempty_list L536, x(2)
+	get_list x(2), x(6), x(7)
+	is_lt L530, x(1), x(6)
+	test_heap 2, 8
+	put_list x(0), x(3), x(3)
+	move x(7), x(2)
+	move x(1), x(0)
+	move x(6), x(1)
+	call_only 6, L529
+L530:
+	is_eq L531, x(6), x(1)
+	move x(7), x(2)
+	call_only 6, L529
+L531:
+	is_lt L532, x(0), x(6)
+	test_heap 2, 8
+	put_list x(0), x(3), x(3)
+	move x(7), x(2)
+	move x(6), x(0)
+	call_only 6, L529
+L532:
+	is_eq L533, x(6), x(0)
+	move x(7), x(2)
+	call_only 6, L529
+L533:
+	is_lt L534, x(5), x(6)
+	test_heap 6, 8
+	put_list x(0), x(3), x(8)
+	put_list x(1), x(8), x(8)
+	put_list x(8), x(4), x(4)
+	move x(7), x(2)
+	move x(6), x(1)
+	move nil, x(3)
+	move x(5), x(0)
+	call_only 5, L521
+L534:
+	is_eq L535, x(6), x(5)
+	move x(7), x(2)
+	call_only 6, L529
+L535:
+	test_heap 6, 8
+	put_list x(0), x(3), x(8)
+	put_list x(1), x(8), x(8)
+	put_list x(8), x(4), x(4)
+	move x(7), x(2)
+	move x(5), x(1)
+	move nil, x(3)
+	move x(6), x(0)
+	call_only 5, L521
+L536:
+	is_nil L528, x(2)
+	test_heap 10, 6
+	put_list x(0), x(3), x(0)
+	put_list x(1), x(0), x(0)
+	put_list x(0), x(4), x(3)
+	put_list x(5), nil, x(4)
+	put_list x(4), x(3), x(0)
+	move asc, x(2)
+	move nil, x(1)
+	call_only 3, L569
+L537:
+ 	#line 246
+	#function lists:usplit_2/5
+L538:
+	is_nonempty_list L544, x(2)
+	get_list x(2), x(5), x(6)
+	is_lt L539, x(5), x(1)
+	test_heap 2, 7
+	put_list x(0), x(3), x(3)
+	move x(6), x(2)
+	move x(1), x(0)
+	move x(5), x(1)
+	call_only 5, L538
+L539:
+	is_eq L540, x(5), x(1)
+	move x(6), x(2)
+	call_only 5, L538
+L540:
+	is_lt L541, x(5), x(0)
+	test_heap 2, 7
+	put_list x(0), x(3), x(3)
+	move x(6), x(2)
+	move x(5), x(0)
+	call_only 5, L538
+L541:
+	is_eq L542, x(5), x(0)
+	move x(6), x(2)
+	call_only 5, L538
+L542:
+	is_nil L543, x(3)
+	test_heap 2, 7
+	put_list x(5), nil, x(3)
+	move x(6), x(2)
+	call_only 5, L538
+L543:
+	move x(6), x(2)
+	call_only 6, L546
+L544:
+	is_nil L537, x(2)
+	test_heap 6, 5
+	put_list x(0), x(3), x(0)
+	put_list x(1), x(0), x(3)
+	put_list x(3), x(4), x(0)
+	move desc, x(2)
+	move nil, x(1)
+	call_only 3, L557
+L545:
+ 	#line 247
+	#function lists:usplit_2_1/6
+L546:
+	is_nonempty_list L553, x(2)
+	get_list x(2), x(6), x(7)
+	is_lt L547, x(6), x(1)
+	test_heap 2, 8
+	put_list x(0), x(3), x(3)
+	move x(7), x(2)
+	move x(1), x(0)
+	move x(6), x(1)
+	call_only 6, L546
+L547:
+	is_eq L548, x(6), x(1)
+	move x(7), x(2)
+	call_only 6, L546
+L548:
+	is_lt L549, x(6), x(0)
+	test_heap 2, 8
+	put_list x(0), x(3), x(3)
+	move x(7), x(2)
+	move x(6), x(0)
+	call_only 6, L546
+L549:
+	is_eq L550, x(6), x(0)
+	move x(7), x(2)
+	call_only 6, L546
+L550:
+	is_lt L551, x(6), x(5)
+	test_heap 6, 8
+	put_list x(0), x(3), x(8)
+	put_list x(1), x(8), x(8)
+	put_list x(8), x(4), x(4)
+	move x(7), x(2)
+	move x(6), x(1)
+	move nil, x(3)
+	move x(5), x(0)
+	call_only 5, L538
+L551:
+	is_eq L552, x(6), x(5)
+	move x(7), x(2)
+	call_only 6, L546
+L552:
+	test_heap 6, 8
+	put_list x(0), x(3), x(8)
+	put_list x(1), x(8), x(8)
+	put_list x(8), x(4), x(4)
+	move x(7), x(2)
+	move x(5), x(1)
+	move nil, x(3)
+	move x(6), x(0)
+	call_only 5, L538
+L553:
+	is_nil L545, x(2)
+	test_heap 10, 6
+	put_list x(0), x(3), x(0)
+	put_list x(1), x(0), x(0)
+	put_list x(0), x(4), x(3)
+	put_list x(5), nil, x(4)
+	put_list x(4), x(3), x(0)
+	move desc, x(2)
+	move nil, x(1)
+	call_only 3, L557
+L554:
+ 	#line 248
+	#function lists:umergel/1
+L555:
+	move asc, x(2)
+	move nil, x(1)
+	call_only 3, L557
+L556:
+ 	#line 249
+	#function lists:umergel/3
+L557:
+	is_nonempty_list L566, x(0)
+	get_list x(0), x(3), x(4)
+	is_nil L558, x(3)
+	move x(4), x(0)
+	call_only 3, L557
+L558:
+	is_nonempty_list L559, x(4)
+	get_list x(4), x(5), x(6)
+	is_nonempty_list L559, x(5)
+	get_list x(5), x(7), x(8)
+	is_nonempty_list L559, x(6)
+	get_list x(6), x(9), x(10)
+	is_nonempty_list L559, x(9)
+	get_list x(9), x(11), x(12)
+	is_eq_exact L559, x(2), asc
+	allocate_heap 2, 2, 13
+	move x(1), y(1)
+	move x(10), y(0)
+	put_list x(7), x(11), x(1)
+	move nil, x(4)
+	move x(12), x(5)
+	move x(8), x(2)
+	move x(11), x(6)
+	move x(3), x(0)
+	move x(7), x(3)
+ 	#line 250
+	call 7, L576
+	test_heap 2, 1
+	put_list x(0), y(1), x(1)
+	move asc, x(2)
+	move y(0), x(0)
+	call_last 3, L557, 2
+L559:
+	is_nonempty_list L560, x(3)
+	get_list x(3), x(5), x(6)
+	is_nonempty_list L562, x(4)
+	get_list x(4), x(7), x(8)
+	is_nonempty_list L560, x(7)
+	get_list x(7), x(9), x(10)
+	is_nonempty_list L560, x(8)
+	get_list x(8), x(11), x(12)
+	is_eq_exact L560, x(2), desc
+	allocate_heap 2, 2, 13
+	move x(1), y(1)
+	move x(12), y(0)
+	put_list x(9), x(5), x(1)
+	move x(9), x(3)
+	move x(10), x(2)
+	move nil, x(4)
+	move x(5), x(7)
+	move x(6), x(5)
+	move x(7), x(6)
+	move x(11), x(0)
+ 	#line 251
+	call 7, L576
+	test_heap 2, 1
+	put_list x(0), y(1), x(1)
+	move desc, x(2)
+	move y(0), x(0)
+	call_last 3, L557, 2
+L560:
+	is_nonempty_list L562, x(4)
+	get_list x(4), x(5), x(6)
+	is_nil L561, x(5)
+	test_heap 2, 7
+	put_list x(3), x(6), x(0)
+	call_only 3, L557
+L561:
+	is_nonempty_list L562, x(6)
+	get_list x(6), x(7), x(8)
+	is_nil L562, x(7)
+	test_heap 4, 9
+	put_list x(5), x(8), x(4)
+	put_list x(3), x(4), x(0)
+	call_only 3, L557
+L562:
+	is_nonempty_list L563, x(3)
+	get_list x(3), x(5), x(6)
+	is_nonempty_list L564, x(4)
+	get_list x(4), x(7), x(8)
+	is_eq_exact L563, x(2), asc
+	allocate 2, 9
+	move x(1), y(0)
+	move nil, x(2)
+	move x(7), x(1)
+	move x(5), x(3)
+	move x(6), x(0)
+	move x(8), y(1)
+ 	#line 252
+	call 4, L640
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move asc, x(2)
+	move y(1), x(0)
+	call_last 3, L557, 2
+L563:
+	is_nonempty_list L564, x(4)
+	get_list x(4), x(5), x(6)
+	is_nonempty_list L556, x(5)
+	get_list x(5), x(7), x(8)
+	is_eq_exact L556, x(2), desc
+	allocate 2, 9
+	move x(1), y(0)
+	move nil, x(2)
+	move x(3), x(1)
+	move x(7), x(3)
+	move x(8), x(0)
+	move x(6), y(1)
+ 	#line 253
+	call 4, L640
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move desc, x(2)
+	move y(1), x(0)
+	call_last 3, L557, 2
+L564:
+	is_nil L556, x(4)
+	is_nil L565, x(1)
+	move x(3), x(0)
+	return 
+L565:
+	allocate 2, 4
+	move x(1), y(0)
+	move nil, x(1)
+	move x(3), x(0)
+	move x(2), y(1)
+ 	#line 254
+	call_ext lists:reverse/2 2
+	test_heap 2, 1
+	put_list x(0), y(0), x(0)
+	move y(1), x(2)
+	move nil, x(1)
+	call_last 3, L569, 2
+L566:
+	is_nil L556, x(0)
+	is_nil L567, x(1)
+	move nil, x(0)
+	return 
+L567:
+	move x(1), x(0)
+	move nil, x(1)
+	call_only 3, L569
+L568:
+ 	#line 255
+	#function lists:rumergel/3
+L569:
+	is_nonempty_list L574, x(0)
+	get_list x(0), x(3), x(4)
+	is_nonempty_list L570, x(3)
+	get_list x(3), x(5), x(6)
+	is_nonempty_list L571, x(4)
+	get_list x(4), x(7), x(8)
+	is_nonempty_list L570, x(7)
+	get_list x(7), x(9), x(10)
+	is_nonempty_list L570, x(8)
+	get_list x(8), x(11), x(12)
+	is_eq_exact L570, x(2), asc
+	allocate 2, 13
+	move x(1), y(0)
+	move x(9), x(2)
+	move nil, x(3)
+	move x(10), x(1)
+	move x(6), x(4)
+	move x(11), x(0)
+	move x(12), y(1)
+ 	#line 256
+	call 6, L606
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move asc, x(2)
+	move y(1), x(0)
+	call_last 3, L569, 2
+L570:
+	is_nonempty_list L571, x(4)
+	get_list x(4), x(5), x(6)
+	is_nonempty_list L571, x(5)
+	get_list x(5), x(7), x(8)
+	is_nonempty_list L571, x(6)
+	get_list x(6), x(9), x(10)
+	is_nonempty_list L571, x(9)
+	get_list x(9), x(11), x(12)
+	is_eq_exact L571, x(2), desc
+	allocate 2, 13
+	move x(1), y(0)
+	move x(7), x(2)
+	move x(12), x(4)
+	move x(8), x(1)
+	move x(11), x(5)
+	move x(3), x(0)
+	move nil, x(3)
+	move x(10), y(1)
+ 	#line 257
+	call 6, L606
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move desc, x(2)
+	move y(1), x(0)
+	call_last 3, L569, 2
+L571:
+	is_nonempty_list L572, x(3)
+	get_list x(3), x(5), x(6)
+	is_nonempty_list L573, x(4)
+	get_list x(4), x(7), x(8)
+	is_eq_exact L572, x(2), asc
+	allocate 2, 9
+	move x(1), y(0)
+	move nil, x(2)
+	move x(6), x(1)
+	move x(5), x(3)
+	move x(7), x(0)
+	move x(8), y(1)
+ 	#line 258
+	call 4, L644
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move asc, x(2)
+	move y(1), x(0)
+	call_last 3, L569, 2
+L572:
+	is_nonempty_list L573, x(4)
+	get_list x(4), x(5), x(6)
+	is_nonempty_list L568, x(5)
+	get_list x(5), x(7), x(8)
+	is_eq_exact L568, x(2), desc
+	allocate 2, 9
+	move x(1), y(0)
+	move x(8), x(1)
+	move nil, x(2)
+	move x(3), x(0)
+	move x(7), x(3)
+	move x(6), y(1)
+ 	#line 259
+	call 4, L644
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move desc, x(2)
+	move y(1), x(0)
+	call_last 3, L569, 2
+L573:
+	is_nil L568, x(4)
+	allocate 2, 4
+	move x(1), y(0)
+	move nil, x(1)
+	move x(3), x(0)
+	move x(2), y(1)
+ 	#line 260
+	call_ext lists:reverse/2 2
+	test_heap 2, 1
+	put_list x(0), y(0), x(0)
+	move y(1), x(2)
+	move nil, x(1)
+	call_last 3, L557, 2
+L574:
+	is_nil L568, x(0)
+	move x(1), x(0)
+	move nil, x(1)
+	call_only 3, L557
+L575:
+ 	#line 261
+	#function lists:umerge3_1/7
+L576:
+	is_nonempty_list L583, x(0)
+	get_list x(0), x(7), x(8)
+	is_ge L579, x(3), x(7)
+	is_ge L577, x(6), x(7)
+	test_heap 2, 9
+	put_list x(7), x(4), x(4)
+	move x(7), x(1)
+	move x(8), x(0)
+	call_only 7, L576
+L577:
+	is_eq L578, x(6), x(1)
+	move x(7), x(1)
+	move x(8), x(0)
+	call_only 6, L598
+L578:
+	test_heap 2, 9
+	put_list x(6), x(4), x(4)
+	move x(7), x(1)
+	move x(8), x(0)
+	call_only 6, L598
+L579:
+	is_eq L580, x(3), x(1)
+	move x(7), x(1)
+	move x(8), x(0)
+	call_only 7, L588
+L580:
+	is_ge L581, x(6), x(3)
+	test_heap 2, 9
+	put_list x(3), x(4), x(4)
+	move x(7), x(1)
+	move x(8), x(0)
+	call_only 7, L588
+L581:
+	is_eq L582, x(6), x(1)
+	move x(7), x(1)
+	move x(8), x(0)
+	call_only 6, L602
+L582:
+	test_heap 2, 9
+	put_list x(6), x(4), x(4)
+	move x(7), x(1)
+	move x(8), x(0)
+	call_only 6, L602
+L583:
+	is_nil L575, x(0)
+	is_eq L584, x(3), x(1)
+	move x(1), x(3)
+	move x(5), x(1)
+	move x(2), x(0)
+	move x(4), x(2)
+	move x(6), x(4)
+	call_only 5, L634
+L584:
+	is_ge L585, x(6), x(3)
+	test_heap 2, 7
+	put_list x(3), x(4), x(7)
+	move x(5), x(1)
+	move x(6), x(4)
+	move x(2), x(0)
+	move x(7), x(2)
+	call_only 5, L634
+L585:
+	is_eq L586, x(6), x(1)
+	move x(5), x(1)
+	move x(2), x(0)
+	move x(4), x(2)
+	call_only 4, L640
+L586:
+	test_heap 2, 7
+	put_list x(6), x(4), x(4)
+	move x(5), x(1)
+	move x(2), x(0)
+	move x(4), x(2)
+	call_only 4, L640
+L587:
+ 	#line 262
+	#function lists:umerge3_2/7
+L588:
+	is_nonempty_list L594, x(2)
+	get_list x(2), x(7), x(8)
+	is_ge L591, x(7), x(1)
+	is_ge L589, x(6), x(1)
+	test_heap 2, 9
+	put_list x(1), x(4), x(4)
+	move x(7), x(3)
+	move x(8), x(2)
+	call_only 7, L576
+L589:
+	is_eq L590, x(6), x(3)
+	move x(7), x(3)
+	move x(8), x(2)
+	call_only 6, L598
+L590:
+	test_heap 2, 9
+	put_list x(6), x(4), x(4)
+	move x(7), x(3)
+	move x(8), x(2)
+	call_only 6, L598
+L591:
+	is_ge L592, x(6), x(7)
+	test_heap 2, 9
+	put_list x(7), x(4), x(4)
+	move x(7), x(3)
+	move x(8), x(2)
+	call_only 7, L588
+L592:
+	is_eq L593, x(6), x(3)
+	move x(7), x(3)
+	move x(8), x(2)
+	call_only 6, L602
+L593:
+	test_heap 2, 9
+	put_list x(6), x(4), x(4)
+	move x(7), x(3)
+	move x(8), x(2)
+	call_only 6, L602
+L594:
+	is_nil L587, x(2)
+	is_ge L595, x(6), x(1)
+	test_heap 2, 7
+	put_list x(1), x(4), x(2)
+	move x(1), x(3)
+	move x(6), x(4)
+	move x(5), x(1)
+	call_only 5, L634
+L595:
+	is_eq L596, x(6), x(3)
+	move x(4), x(2)
+	move x(1), x(3)
+	move x(5), x(1)
+	call_only 4, L640
+L596:
+	test_heap 2, 7
+	put_list x(6), x(4), x(2)
+	move x(1), x(3)
+	move x(5), x(1)
+	call_only 4, L640
+L597:
+ 	#line 263
+	#function lists:umerge3_12_3/6
+L598:
+	is_nonempty_list L600, x(5)
+	get_list x(5), x(6), x(7)
+	is_ge L599, x(6), x(1)
+	test_heap 2, 8
+	put_list x(1), x(4), x(4)
+	move x(7), x(5)
+	call_only 7, L576
+L599:
+	test_heap 2, 8
+	put_list x(6), x(4), x(4)
+	move x(7), x(5)
+	call_only 6, L598
+L600:
+	is_nil L597, x(5)
+	test_heap 2, 5
+	put_list x(1), x(4), x(5)
+	move x(3), x(4)
+	move x(1), x(3)
+	move x(2), x(1)
+	move x(5), x(2)
+	call_only 5, L634
+L601:
+ 	#line 264
+	#function lists:umerge3_21_3/6
+L602:
+	is_nonempty_list L604, x(5)
+	get_list x(5), x(6), x(7)
+	is_ge L603, x(6), x(3)
+	test_heap 2, 8
+	put_list x(3), x(4), x(4)
+	move x(7), x(5)
+	call_only 7, L588
+L603:
+	test_heap 2, 8
+	put_list x(6), x(4), x(4)
+	move x(7), x(5)
+	call_only 6, L602
+L604:
+	is_nil L601, x(5)
+	test_heap 2, 5
+	put_list x(3), x(4), x(4)
+	move x(1), x(3)
+	move x(2), x(1)
+	move x(4), x(2)
+	call_only 4, L640
+L605:
+ 	#line 265
+	#function lists:rumerge3_1/6
+L606:
+	is_nonempty_list L610, x(0)
+	get_list x(0), x(6), x(7)
+	is_ge L608, x(2), x(6)
+	is_ge L607, x(5), x(2)
+	move x(7), x(0)
+	call_only 7, L622
+L607:
+	move x(7), x(0)
+	call_only 7, L613
+L608:
+	is_ge L609, x(5), x(6)
+	move x(7), x(0)
+	call_only 7, L628
+L609:
+	test_heap 2, 8
+	put_list x(6), x(3), x(3)
+	move x(7), x(0)
+	call_only 6, L606
+L610:
+	is_nil L605, x(0)
+	is_ge L611, x(5), x(2)
+	move x(1), x(0)
+	move x(4), x(1)
+	move x(2), x(4)
+	move x(3), x(2)
+	move x(5), x(3)
+	call_only 5, L648
+L611:
+	test_heap 2, 6
+	put_list x(2), x(3), x(2)
+	move x(5), x(3)
+	move x(1), x(0)
+	move x(4), x(1)
+	call_only 4, L644
+L612:
+ 	#line 266
+	#function lists:rumerge3_2/7
+L613:
+	is_nonempty_list L618, x(1)
+	get_list x(1), x(7), x(8)
+	is_ge L615, x(7), x(6)
+	is_ge L614, x(5), x(7)
+	test_heap 2, 9
+	put_list x(2), x(3), x(3)
+	move x(7), x(2)
+	move x(8), x(1)
+	call_only 7, L622
+L614:
+	test_heap 2, 9
+	put_list x(2), x(3), x(3)
+	move x(7), x(2)
+	move x(8), x(1)
+	call_only 7, L613
+L615:
+	is_eq L616, x(6), x(2)
+	test_heap 2, 9
+	put_list x(6), x(3), x(3)
+	move x(7), x(2)
+	move x(8), x(1)
+	call_only 6, L606
+L616:
+	is_ge L617, x(5), x(6)
+	test_heap 2, 9
+	put_list x(2), x(3), x(3)
+	move x(7), x(2)
+	move x(8), x(1)
+	call_only 7, L628
+L617:
+	test_heap 4, 9
+	put_list x(2), x(3), x(9)
+	put_list x(6), x(9), x(3)
+	move x(7), x(2)
+	move x(8), x(1)
+	call_only 6, L606
+L618:
+	is_nil L612, x(1)
+	is_eq L619, x(6), x(2)
+	test_heap 2, 7
+	put_list x(6), x(3), x(2)
+	move x(5), x(3)
+	move x(4), x(1)
+	call_only 4, L644
+L619:
+	is_ge L620, x(5), x(6)
+	test_heap 2, 7
+	put_list x(2), x(3), x(2)
+	move x(5), x(3)
+	move x(4), x(1)
+	move x(6), x(4)
+	call_only 5, L648
+L620:
+	test_heap 4, 7
+	put_list x(2), x(3), x(7)
+	put_list x(6), x(7), x(2)
+	move x(5), x(3)
+	move x(4), x(1)
+	call_only 4, L644
+L621:
+ 	#line 267
+	#function lists:rumerge3_12_3/7
+L622:
+	is_nonempty_list L625, x(4)
+	get_list x(4), x(7), x(8)
+	is_ge L623, x(7), x(2)
+	test_heap 2, 9
+	put_list x(5), x(3), x(3)
+	move x(7), x(5)
+	move x(8), x(4)
+	call_only 7, L622
+L623:
+	is_eq L624, x(2), x(5)
+	move x(7), x(5)
+	move x(8), x(4)
+	call_only 7, L613
+L624:
+	test_heap 2, 9
+	put_list x(5), x(3), x(3)
+	move x(7), x(5)
+	move x(8), x(4)
+	call_only 7, L613
+L625:
+	is_nil L621, x(4)
+	is_eq L626, x(2), x(5)
+	move x(6), x(4)
+	move x(3), x(5)
+	move x(2), x(3)
+	move x(5), x(2)
+	call_only 5, L648
+L626:
+	test_heap 2, 7
+	put_list x(5), x(3), x(5)
+	move x(2), x(3)
+	move x(6), x(4)
+	move x(5), x(2)
+	call_only 5, L648
+L627:
+ 	#line 268
+	#function lists:rumerge3_21_3/7
+L628:
+	is_nonempty_list L631, x(4)
+	get_list x(4), x(7), x(8)
+	is_ge L629, x(7), x(6)
+	test_heap 2, 9
+	put_list x(5), x(3), x(3)
+	move x(7), x(5)
+	move x(8), x(4)
+	call_only 7, L628
+L629:
+	is_eq L630, x(6), x(5)
+	test_heap 2, 9
+	put_list x(6), x(3), x(3)
+	move x(7), x(5)
+	move x(8), x(4)
+	call_only 6, L606
+L630:
+	test_heap 4, 9
+	put_list x(5), x(3), x(9)
+	put_list x(6), x(9), x(3)
+	move x(7), x(5)
+	move x(8), x(4)
+	call_only 6, L606
+L631:
+	is_nil L627, x(4)
+	is_eq L632, x(6), x(5)
+	test_heap 2, 7
+	put_list x(6), x(3), x(4)
+	move x(2), x(3)
+	move x(4), x(2)
+	call_only 4, L644
+L632:
+	test_heap 4, 7
+	put_list x(5), x(3), x(4)
+	put_list x(6), x(4), x(4)
+	move x(2), x(3)
+	move x(4), x(2)
+	call_only 4, L644
+L633:
+ 	#line 269
+	#function lists:umerge2_1/5
+L634:
+	is_nonempty_list L637, x(0)
+	get_list x(0), x(5), x(6)
+	is_ge L635, x(4), x(5)
+	test_heap 2, 7
+	put_list x(5), x(2), x(2)
+	move x(5), x(3)
+	move x(6), x(0)
+	call_only 5, L634
+L635:
+	is_eq L636, x(4), x(3)
+	move x(5), x(3)
+	move x(6), x(0)
+	call_only 4, L640
+L636:
+	test_heap 2, 7
+	put_list x(4), x(2), x(2)
+	move x(5), x(3)
+	move x(6), x(0)
+	call_only 4, L640
+L637:
+	is_nil L633, x(0)
+	is_eq L638, x(4), x(3)
+	move x(1), x(0)
+	move x(2), x(1)
+ 	#line 270
+	call_ext_only lists:reverse/2 2
+L638:
+	test_heap 2, 5
+	put_list x(4), x(2), x(2)
+	move x(1), x(0)
+	move x(2), x(1)
+ 	#line 271
+	call_ext_only lists:reverse/2 2
+L639:
+ 	#line 272
+	#function lists:umerge2_2/4
+L640:
+	is_nonempty_list L642, x(1)
+	get_list x(1), x(4), x(5)
+	is_ge L641, x(4), x(3)
+	test_heap 2, 6
+	put_list x(3), x(2), x(2)
+	move x(5), x(1)
+	call_only 5, L634
+L641:
+	test_heap 2, 6
+	put_list x(4), x(2), x(2)
+	move x(5), x(1)
+	call_only 4, L640
+L642:
+	is_nil L639, x(1)
+	test_heap 2, 4
+	put_list x(3), x(2), x(1)
+ 	#line 273
+	call_ext_only lists:reverse/2 2
+L643:
+ 	#line 274
+	#function lists:rumerge2_1/4
+L644:
+	is_nonempty_list L646, x(0)
+	get_list x(0), x(4), x(5)
+	is_ge L645, x(3), x(4)
+	move x(5), x(0)
+	call_only 5, L648
+L645:
+	test_heap 2, 6
+	put_list x(4), x(2), x(2)
+	move x(5), x(0)
+	call_only 4, L644
+L646:
+	is_nil L643, x(0)
+	test_heap 2, 4
+	put_list x(3), x(2), x(2)
+	move x(1), x(0)
+	move x(2), x(1)
+ 	#line 275
+	call_ext_only lists:reverse/2 2
+L647:
+ 	#line 276
+	#function lists:rumerge2_2/5
+L648:
+	is_nonempty_list L651, x(1)
+	get_list x(1), x(5), x(6)
+	is_ge L649, x(5), x(4)
+	test_heap 2, 7
+	put_list x(3), x(2), x(2)
+	move x(5), x(3)
+	move x(6), x(1)
+	call_only 5, L648
+L649:
+	is_eq L650, x(4), x(3)
+	test_heap 2, 7
+	put_list x(4), x(2), x(2)
+	move x(5), x(3)
+	move x(6), x(1)
+	call_only 4, L644
+L650:
+	test_heap 4, 7
+	put_list x(3), x(2), x(7)
+	put_list x(4), x(7), x(2)
+	move x(5), x(3)
+	move x(6), x(1)
+	call_only 4, L644
+L651:
+	is_nil L647, x(1)
+	is_eq L652, x(4), x(3)
+	test_heap 2, 5
+	put_list x(4), x(2), x(1)
+ 	#line 277
+	call_ext_only lists:reverse/2 2
+L652:
+	test_heap 4, 5
+	put_list x(3), x(2), x(2)
+	put_list x(4), x(2), x(1)
+ 	#line 278
+	call_ext_only lists:reverse/2 2
+L653:
+ 	#line 279
+	#function lists:keysplit_1/8
+L654:
+	is_nonempty_list L658, x(5)
+	get_list x(5), x(8), x(9)
+ 	#line 280
+	bif2 L0, 13, x(0), x(8), x(5)
+	is_ge L655, x(5), x(4)
+	test_heap 2, 10
+	put_list x(1), x(6), x(6)
+	move x(4), x(2)
+	move x(5), x(4)
+	move x(9), x(5)
+	move x(3), x(1)
+	move x(8), x(3)
+	call_only 8, L654
+L655:
+	is_ge L656, x(5), x(2)
+	test_heap 2, 10
+	put_list x(1), x(6), x(6)
+	move x(5), x(2)
+	move x(9), x(5)
+	move x(8), x(1)
+	call_only 8, L654
+L656:
+	is_eq_exact L657, x(6), nil
+	test_heap 2, 10
+	put_list x(8), nil, x(6)
+	move x(9), x(5)
+	call_only 8, L654
+L657:
+	call_only 10, L660
+L658:
+	is_nil L653, x(5)
+	test_heap 6, 8
+	put_list x(1), x(6), x(4)
+	put_list x(3), x(4), x(4)
+	put_list x(4), x(7), x(1)
+	move asc, x(3)
+	move nil, x(2)
+	call_only 4, L686
+L659:
+ 	#line 281
+	#function lists:keysplit_1_1/10
+L660:
+	is_nonempty_list L664, x(9)
+	get_list x(9), x(10), x(11)
+ 	#line 282
+	bif2 L0, 13, x(0), x(10), x(9)
+	is_ge L661, x(9), x(4)
+	test_heap 2, 12
+	put_list x(1), x(6), x(6)
+	move x(4), x(2)
+	move x(9), x(4)
+	move x(11), x(9)
+	move x(3), x(1)
+	move x(10), x(3)
+	call_only 10, L660
+L661:
+	is_ge L662, x(9), x(2)
+	test_heap 2, 12
+	put_list x(1), x(6), x(6)
+	move x(9), x(2)
+	move x(11), x(9)
+	move x(10), x(1)
+	call_only 10, L660
+L662:
+	is_ge L663, x(9), x(5)
+	test_heap 6, 12
+	put_list x(1), x(6), x(12)
+	put_list x(3), x(12), x(12)
+	put_list x(12), x(7), x(7)
+	move x(10), x(3)
+	move x(9), x(4)
+	move x(5), x(2)
+	move x(11), x(5)
+	move nil, x(6)
+	move x(8), x(1)
+	call_only 8, L654
+L663:
+	test_heap 6, 12
+	put_list x(1), x(6), x(12)
+	put_list x(3), x(12), x(12)
+	put_list x(12), x(7), x(7)
+	move x(5), x(4)
+	move x(8), x(3)
+	move x(11), x(5)
+	move x(9), x(2)
+	move nil, x(6)
+	move x(10), x(1)
+	call_only 8, L654
+L664:
+	is_nil L659, x(9)
+	test_heap 10, 9
+	put_list x(1), x(6), x(4)
+	put_list x(3), x(4), x(4)
+	put_list x(4), x(7), x(4)
+	put_list x(8), nil, x(5)
+	put_list x(5), x(4), x(1)
+	move asc, x(3)
+	move nil, x(2)
+	call_only 4, L686
+L665:
+ 	#line 283
+	#function lists:keysplit_2/8
+L666:
+	is_nonempty_list L670, x(5)
+	get_list x(5), x(8), x(9)
+ 	#line 284
+	bif2 L0, 13, x(0), x(8), x(5)
+	is_lt L667, x(5), x(4)
+	test_heap 2, 10
+	put_list x(1), x(6), x(6)
+	move x(4), x(2)
+	move x(5), x(4)
+	move x(9), x(5)
+	move x(3), x(1)
+	move x(8), x(3)
+	call_only 8, L666
+L667:
+	is_lt L668, x(5), x(2)
+	test_heap 2, 10
+	put_list x(1), x(6), x(6)
+	move x(5), x(2)
+	move x(9), x(5)
+	move x(8), x(1)
+	call_only 8, L666
+L668:
+	is_eq_exact L669, x(6), nil
+	test_heap 2, 10
+	put_list x(8), nil, x(6)
+	move x(9), x(5)
+	call_only 8, L666
+L669:
+	call_only 10, L672
+L670:
+	is_nil L665, x(5)
+	test_heap 6, 8
+	put_list x(1), x(6), x(4)
+	put_list x(3), x(4), x(4)
+	put_list x(4), x(7), x(1)
+	move desc, x(3)
+	move nil, x(2)
+	call_only 4, L678
+L671:
+ 	#line 285
+	#function lists:keysplit_2_1/10
+L672:
+	is_nonempty_list L676, x(9)
+	get_list x(9), x(10), x(11)
+ 	#line 286
+	bif2 L0, 13, x(0), x(10), x(9)
+	is_lt L673, x(9), x(4)
+	test_heap 2, 12
+	put_list x(1), x(6), x(6)
+	move x(4), x(2)
+	move x(9), x(4)
+	move x(11), x(9)
+	move x(3), x(1)
+	move x(10), x(3)
+	call_only 10, L672
+L673:
+	is_lt L674, x(9), x(2)
+	test_heap 2, 12
+	put_list x(1), x(6), x(6)
+	move x(9), x(2)
+	move x(11), x(9)
+	move x(10), x(1)
+	call_only 10, L672
+L674:
+	is_lt L675, x(9), x(5)
+	test_heap 6, 12
+	put_list x(1), x(6), x(12)
+	put_list x(3), x(12), x(12)
+	put_list x(12), x(7), x(7)
+	move x(10), x(3)
+	move x(9), x(4)
+	move x(5), x(2)
+	move x(11), x(5)
+	move nil, x(6)
+	move x(8), x(1)
+	call_only 8, L666
+L675:
+	test_heap 6, 12
+	put_list x(1), x(6), x(12)
+	put_list x(3), x(12), x(12)
+	put_list x(12), x(7), x(7)
+	move x(5), x(4)
+	move x(8), x(3)
+	move x(11), x(5)
+	move x(9), x(2)
+	move nil, x(6)
+	move x(10), x(1)
+	call_only 8, L666
+L676:
+	is_nil L671, x(9)
+	test_heap 10, 9
+	put_list x(1), x(6), x(4)
+	put_list x(3), x(4), x(4)
+	put_list x(4), x(7), x(4)
+	put_list x(8), nil, x(5)
+	put_list x(5), x(4), x(1)
+	move desc, x(3)
+	move nil, x(2)
+	call_only 4, L678
+L677:
+ 	#line 287
+	#function lists:keymergel/4
+L678:
+	is_nonempty_list L684, x(1)
+	get_list x(1), x(4), x(5)
+	is_nonempty_list L679, x(5)
+	get_list x(5), x(6), x(7)
+	is_nonempty_list L679, x(6)
+	get_list x(6), x(8), x(9)
+	is_nonempty_list L679, x(7)
+	get_list x(7), x(10), x(11)
+	is_nonempty_list L679, x(10)
+	get_list x(10), x(12), x(13)
+	is_eq_exact L679, x(3), asc
+	allocate_zero 4, 14
+ 	#line 288
+	bif2 L0, 13, x(0), x(8), x(1)
+ 	#line 288
+	bif2 L0, 13, x(0), x(12), x(7)
+	move x(2), y(0)
+	move x(9), x(6)
+	move x(8), x(5)
+	move x(12), x(8)
+	move x(13), x(9)
+	move nil, x(2)
+	move x(4), x(14)
+	move x(1), x(4)
+	move x(14), x(1)
+	move x(3), y(1)
+	move x(0), y(2)
+	move x(11), y(3)
+ 	#line 288
+	call 10, L693
+	test_heap 2, 1
+	put_list x(0), y(0), x(2)
+	move y(3), x(1)
+	move y(1), x(3)
+	move y(2), x(0)
+	call_last 4, L678, 4
+L679:
+	is_nonempty_list L680, x(4)
+	get_list x(4), x(6), x(7)
+	is_nonempty_list L681, x(5)
+	get_list x(5), x(8), x(9)
+	is_nonempty_list L680, x(8)
+	get_list x(8), x(10), x(11)
+	is_nonempty_list L680, x(9)
+	get_list x(9), x(12), x(13)
+	is_eq_exact L680, x(3), desc
+	allocate_zero 4, 14
+ 	#line 289
+	bif2 L0, 13, x(0), x(10), x(1)
+ 	#line 289
+	bif2 L0, 13, x(0), x(6), x(4)
+	move x(2), y(0)
+	move x(10), x(5)
+	move x(6), x(8)
+	move x(11), x(6)
+	move nil, x(2)
+	move x(7), x(9)
+	move x(4), x(7)
+	move x(1), x(4)
+	move x(12), x(1)
+	move x(3), y(1)
+	move x(0), y(2)
+	move x(13), y(3)
+ 	#line 289
+	call 10, L693
+	test_heap 2, 1
+	put_list x(0), y(0), x(2)
+	move y(3), x(1)
+	move y(1), x(3)
+	move y(2), x(0)
+	call_last 4, L678, 4
+L680:
+	is_nonempty_list L681, x(5)
+	get_list x(5), x(6), x(7)
+	is_nonempty_list L681, x(6)
+	get_list x(6), x(8), x(9)
+	is_eq_exact L681, x(3), asc
+	allocate_zero 3, 10
+ 	#line 290
+	bif2 L0, 13, x(0), x(8), x(1)
+	move x(2), y(0)
+	move x(8), x(3)
+	move x(1), x(2)
+	move nil, x(5)
+	move x(4), x(1)
+	move x(9), x(4)
+	move x(0), y(1)
+	move x(7), y(2)
+ 	#line 290
+	call 6, L737
+	test_heap 2, 1
+	put_list x(0), y(0), x(2)
+	move y(2), x(1)
+	move asc, x(3)
+	move y(1), x(0)
+	call_last 4, L678, 3
+L681:
+	is_nonempty_list L682, x(4)
+	get_list x(4), x(6), x(7)
+	is_nonempty_list L682, x(5)
+	get_list x(5), x(8), x(9)
+	is_eq_exact L682, x(3), desc
+	allocate_zero 3, 10
+ 	#line 291
+	bif2 L0, 13, x(0), x(6), x(1)
+	move x(2), y(0)
+	move x(6), x(3)
+	move x(7), x(4)
+	move x(1), x(2)
+	move nil, x(5)
+	move x(8), x(1)
+	move x(0), y(1)
+	move x(9), y(2)
+ 	#line 291
+	call 6, L737
+	test_heap 2, 1
+	put_list x(0), y(0), x(2)
+	move y(2), x(1)
+	move desc, x(3)
+	move y(1), x(0)
+	call_last 4, L678, 3
+L682:
+	is_nil L677, x(5)
+	is_nil L683, x(2)
+	move x(4), x(0)
+	return 
+L683:
+	allocate 3, 5
+	move x(0), y(2)
+	move nil, x(1)
+	move x(4), x(0)
+	move x(2), y(0)
+	move x(3), y(1)
+ 	#line 292
+	call_ext lists:reverse/2 2
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move nil, x(2)
+	move y(1), x(3)
+	move y(2), x(0)
+	call_last 4, L686, 3
+L684:
+	is_nil L677, x(1)
+	move x(2), x(1)
+	move nil, x(2)
+	call_only 4, L686
+L685:
+ 	#line 293
+	#function lists:rkeymergel/4
+L686:
+	is_nonempty_list L691, x(1)
+	get_list x(1), x(4), x(5)
+	is_nonempty_list L687, x(4)
+	get_list x(4), x(6), x(7)
+	is_nonempty_list L688, x(5)
+	get_list x(5), x(8), x(9)
+	is_nonempty_list L687, x(8)
+	get_list x(8), x(10), x(11)
+	is_nonempty_list L687, x(9)
+	get_list x(9), x(12), x(13)
+	is_eq_exact L687, x(3), asc
+	allocate_zero 4, 14
+ 	#line 294
+	bif2 L0, 13, x(0), x(10), x(1)
+ 	#line 294
+	bif2 L0, 13, x(0), x(6), x(4)
+	move x(2), y(0)
+	move x(10), x(5)
+	move x(6), x(8)
+	move x(11), x(6)
+	move nil, x(2)
+	move x(7), x(9)
+	move x(4), x(7)
+	move x(1), x(4)
+	move x(12), x(1)
+	move x(3), y(1)
+	move x(0), y(2)
+	move x(13), y(3)
+ 	#line 294
+	call 10, L715
+	test_heap 2, 1
+	put_list x(0), y(0), x(2)
+	move y(3), x(1)
+	move y(1), x(3)
+	move y(2), x(0)
+	call_last 4, L686, 4
+L687:
+	is_nonempty_list L688, x(5)
+	get_list x(5), x(6), x(7)
+	is_nonempty_list L688, x(6)
+	get_list x(6), x(8), x(9)
+	is_nonempty_list L688, x(7)
+	get_list x(7), x(10), x(11)
+	is_nonempty_list L688, x(10)
+	get_list x(10), x(12), x(13)
+	is_eq_exact L688, x(3), desc
+	allocate_zero 4, 14
+ 	#line 295
+	bif2 L0, 13, x(0), x(8), x(1)
+ 	#line 295
+	bif2 L0, 13, x(0), x(12), x(7)
+	move x(2), y(0)
+	move x(9), x(6)
+	move x(8), x(5)
+	move x(12), x(8)
+	move x(13), x(9)
+	move nil, x(2)
+	move x(4), x(14)
+	move x(1), x(4)
+	move x(14), x(1)
+	move x(3), y(1)
+	move x(0), y(2)
+	move x(11), y(3)
+ 	#line 295
+	call 10, L715
+	test_heap 2, 1
+	put_list x(0), y(0), x(2)
+	move y(3), x(1)
+	move y(1), x(3)
+	move y(2), x(0)
+	call_last 4, L686, 4
+L688:
+	is_nonempty_list L689, x(4)
+	get_list x(4), x(6), x(7)
+	is_nonempty_list L690, x(5)
+	get_list x(5), x(8), x(9)
+	is_eq_exact L689, x(3), asc
+	allocate_zero 3, 10
+ 	#line 296
+	bif2 L0, 13, x(0), x(6), x(1)
+	move x(2), y(0)
+	move x(6), x(3)
+	move x(7), x(4)
+	move x(1), x(2)
+	move nil, x(5)
+	move x(8), x(1)
+	move x(0), y(1)
+	move x(9), y(2)
+ 	#line 296
+	call 6, L745
+	test_heap 2, 1
+	put_list x(0), y(0), x(2)
+	move y(2), x(1)
+	move asc, x(3)
+	move y(1), x(0)
+	call_last 4, L686, 3
+L689:
+	is_nonempty_list L690, x(5)
+	get_list x(5), x(6), x(7)
+	is_nonempty_list L685, x(6)
+	get_list x(6), x(8), x(9)
+	is_eq_exact L685, x(3), desc
+	allocate_zero 3, 10
+ 	#line 297
+	bif2 L0, 13, x(0), x(8), x(1)
+	move x(2), y(0)
+	move x(8), x(3)
+	move x(1), x(2)
+	move nil, x(5)
+	move x(4), x(1)
+	move x(9), x(4)
+	move x(0), y(1)
+	move x(7), y(2)
+ 	#line 297
+	call 6, L745
+	test_heap 2, 1
+	put_list x(0), y(0), x(2)
+	move y(2), x(1)
+	move desc, x(3)
+	move y(1), x(0)
+	call_last 4, L686, 3
+L690:
+	is_nil L685, x(5)
+	allocate 3, 5
+	move x(0), y(2)
+	move nil, x(1)
+	move x(4), x(0)
+	move x(2), y(0)
+	move x(3), y(1)
+ 	#line 298
+	call_ext lists:reverse/2 2
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move nil, x(2)
+	move y(1), x(3)
+	move y(2), x(0)
+	call_last 4, L678, 3
+L691:
+	is_nil L685, x(1)
+	move x(2), x(1)
+	move nil, x(2)
+	call_only 4, L678
+L692:
+ 	#line 299
+	#function lists:keymerge3_1/10
+L693:
+	is_nonempty_list L697, x(1)
+	get_list x(1), x(10), x(11)
+ 	#line 300
+	bif2 L0, 13, x(0), x(10), x(1)
+	is_ge L695, x(4), x(1)
+	is_ge L694, x(7), x(1)
+	test_heap 2, 12
+	put_list x(10), x(2), x(2)
+	move x(11), x(1)
+	call_only 10, L693
+L694:
+	test_heap 2, 12
+	put_list x(8), x(2), x(8)
+	move x(11), x(3)
+	move x(9), x(7)
+	move x(10), x(2)
+	call_only 9, L707
+L695:
+	is_ge L696, x(7), x(4)
+	test_heap 2, 12
+	put_list x(5), x(2), x(5)
+	move x(11), x(3)
+	move x(6), x(4)
+	move x(10), x(2)
+	call_only 10, L700
+L696:
+	test_heap 2, 12
+	put_list x(8), x(2), x(8)
+	move x(11), x(3)
+	move x(9), x(7)
+	move x(10), x(2)
+	call_only 9, L711
+L697:
+	is_nil L692, x(1)
+	is_ge L698, x(7), x(4)
+	test_heap 2, 10
+	put_list x(5), x(2), x(5)
+	move x(8), x(3)
+	move x(7), x(2)
+	move x(9), x(4)
+	move x(6), x(1)
+	call_only 6, L737
+L698:
+	move x(8), x(3)
+	move x(6), x(1)
+	move x(5), x(6)
+	move x(2), x(5)
+	move x(4), x(2)
+	move x(9), x(4)
+	call_only 7, L741
+L699:
+ 	#line 301
+	#function lists:keymerge3_2/10
+L700:
+	is_nonempty_list L704, x(4)
+	get_list x(4), x(10), x(11)
+ 	#line 302
+	bif2 L0, 13, x(0), x(10), x(4)
+	is_ge L702, x(4), x(1)
+	is_ge L701, x(7), x(1)
+	test_heap 2, 12
+	put_list x(2), x(5), x(2)
+	move x(10), x(5)
+	move x(11), x(6)
+	move x(3), x(1)
+	call_only 10, L693
+L701:
+	test_heap 2, 12
+	put_list x(8), x(5), x(8)
+	move x(11), x(6)
+	move x(9), x(7)
+	move x(10), x(5)
+	call_only 9, L707
+L702:
+	is_ge L703, x(7), x(4)
+	test_heap 2, 12
+	put_list x(10), x(5), x(5)
+	move x(11), x(4)
+	call_only 10, L700
+L703:
+	test_heap 2, 12
+	put_list x(8), x(5), x(8)
+	move x(11), x(6)
+	move x(9), x(7)
+	move x(10), x(5)
+	call_only 9, L711
+L704:
+	is_nil L699, x(4)
+	is_ge L705, x(7), x(1)
+	test_heap 2, 10
+	put_list x(2), x(5), x(5)
+	move x(7), x(2)
+	move x(9), x(4)
+	move x(3), x(1)
+	move x(8), x(3)
+	call_only 6, L737
+L705:
+	move x(9), x(4)
+	move x(2), x(6)
+	move x(1), x(2)
+	move x(3), x(1)
+	move x(8), x(3)
+	call_only 7, L741
+L706:
+ 	#line 303
+	#function lists:keymerge3_12_3/9
+L707:
+	is_nonempty_list L709, x(7)
+	get_list x(7), x(9), x(10)
+ 	#line 304
+	bif2 L0, 13, x(0), x(9), x(7)
+	is_ge L708, x(7), x(1)
+	test_heap 2, 11
+	put_list x(2), x(8), x(2)
+	move x(9), x(8)
+	move x(10), x(9)
+	move x(3), x(1)
+	call_only 10, L693
+L708:
+	test_heap 2, 11
+	put_list x(9), x(8), x(8)
+	move x(10), x(7)
+	call_only 9, L707
+L709:
+	is_nil L706, x(7)
+	test_heap 2, 9
+	put_list x(2), x(8), x(7)
+	move x(4), x(2)
+	move x(6), x(4)
+	move x(3), x(1)
+	move x(5), x(3)
+	move x(7), x(5)
+	call_only 6, L737
+L710:
+ 	#line 305
+	#function lists:keymerge3_21_3/9
+L711:
+	is_nonempty_list L713, x(7)
+	get_list x(7), x(9), x(10)
+ 	#line 306
+	bif2 L0, 13, x(0), x(9), x(7)
+	is_ge L712, x(7), x(4)
+	test_heap 2, 11
+	put_list x(5), x(8), x(5)
+	move x(9), x(8)
+	move x(10), x(9)
+	move x(6), x(4)
+	call_only 10, L700
+L712:
+	test_heap 2, 11
+	put_list x(9), x(8), x(8)
+	move x(10), x(7)
+	call_only 9, L711
+L713:
+	is_nil L710, x(7)
+	move x(6), x(4)
+	move x(2), x(6)
+	move x(1), x(2)
+	move x(3), x(1)
+	move x(5), x(3)
+	move x(8), x(5)
+	call_only 7, L741
+L714:
+ 	#line 307
+	#function lists:rkeymerge3_1/10
+L715:
+	is_nonempty_list L719, x(1)
+	get_list x(1), x(10), x(11)
+ 	#line 308
+	bif2 L0, 13, x(0), x(10), x(1)
+	is_ge L717, x(4), x(1)
+	is_ge L716, x(7), x(4)
+	test_heap 2, 12
+	put_list x(8), x(2), x(8)
+	move x(11), x(3)
+	move x(9), x(7)
+	move x(10), x(2)
+	call_only 9, L729
+L716:
+	test_heap 2, 12
+	put_list x(5), x(2), x(5)
+	move x(11), x(3)
+	move x(6), x(4)
+	move x(10), x(2)
+	call_only 10, L722
+L717:
+	is_ge L718, x(7), x(1)
+	test_heap 2, 12
+	put_list x(8), x(2), x(8)
+	move x(11), x(3)
+	move x(9), x(7)
+	move x(10), x(2)
+	call_only 9, L733
+L718:
+	test_heap 2, 12
+	put_list x(10), x(2), x(2)
+	move x(11), x(1)
+	call_only 10, L715
+L719:
+	is_nil L714, x(1)
+	is_ge L720, x(7), x(4)
+	move x(8), x(3)
+	move x(5), x(7)
+	move x(2), x(5)
+	move x(6), x(2)
+	move x(7), x(6)
+	move x(4), x(1)
+	move x(9), x(4)
+	call_only 7, L749
+L720:
+	test_heap 2, 10
+	put_list x(5), x(2), x(5)
+	move x(8), x(3)
+	move x(7), x(2)
+	move x(9), x(4)
+	move x(6), x(1)
+	call_only 6, L745
+L721:
+ 	#line 309
+	#function lists:rkeymerge3_2/10
+L722:
+	is_nonempty_list L726, x(4)
+	get_list x(4), x(10), x(11)
+ 	#line 310
+	bif2 L0, 13, x(0), x(10), x(4)
+	is_ge L724, x(4), x(1)
+	is_ge L723, x(7), x(4)
+	test_heap 2, 12
+	put_list x(8), x(5), x(8)
+	move x(11), x(6)
+	move x(9), x(7)
+	move x(10), x(5)
+	call_only 9, L729
+L723:
+	test_heap 2, 12
+	put_list x(10), x(5), x(5)
+	move x(11), x(4)
+	call_only 10, L722
+L724:
+	is_ge L725, x(7), x(1)
+	test_heap 2, 12
+	put_list x(8), x(5), x(8)
+	move x(11), x(6)
+	move x(9), x(7)
+	move x(10), x(5)
+	call_only 9, L733
+L725:
+	test_heap 2, 12
+	put_list x(2), x(5), x(2)
+	move x(10), x(5)
+	move x(11), x(6)
+	move x(3), x(1)
+	call_only 10, L715
+L726:
+	is_nil L721, x(4)
+	is_ge L727, x(7), x(1)
+	move x(9), x(4)
+	move x(2), x(6)
+	move x(3), x(2)
+	move x(8), x(3)
+	call_only 7, L749
+L727:
+	test_heap 2, 10
+	put_list x(2), x(5), x(5)
+	move x(7), x(2)
+	move x(9), x(4)
+	move x(3), x(1)
+	move x(8), x(3)
+	call_only 6, L745
+L728:
+ 	#line 311
+	#function lists:rkeymerge3_12_3/9
+L729:
+	is_nonempty_list L731, x(7)
+	get_list x(7), x(9), x(10)
+ 	#line 312
+	bif2 L0, 13, x(0), x(9), x(7)
+	is_ge L730, x(7), x(4)
+	test_heap 2, 11
+	put_list x(9), x(8), x(8)
+	move x(10), x(7)
+	call_only 9, L729
+L730:
+	test_heap 2, 11
+	put_list x(5), x(8), x(5)
+	move x(9), x(8)
+	move x(10), x(9)
+	move x(6), x(4)
+	call_only 10, L722
+L731:
+	is_nil L728, x(7)
+	move x(6), x(4)
+	move x(2), x(6)
+	move x(3), x(2)
+	move x(5), x(3)
+	move x(8), x(5)
+	call_only 7, L749
+L732:
+ 	#line 313
+	#function lists:rkeymerge3_21_3/9
+L733:
+	is_nonempty_list L735, x(7)
+	get_list x(7), x(9), x(10)
+ 	#line 314
+	bif2 L0, 13, x(0), x(9), x(7)
+	is_ge L734, x(7), x(1)
+	test_heap 2, 11
+	put_list x(9), x(8), x(8)
+	move x(10), x(7)
+	call_only 9, L733
+L734:
+	test_heap 2, 11
+	put_list x(2), x(8), x(2)
+	move x(9), x(8)
+	move x(10), x(9)
+	move x(3), x(1)
+	call_only 10, L715
+L735:
+	is_nil L732, x(7)
+	test_heap 2, 9
+	put_list x(2), x(8), x(7)
+	move x(4), x(2)
+	move x(6), x(4)
+	move x(3), x(1)
+	move x(5), x(3)
+	move x(7), x(5)
+	call_only 6, L745
+L736:
+ 	#line 315
+	#function lists:keymerge2_1/6
+L737:
+	is_nonempty_list L739, x(1)
+	get_list x(1), x(6), x(7)
+ 	#line 316
+	bif2 L0, 13, x(0), x(6), x(1)
+	is_ge L738, x(2), x(1)
+	test_heap 2, 8
+	put_list x(6), x(5), x(5)
+	move x(7), x(1)
+	call_only 6, L737
+L738:
+	move x(1), x(2)
+	move x(7), x(1)
+	call_only 7, L741
+L739:
+	is_nil L736, x(1)
+	test_heap 2, 6
+	put_list x(3), x(5), x(1)
+	move x(4), x(0)
+ 	#line 317
+	call_ext_only lists:reverse/2 2
+L740:
+ 	#line 318
+	#function lists:keymerge2_2/7
+L741:
+	is_nonempty_list L743, x(4)
+	get_list x(4), x(7), x(8)
+ 	#line 319
+	bif2 L0, 13, x(0), x(7), x(4)
+	is_ge L742, x(4), x(2)
+	test_heap 4, 9
+	put_list x(3), x(5), x(9)
+	put_list x(6), x(9), x(5)
+	move x(7), x(3)
+	move x(4), x(2)
+	move x(8), x(4)
+	call_only 6, L737
+L742:
+	test_heap 2, 9
+	put_list x(3), x(5), x(5)
+	move x(8), x(4)
+	move x(7), x(3)
+	call_only 7, L741
+L743:
+	is_nil L740, x(4)
+	test_heap 4, 7
+	put_list x(3), x(5), x(2)
+	put_list x(6), x(2), x(2)
+	move x(1), x(0)
+	move x(2), x(1)
+ 	#line 320
+	call_ext_only lists:reverse/2 2
+L744:
+ 	#line 321
+	#function lists:rkeymerge2_1/6
+L745:
+	is_nonempty_list L747, x(1)
+	get_list x(1), x(6), x(7)
+ 	#line 322
+	bif2 L0, 13, x(0), x(6), x(1)
+	is_ge L746, x(2), x(1)
+	move x(7), x(2)
+	call_only 7, L749
+L746:
+	test_heap 2, 8
+	put_list x(6), x(5), x(5)
+	move x(7), x(1)
+	call_only 6, L745
+L747:
+	is_nil L744, x(1)
+	test_heap 2, 6
+	put_list x(3), x(5), x(1)
+	move x(4), x(0)
+ 	#line 323
+	call_ext_only lists:reverse/2 2
+L748:
+ 	#line 324
+	#function lists:rkeymerge2_2/7
+L749:
+	is_nonempty_list L751, x(4)
+	get_list x(4), x(7), x(8)
+ 	#line 325
+	bif2 L0, 13, x(0), x(7), x(4)
+	is_ge L750, x(4), x(1)
+	test_heap 2, 9
+	put_list x(3), x(5), x(5)
+	move x(8), x(4)
+	move x(7), x(3)
+	call_only 7, L749
+L750:
+	test_heap 4, 9
+	put_list x(3), x(5), x(9)
+	put_list x(6), x(9), x(5)
+	move x(7), x(3)
+	move x(2), x(1)
+	move x(4), x(2)
+	move x(8), x(4)
+	call_only 6, L745
+L751:
+	is_nil L748, x(4)
+	test_heap 4, 7
+	put_list x(3), x(5), x(3)
+	put_list x(6), x(3), x(1)
+	move x(2), x(0)
+ 	#line 326
+	call_ext_only lists:reverse/2 2
+L752:
+ 	#line 327
+	#function lists:ukeysplit_1/8
+L753:
+	is_nonempty_list L759, x(5)
+	get_list x(5), x(8), x(9)
+ 	#line 328
+	bif2 L0, 13, x(0), x(8), x(5)
+	is_eq L754, x(4), x(5)
+	move x(9), x(5)
+	call_only 8, L753
+L754:
+	is_lt L755, x(4), x(5)
+	test_heap 2, 10
+	put_list x(1), x(6), x(6)
+	move x(4), x(2)
+	move x(5), x(4)
+	move x(9), x(5)
+	move x(3), x(1)
+	move x(8), x(3)
+	call_only 8, L753
+L755:
+	is_eq L756, x(2), x(5)
+	move x(9), x(5)
+	call_only 8, L753
+L756:
+	is_lt L757, x(2), x(5)
+	test_heap 2, 10
+	put_list x(1), x(6), x(6)
+	move x(5), x(2)
+	move x(9), x(5)
+	move x(8), x(1)
+	call_only 8, L753
+L757:
+	is_eq_exact L758, x(6), nil
+	test_heap 2, 10
+	put_list x(8), nil, x(6)
+	move x(9), x(5)
+	call_only 8, L753
+L758:
+	move x(9), x(10)
+	move x(5), x(9)
+	move x(10), x(5)
+	call_only 10, L761
+L759:
+	is_nil L752, x(5)
+	test_heap 6, 8
+	put_list x(1), x(6), x(4)
+	put_list x(3), x(4), x(3)
+	put_list x(3), x(7), x(1)
+	move nil, x(2)
+	call_only 3, L781
+L760:
+ 	#line 329
+	#function lists:ukeysplit_1_1/10
+L761:
+	is_nonempty_list L768, x(5)
+	get_list x(5), x(10), x(11)
+ 	#line 330
+	bif2 L0, 13, x(0), x(10), x(5)
+	is_eq L762, x(4), x(5)
+	move x(11), x(5)
+	call_only 10, L761
+L762:
+	is_lt L763, x(4), x(5)
+	test_heap 2, 12
+	put_list x(1), x(6), x(6)
+	move x(4), x(2)
+	move x(5), x(4)
+	move x(11), x(5)
+	move x(3), x(1)
+	move x(10), x(3)
+	call_only 10, L761
+L763:
+	is_eq L764, x(2), x(5)
+	move x(11), x(5)
+	call_only 10, L761
+L764:
+	is_lt L765, x(2), x(5)
+	test_heap 2, 12
+	put_list x(1), x(6), x(6)
+	move x(5), x(2)
+	move x(11), x(5)
+	move x(10), x(1)
+	call_only 10, L761
+L765:
+	is_eq L766, x(9), x(5)
+	move x(11), x(5)
+	call_only 10, L761
+L766:
+	is_lt L767, x(9), x(5)
+	test_heap 6, 12
+	put_list x(1), x(6), x(12)
+	put_list x(3), x(12), x(12)
+	put_list x(12), x(7), x(7)
+	move x(5), x(4)
+	move x(10), x(3)
+	move x(11), x(5)
+	move x(9), x(2)
+	move nil, x(6)
+	move x(8), x(1)
+	call_only 8, L753
+L767:
+	test_heap 6, 12
+	put_list x(1), x(6), x(12)
+	put_list x(3), x(12), x(12)
+	put_list x(12), x(7), x(7)
+	move x(8), x(3)
+	move x(9), x(4)
+	move x(5), x(2)
+	move x(11), x(5)
+	move nil, x(6)
+	move x(10), x(1)
+	call_only 8, L753
+L768:
+	is_nil L760, x(5)
+	test_heap 10, 9
+	put_list x(1), x(6), x(4)
+	put_list x(3), x(4), x(3)
+	put_list x(3), x(7), x(3)
+	put_list x(8), nil, x(4)
+	put_list x(4), x(3), x(1)
+	move nil, x(2)
+	call_only 3, L781
+L769:
+ 	#line 331
+	#function lists:ukeysplit_2/5
+L770:
+	is_nonempty_list L773, x(3)
+	allocate_zero 6, 5
+	get_list x(3), x(5), x(6)
+ 	#line 332
+	bif2 L0, 13, x(0), x(5), x(3)
+	is_eq L771, x(2), x(3)
+	move x(6), x(3)
+	call_last 5, L770, 6
+L771:
+	is_lt L772, x(2), x(3)
+	move x(0), y(2)
+	move x(1), y(1)
+	move nil, x(1)
+	move x(4), x(0)
+	move x(2), y(0)
+	move x(6), y(3)
+	move x(5), y(4)
+	move x(3), y(5)
+ 	#line 333
+	call_ext lists:reverse/2 2
+	test_heap 2, 1
+	put_list x(0), nil, x(7)
+	move y(4), x(3)
+	move y(5), x(4)
+	move y(0), x(2)
+	move y(3), x(5)
+	move y(1), x(1)
+	move nil, x(6)
+	move y(2), x(0)
+	call_last 8, L753, 6
+L772:
+	test_heap 2, 7
+	put_list x(1), x(4), x(4)
+	move x(3), x(2)
+	move x(6), x(3)
+	move x(5), x(1)
+	call_last 5, L770, 6
+L773:
+	is_nil L769, x(3)
+	test_heap 2, 5
+	put_list x(1), x(4), x(0)
+	return 
+L774:
+ 	#line 334
+	#function lists:ukeymergel/3
+L775:
+	is_nonempty_list L779, x(1)
+	get_list x(1), x(3), x(4)
+	is_nonempty_list L776, x(4)
+	get_list x(4), x(5), x(6)
+	is_nonempty_list L776, x(5)
+	get_list x(5), x(7), x(8)
+	is_nonempty_list L776, x(6)
+	get_list x(6), x(9), x(10)
+	is_nonempty_list L776, x(9)
+	allocate_zero 3, 11
+	get_list x(9), x(11), x(12)
+ 	#line 335
+	bif2 L0, 13, x(0), x(7), x(1)
+ 	#line 336
+	test_heap 2, 13
+	bif2 L0, 13, x(0), x(11), x(4)
+	move x(2), y(2)
+	move x(0), y(1)
+	move x(10), y(0)
+	put_list x(7), x(11), x(13)
+	move x(8), x(6)
+	move x(4), x(8)
+	move x(7), x(5)
+	move nil, x(7)
+	move x(11), x(9)
+	move x(1), x(4)
+	move x(12), x(10)
+	move x(3), x(1)
+	move x(13), x(3)
+ 	#line 335
+	call 11, L786
+	test_heap 2, 1
+	put_list x(0), y(2), x(2)
+	move y(0), x(1)
+	move y(1), x(0)
+	call_last 3, L775, 3
+L776:
+	is_nonempty_list L777, x(3)
+	get_list x(3), x(5), x(6)
+	is_nonempty_list L777, x(4)
+	allocate_zero 3, 7
+	get_list x(4), x(4), y(2)
+ 	#line 337
+	bif2 L0, 13, x(0), x(5), x(1)
+	move x(2), y(0)
+	move x(5), x(3)
+	move x(1), x(2)
+	move nil, x(5)
+	move x(6), x(1)
+	move x(0), y(1)
+ 	#line 337
+	call 6, L850
+	test_heap 2, 1
+	put_list x(0), y(0), x(2)
+	move y(2), x(1)
+	move y(1), x(0)
+	call_last 3, L775, 3
+L777:
+	is_nil L774, x(4)
+	is_nil L778, x(2)
+	move x(3), x(0)
+	return 
+L778:
+	allocate 2, 4
+	move x(0), y(1)
+	move nil, x(1)
+	move x(3), x(0)
+	move x(2), y(0)
+ 	#line 338
+	call_ext lists:reverse/2 2
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move nil, x(2)
+	move y(1), x(0)
+	call_last 3, L781, 2
+L779:
+	is_nil L774, x(1)
+	move x(2), x(1)
+	move nil, x(2)
+	call_only 3, L781
+L780:
+ 	#line 339
+	#function lists:rukeymergel/3
+L781:
+	is_nonempty_list L784, x(1)
+	get_list x(1), x(3), x(4)
+	is_nonempty_list L783, x(3)
+	get_list x(3), x(5), x(6)
+	is_nonempty_list L783, x(4)
+	get_list x(4), x(7), x(8)
+	is_nonempty_list L782, x(7)
+	get_list x(7), x(9), x(10)
+	is_nonempty_list L782, x(8)
+	allocate_zero 3, 11
+	get_list x(8), x(1), y(2)
+ 	#line 340
+	bif2 L0, 13, x(0), x(9), x(4)
+ 	#line 341
+	bif2 L0, 13, x(0), x(5), x(8)
+	move nil, x(7)
+	move nil, x(3)
+	move x(5), x(13)
+	move x(9), x(5)
+	move x(13), x(9)
+	move x(6), x(13)
+	move x(10), x(6)
+	move x(13), x(10)
+	move x(2), y(0)
+	move x(0), y(1)
+ 	#line 340
+	call 11, L816
+	test_heap 2, 1
+	put_list x(0), y(0), x(2)
+	move y(2), x(1)
+	move y(1), x(0)
+	call_last 3, L781, 3
+L782:
+	allocate_zero 3, 9
+ 	#line 342
+	bif2 L0, 13, x(0), x(5), x(1)
+	move x(2), y(0)
+	move x(6), x(3)
+	move x(1), x(2)
+	move nil, x(4)
+	move x(7), x(1)
+	move x(0), y(1)
+	move x(8), y(2)
+ 	#line 342
+	call 6, L854
+	test_heap 2, 1
+	put_list x(0), y(0), x(2)
+	move y(2), x(1)
+	move y(1), x(0)
+	call_last 3, L781, 3
+L783:
+	is_nil L780, x(4)
+	allocate 2, 4
+	move x(0), y(1)
+	move nil, x(1)
+	move x(3), x(0)
+	move x(2), y(0)
+ 	#line 343
+	call_ext lists:reverse/2 2
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move nil, x(2)
+	move y(1), x(0)
+	call_last 3, L775, 2
+L784:
+	is_nil L780, x(1)
+	move x(2), x(1)
+	move nil, x(2)
+	call_only 3, L775
+L785:
+ 	#line 344
+	#function lists:ukeymerge3_1/11
+L786:
+	is_nonempty_list L793, x(1)
+	get_list x(1), x(11), x(12)
+ 	#line 345
+	bif2 L0, 13, x(0), x(11), x(1)
+	is_ge L789, x(4), x(1)
+	is_ge L787, x(8), x(1)
+	test_heap 2, 13
+	put_list x(11), x(7), x(7)
+	move x(1), x(3)
+	move x(12), x(1)
+	call_only 11, L786
+L787:
+	is_eq L788, x(8), x(3)
+	move x(11), x(3)
+	move x(10), x(8)
+	move x(12), x(2)
+	call_only 9, L808
+L788:
+	test_heap 2, 13
+	put_list x(9), x(7), x(7)
+	move x(11), x(3)
+	move x(10), x(8)
+	move x(12), x(2)
+	call_only 9, L808
+L789:
+	is_eq L790, x(4), x(3)
+	move x(6), x(4)
+	move x(3), x(5)
+	move x(11), x(3)
+	move x(12), x(2)
+	call_only 11, L798
+L790:
+	is_ge L791, x(8), x(4)
+	test_heap 2, 13
+	put_list x(5), x(7), x(7)
+	move x(11), x(3)
+	move x(4), x(5)
+	move x(6), x(4)
+	move x(12), x(2)
+	call_only 11, L798
+L791:
+	is_eq L792, x(8), x(3)
+	move x(11), x(3)
+	move x(10), x(8)
+	move x(12), x(2)
+	call_only 9, L812
+L792:
+	test_heap 2, 13
+	put_list x(9), x(7), x(7)
+	move x(11), x(3)
+	move x(10), x(8)
+	move x(12), x(2)
+	call_only 9, L812
+L793:
+	is_nil L785, x(1)
+	is_eq L794, x(4), x(3)
+	move x(10), x(4)
+	move x(8), x(2)
+	move x(7), x(5)
+	move x(6), x(1)
+	move x(9), x(6)
+	call_only 7, L844
+L794:
+	is_ge L795, x(8), x(4)
+	test_heap 2, 11
+	put_list x(5), x(7), x(5)
+	move x(4), x(3)
+	move x(8), x(2)
+	move x(10), x(4)
+	move x(6), x(1)
+	move x(9), x(6)
+	call_only 7, L844
+L795:
+	is_eq L796, x(8), x(3)
+	move x(5), x(3)
+	move x(4), x(2)
+	move x(10), x(4)
+	move x(7), x(5)
+	move x(6), x(1)
+	call_only 6, L850
+L796:
+	test_heap 2, 11
+	put_list x(9), x(7), x(7)
+	move x(5), x(3)
+	move x(4), x(2)
+	move x(10), x(4)
+	move x(7), x(5)
+	move x(6), x(1)
+	call_only 6, L850
+L797:
+ 	#line 346
+	#function lists:ukeymerge3_2/11
+L798:
+	is_nonempty_list L804, x(4)
+	get_list x(4), x(11), x(12)
+ 	#line 347
+	bif2 L0, 13, x(0), x(11), x(4)
+	is_ge L801, x(4), x(1)
+	is_ge L799, x(8), x(1)
+	test_heap 2, 13
+	put_list x(3), x(7), x(7)
+	move x(11), x(5)
+	move x(1), x(3)
+	move x(12), x(6)
+	move x(2), x(1)
+	call_only 11, L786
+L799:
+	is_eq L800, x(8), x(5)
+	move x(12), x(6)
+	move x(10), x(8)
+	move x(11), x(5)
+	call_only 9, L808
+L800:
+	test_heap 2, 13
+	put_list x(9), x(7), x(7)
+	move x(12), x(6)
+	move x(10), x(8)
+	move x(11), x(5)
+	call_only 9, L808
+L801:
+	is_ge L802, x(8), x(4)
+	test_heap 2, 13
+	put_list x(11), x(7), x(7)
+	move x(4), x(5)
+	move x(12), x(4)
+	call_only 11, L798
+L802:
+	is_eq L803, x(8), x(5)
+	move x(12), x(6)
+	move x(10), x(8)
+	move x(11), x(5)
+	call_only 9, L812
+L803:
+	test_heap 2, 13
+	put_list x(9), x(7), x(7)
+	move x(12), x(6)
+	move x(10), x(8)
+	move x(11), x(5)
+	call_only 9, L812
+L804:
+	is_nil L797, x(4)
+	is_ge L805, x(8), x(1)
+	test_heap 2, 11
+	put_list x(3), x(7), x(5)
+	move x(10), x(4)
+	move x(1), x(3)
+	move x(9), x(6)
+	move x(2), x(1)
+	move x(8), x(2)
+	call_only 7, L844
+L805:
+	is_eq L806, x(8), x(5)
+	move x(7), x(5)
+	move x(10), x(4)
+	move x(2), x(6)
+	move x(1), x(2)
+	move x(6), x(1)
+	call_only 6, L850
+L806:
+	test_heap 2, 11
+	put_list x(9), x(7), x(5)
+	move x(10), x(4)
+	move x(2), x(6)
+	move x(1), x(2)
+	move x(6), x(1)
+	call_only 6, L850
+L807:
+ 	#line 348
+	#function lists:ukeymerge3_12_3/9
+L808:
+	is_nonempty_list L810, x(8)
+	get_list x(8), x(9), x(10)
+ 	#line 349
+	bif2 L0, 13, x(0), x(9), x(8)
+	is_ge L809, x(8), x(1)
+	test_heap 2, 11
+	put_list x(3), x(7), x(7)
+	move x(1), x(3)
+	move x(2), x(1)
+	call_only 11, L786
+L809:
+	test_heap 2, 11
+	put_list x(9), x(7), x(7)
+	move x(10), x(8)
+	call_only 9, L808
+L810:
+	is_nil L807, x(8)
+	test_heap 2, 8
+	put_list x(3), x(7), x(7)
+	move x(1), x(3)
+	move x(2), x(1)
+	move x(4), x(2)
+	move x(6), x(4)
+	move x(5), x(6)
+	move x(7), x(5)
+	call_only 7, L844
+L811:
+ 	#line 350
+	#function lists:ukeymerge3_21_3/9
+L812:
+	is_nonempty_list L814, x(8)
+	get_list x(8), x(9), x(10)
+ 	#line 351
+	bif2 L0, 13, x(0), x(9), x(8)
+	is_ge L813, x(8), x(4)
+	test_heap 2, 11
+	put_list x(5), x(7), x(7)
+	move x(4), x(5)
+	move x(6), x(4)
+	call_only 11, L798
+L813:
+	test_heap 2, 11
+	put_list x(9), x(7), x(7)
+	move x(10), x(8)
+	call_only 9, L812
+L814:
+	is_nil L811, x(8)
+	test_heap 2, 8
+	put_list x(5), x(7), x(5)
+	move x(6), x(4)
+	move x(2), x(7)
+	move x(1), x(2)
+	move x(7), x(1)
+	call_only 6, L850
+L815:
+ 	#line 352
+	#function lists:rukeymerge3_1/11
+L816:
+	is_nonempty_list L820, x(1)
+	get_list x(1), x(11), x(12)
+ 	#line 353
+	bif2 L0, 13, x(0), x(11), x(1)
+	is_ge L818, x(4), x(1)
+	is_ge L817, x(8), x(4)
+	move x(12), x(3)
+	move x(11), x(2)
+	call_only 11, L832
+L817:
+	move x(12), x(3)
+	move x(4), x(13)
+	move x(6), x(4)
+	move x(13), x(6)
+	move x(11), x(2)
+	call_only 11, L823
+L818:
+	is_ge L819, x(8), x(1)
+	move x(12), x(3)
+	move x(11), x(2)
+	call_only 11, L838
+L819:
+	test_heap 2, 13
+	put_list x(11), x(7), x(7)
+	move x(12), x(1)
+	call_only 11, L816
+L820:
+	is_nil L815, x(1)
+	is_ge L821, x(8), x(4)
+	move x(10), x(3)
+	move x(4), x(2)
+	move x(7), x(4)
+	move x(5), x(7)
+	move x(8), x(5)
+	move x(6), x(1)
+	move x(9), x(6)
+	call_only 8, L858
+L821:
+	test_heap 2, 11
+	put_list x(5), x(7), x(4)
+	move x(10), x(3)
+	move x(8), x(2)
+	move x(9), x(5)
+	move x(6), x(1)
+	call_only 6, L854
+L822:
+ 	#line 354
+	#function lists:rukeymerge3_2/11
+L823:
+	is_nonempty_list L828, x(4)
+	get_list x(4), x(11), x(12)
+ 	#line 355
+	bif2 L0, 13, x(0), x(11), x(4)
+	is_ge L825, x(4), x(1)
+	is_ge L824, x(8), x(4)
+	test_heap 2, 13
+	put_list x(5), x(7), x(7)
+	move x(12), x(6)
+	move x(11), x(5)
+	call_only 11, L832
+L824:
+	test_heap 2, 13
+	put_list x(5), x(7), x(7)
+	move x(11), x(5)
+	move x(4), x(6)
+	move x(12), x(4)
+	call_only 11, L823
+L825:
+	is_eq L826, x(1), x(6)
+	test_heap 2, 13
+	put_list x(2), x(7), x(7)
+	move x(11), x(5)
+	move x(12), x(6)
+	move x(3), x(1)
+	call_only 11, L816
+L826:
+	is_ge L827, x(8), x(1)
+	test_heap 2, 13
+	put_list x(5), x(7), x(7)
+	move x(12), x(6)
+	move x(11), x(5)
+	call_only 11, L838
+L827:
+	test_heap 4, 13
+	put_list x(5), x(7), x(13)
+	put_list x(2), x(13), x(7)
+	move x(11), x(5)
+	move x(12), x(6)
+	move x(3), x(1)
+	call_only 11, L816
+L828:
+	is_nil L822, x(4)
+	is_eq L829, x(1), x(6)
+	test_heap 2, 11
+	put_list x(2), x(7), x(4)
+	move x(8), x(2)
+	move x(9), x(5)
+	move x(3), x(1)
+	move x(10), x(3)
+	call_only 6, L854
+L829:
+	is_ge L830, x(8), x(1)
+	test_heap 2, 11
+	put_list x(5), x(7), x(4)
+	move x(9), x(6)
+	move x(8), x(5)
+	move x(2), x(7)
+	move x(1), x(2)
+	move x(3), x(1)
+	move x(10), x(3)
+	call_only 8, L858
+L830:
+	test_heap 4, 11
+	put_list x(5), x(7), x(6)
+	put_list x(2), x(6), x(4)
+	move x(8), x(2)
+	move x(9), x(5)
+	move x(3), x(1)
+	move x(10), x(3)
+	call_only 6, L854
+L831:
+ 	#line 356
+	#function lists:rukeymerge3_12_3/11
+L832:
+	is_nonempty_list L835, x(10)
+	get_list x(10), x(11), x(12)
+ 	#line 357
+	bif2 L0, 13, x(0), x(11), x(10)
+	is_ge L833, x(10), x(4)
+	test_heap 2, 13
+	put_list x(9), x(7), x(7)
+	move x(11), x(9)
+	move x(10), x(8)
+	move x(12), x(10)
+	call_only 11, L832
+L833:
+	is_eq L834, x(4), x(8)
+	move x(11), x(9)
+	move x(10), x(8)
+	move x(12), x(10)
+	move x(6), x(13)
+	move x(4), x(6)
+	move x(13), x(4)
+	call_only 11, L823
+L834:
+	test_heap 2, 13
+	put_list x(9), x(7), x(7)
+	move x(11), x(9)
+	move x(10), x(8)
+	move x(12), x(10)
+	move x(6), x(13)
+	move x(4), x(6)
+	move x(13), x(4)
+	call_only 11, L823
+L835:
+	is_nil L831, x(10)
+	is_eq L836, x(4), x(8)
+	move x(3), x(8)
+	move x(6), x(3)
+	move x(5), x(6)
+	move x(4), x(5)
+	move x(7), x(4)
+	move x(2), x(7)
+	move x(1), x(2)
+	move x(8), x(1)
+	call_only 8, L858
+L836:
+	test_heap 2, 10
+	put_list x(9), x(7), x(8)
+	move x(2), x(7)
+	move x(1), x(2)
+	move x(3), x(1)
+	move x(6), x(3)
+	move x(5), x(6)
+	move x(4), x(5)
+	move x(8), x(4)
+	call_only 8, L858
+L837:
+ 	#line 358
+	#function lists:rukeymerge3_21_3/11
+L838:
+	is_nonempty_list L841, x(10)
+	get_list x(10), x(11), x(12)
+ 	#line 359
+	bif2 L0, 13, x(0), x(11), x(10)
+	is_ge L839, x(10), x(1)
+	test_heap 2, 13
+	put_list x(9), x(7), x(7)
+	move x(11), x(9)
+	move x(10), x(8)
+	move x(12), x(10)
+	call_only 11, L838
+L839:
+	is_eq L840, x(1), x(8)
+	test_heap 2, 13
+	put_list x(2), x(7), x(7)
+	move x(11), x(9)
+	move x(10), x(8)
+	move x(12), x(10)
+	move x(3), x(1)
+	call_only 11, L816
+L840:
+	test_heap 4, 13
+	put_list x(9), x(7), x(13)
+	put_list x(2), x(13), x(7)
+	move x(11), x(9)
+	move x(10), x(8)
+	move x(12), x(10)
+	move x(3), x(1)
+	call_only 11, L816
+L841:
+	is_nil L837, x(10)
+	is_eq L842, x(1), x(8)
+	test_heap 2, 8
+	put_list x(2), x(7), x(7)
+	move x(4), x(2)
+	move x(7), x(4)
+	move x(3), x(1)
+	move x(6), x(3)
+	call_only 6, L854
+L842:
+	test_heap 4, 10
+	put_list x(9), x(7), x(7)
+	put_list x(2), x(7), x(7)
+	move x(4), x(2)
+	move x(7), x(4)
+	move x(3), x(1)
+	move x(6), x(3)
+	call_only 6, L854
+L843:
+ 	#line 360
+	#function lists:ukeymerge2_1/7
+L844:
+	is_nonempty_list L847, x(1)
+	get_list x(1), x(7), x(8)
+ 	#line 361
+	bif2 L0, 13, x(0), x(7), x(1)
+	is_ge L845, x(2), x(1)
+	test_heap 2, 9
+	put_list x(7), x(5), x(5)
+	move x(1), x(3)
+	move x(8), x(1)
+	call_only 7, L844
+L845:
+	is_eq L846, x(2), x(3)
+	move x(1), x(2)
+	move x(7), x(3)
+	move x(8), x(1)
+	call_only 6, L850
+L846:
+	test_heap 2, 9
+	put_list x(6), x(5), x(5)
+	move x(1), x(2)
+	move x(7), x(3)
+	move x(8), x(1)
+	call_only 6, L850
+L847:
+	is_nil L843, x(1)
+	is_eq L848, x(2), x(3)
+	move x(5), x(1)
+	move x(4), x(0)
+ 	#line 362
+	call_ext_only lists:reverse/2 2
+L848:
+	test_heap 2, 7
+	put_list x(6), x(5), x(1)
+	move x(4), x(0)
+ 	#line 363
+	call_ext_only lists:reverse/2 2
+L849:
+ 	#line 364
+	#function lists:ukeymerge2_2/6
+L850:
+	is_nonempty_list L852, x(4)
+	get_list x(4), x(6), x(7)
+ 	#line 365
+	bif2 L0, 13, x(0), x(6), x(4)
+	is_ge L851, x(4), x(2)
+	test_heap 2, 8
+	put_list x(3), x(5), x(5)
+	move x(2), x(3)
+	move x(4), x(2)
+	move x(7), x(4)
+	call_only 7, L844
+L851:
+	test_heap 2, 8
+	put_list x(6), x(5), x(5)
+	move x(7), x(4)
+	call_only 6, L850
+L852:
+	is_nil L849, x(4)
+	test_heap 2, 6
+	put_list x(3), x(5), x(2)
+	move x(1), x(0)
+	move x(2), x(1)
+ 	#line 366
+	call_ext_only lists:reverse/2 2
+L853:
+ 	#line 367
+	#function lists:rukeymerge2_1/6
+L854:
+	is_nonempty_list L856, x(1)
+	get_list x(1), x(6), x(7)
+ 	#line 368
+	bif2 L0, 13, x(0), x(6), x(1)
+	is_ge L855, x(2), x(1)
+	move x(7), x(8)
+	move x(6), x(7)
+	move x(5), x(6)
+	move x(2), x(5)
+	move x(1), x(2)
+	move x(8), x(1)
+	call_only 8, L858
+L855:
+	test_heap 2, 8
+	put_list x(6), x(4), x(4)
+	move x(7), x(1)
+	call_only 6, L854
+L856:
+	is_nil L853, x(1)
+	test_heap 2, 6
+	put_list x(5), x(4), x(1)
+	move x(3), x(0)
+ 	#line 369
+	call_ext_only lists:reverse/2 2
+L857:
+ 	#line 370
+	#function lists:rukeymerge2_2/8
+L858:
+	is_nonempty_list L861, x(3)
+	get_list x(3), x(8), x(9)
+ 	#line 371
+	bif2 L0, 13, x(0), x(8), x(3)
+	is_ge L859, x(3), x(2)
+	test_heap 2, 10
+	put_list x(6), x(4), x(4)
+	move x(3), x(5)
+	move x(8), x(6)
+	move x(9), x(3)
+	call_only 8, L858
+L859:
+	is_eq L860, x(2), x(5)
+	test_heap 2, 10
+	put_list x(7), x(4), x(4)
+	move x(8), x(5)
+	move x(3), x(2)
+	move x(9), x(3)
+	call_only 6, L854
+L860:
+	test_heap 4, 10
+	put_list x(6), x(4), x(6)
+	put_list x(7), x(6), x(4)
+	move x(8), x(5)
+	move x(3), x(2)
+	move x(9), x(3)
+	call_only 6, L854
+L861:
+	is_nil L857, x(3)
+	is_eq L862, x(2), x(5)
+	test_heap 2, 8
+	put_list x(7), x(4), x(2)
+	move x(1), x(0)
+	move x(2), x(1)
+ 	#line 372
+	call_ext_only lists:reverse/2 2
+L862:
+	test_heap 4, 8
+	put_list x(6), x(4), x(2)
+	put_list x(7), x(2), x(2)
+	move x(1), x(0)
+	move x(2), x(1)
+ 	#line 373
+	call_ext_only lists:reverse/2 2
+L863:
+ 	#line 374
+	#function lists:fsplit_1/6
+L864:
+	is_nonempty_list L870, x(3)
+	allocate 7, 6
+	get_list x(3), x(6), y(5)
+	move x(1), y(3)
+	move x(6), x(1)
+	move x(5), y(0)
+	move x(4), y(1)
+	move x(2), y(2)
+	move x(0), y(4)
+	move x(1), y(6)
+ 	#line 375
+	call_fun 2
+	is_atom L872, x(0)
+	select_val x(0), L872, [
+		(true, L865),
+		(false, L866)
+	]
+L865:
+	test_heap 2, 0
+	put_list y(3), y(1), x(4)
+	move y(2), x(2)
+	move y(5), x(3)
+	move y(4), x(1)
+	move y(0), x(5)
+	move y(6), x(0)
+	call_last 6, L864, 7
+L866:
+	move y(6), x(1)
+	move y(2), x(2)
+	move y(3), x(0)
+ 	#line 376
+	call_fun 2
+	is_atom L871, x(0)
+	select_val x(0), L871, [
+		(false, L867),
+		(true, L869)
+	]
+L867:
+	is_eq_exact L868, y(1), nil
+	test_heap 2, 0
+	put_list y(6), nil, x(4)
+	move y(2), x(2)
+	move y(5), x(3)
+	move y(3), x(1)
+	move y(0), x(5)
+	move y(4), x(0)
+	call_last 6, L864, 7
+L868:
+	move y(5), x(3)
+	move y(1), x(4)
+	move y(2), x(2)
+	move y(0), x(5)
+	move y(3), x(1)
+	move y(6), x(6)
+	move y(4), x(0)
+	call_last 7, L874, 7
+L869:
+	test_heap 2, 0
+	put_list y(3), y(1), x(4)
+	move y(2), x(2)
+	move y(5), x(3)
+	move y(6), x(1)
+	move y(0), x(5)
+	move y(4), x(0)
+	call_last 6, L864, 7
+L870:
+	is_nil L863, x(3)
+	test_heap 6, 6
+	put_list x(1), x(4), x(4)
+	put_list x(0), x(4), x(4)
+	put_list x(4), x(5), x(0)
+	move asc, x(3)
+	move nil, x(1)
+	call_only 4, L914
+L871:
+ 	#line 376
+	case_end x(0)
+L872:
+ 	#line 375
+	case_end x(0)
+L873:
+ 	#line 377
+	#function lists:fsplit_1_1/7
+L874:
+	is_nonempty_list L881, x(3)
+	allocate 8, 7
+	get_list x(3), x(7), y(6)
+	move x(1), y(4)
+	move x(7), x(1)
+	move x(6), y(0)
+	move x(5), y(1)
+	move x(4), y(2)
+	move x(2), y(3)
+	move x(0), y(5)
+	move x(1), y(7)
+ 	#line 378
+	call_fun 2
+	is_atom L884, x(0)
+	select_val x(0), L884, [
+		(true, L875),
+		(false, L876)
+	]
+L875:
+	test_heap 2, 0
+	put_list y(4), y(2), x(4)
+	move y(6), x(3)
+	move y(3), x(2)
+	move y(1), x(5)
+	move y(5), x(1)
+	move y(0), x(6)
+	move y(7), x(0)
+	call_last 7, L874, 8
+L876:
+	move y(7), x(1)
+	move y(3), x(2)
+	move y(4), x(0)
+ 	#line 379
+	call_fun 2
+	is_atom L883, x(0)
+	select_val x(0), L883, [
+		(true, L877),
+		(false, L878)
+	]
+L877:
+	test_heap 2, 0
+	put_list y(4), y(2), x(4)
+	move y(6), x(3)
+	move y(3), x(2)
+	move y(1), x(5)
+	move y(7), x(1)
+	move y(0), x(6)
+	move y(5), x(0)
+	call_last 7, L874, 8
+L878:
+	move y(7), x(1)
+	move y(3), x(2)
+	move y(0), x(0)
+ 	#line 380
+	call_fun 2
+	is_atom L882, x(0)
+	select_val x(0), L882, [
+		(true, L879),
+		(false, L880)
+	]
+L879:
+	test_heap 6, 0
+	put_list y(4), y(2), x(6)
+	put_list y(5), x(6), x(6)
+	put_list x(6), y(1), x(5)
+	move y(3), x(2)
+	move y(6), x(3)
+	move y(0), x(1)
+	move nil, x(4)
+	move y(7), x(0)
+	call_last 6, L864, 8
+L880:
+	test_heap 6, 0
+	put_list y(4), y(2), x(6)
+	put_list y(5), x(6), x(6)
+	put_list x(6), y(1), x(5)
+	move y(3), x(2)
+	move y(6), x(3)
+	move y(7), x(1)
+	move nil, x(4)
+	move y(0), x(0)
+	call_last 6, L864, 8
+L881:
+	is_nil L873, x(3)
+	test_heap 10, 7
+	put_list x(1), x(4), x(4)
+	put_list x(0), x(4), x(0)
+	put_list x(0), x(5), x(4)
+	put_list x(6), nil, x(5)
+	put_list x(5), x(4), x(0)
+	move asc, x(3)
+	move nil, x(1)
+	call_only 4, L914
+L882:
+ 	#line 380
+	case_end x(0)
+L883:
+ 	#line 379
+	case_end x(0)
+L884:
+ 	#line 378
+	case_end x(0)
+L885:
+ 	#line 381
+	#function lists:fsplit_2/6
+L886:
+	is_nonempty_list L892, x(3)
+	allocate 7, 6
+	get_list x(3), x(6), y(5)
+	move x(1), y(3)
+	move x(6), x(1)
+	move x(5), y(0)
+	move x(4), y(1)
+	move x(2), y(2)
+	move x(0), y(4)
+	move x(1), y(6)
+ 	#line 382
+	call_fun 2
+	is_atom L894, x(0)
+	select_val x(0), L894, [
+		(false, L887),
+		(true, L888)
+	]
+L887:
+	test_heap 2, 0
+	put_list y(3), y(1), x(4)
+	move y(2), x(2)
+	move y(5), x(3)
+	move y(4), x(1)
+	move y(0), x(5)
+	move y(6), x(0)
+	call_last 6, L886, 7
+L888:
+	move y(6), x(1)
+	move y(2), x(2)
+	move y(3), x(0)
+ 	#line 383
+	call_fun 2
+	is_atom L893, x(0)
+	select_val x(0), L893, [
+		(true, L889),
+		(false, L891)
+	]
+L889:
+	is_eq_exact L890, y(1), nil
+	test_heap 2, 0
+	put_list y(6), nil, x(4)
+	move y(2), x(2)
+	move y(5), x(3)
+	move y(3), x(1)
+	move y(0), x(5)
+	move y(4), x(0)
+	call_last 6, L886, 7
+L890:
+	move y(5), x(3)
+	move y(1), x(4)
+	move y(2), x(2)
+	move y(0), x(5)
+	move y(3), x(1)
+	move y(6), x(6)
+	move y(4), x(0)
+	call_last 7, L896, 7
+L891:
+	test_heap 2, 0
+	put_list y(3), y(1), x(4)
+	move y(2), x(2)
+	move y(5), x(3)
+	move y(6), x(1)
+	move y(0), x(5)
+	move y(4), x(0)
+	call_last 6, L886, 7
+L892:
+	is_nil L885, x(3)
+	test_heap 6, 6
+	put_list x(1), x(4), x(4)
+	put_list x(0), x(4), x(4)
+	put_list x(4), x(5), x(0)
+	move desc, x(3)
+	move nil, x(1)
+	call_only 4, L908
+L893:
+ 	#line 383
+	case_end x(0)
+L894:
+ 	#line 382
+	case_end x(0)
+L895:
+ 	#line 384
+	#function lists:fsplit_2_1/7
+L896:
+	is_nonempty_list L903, x(3)
+	allocate 8, 7
+	get_list x(3), x(7), y(6)
+	move x(1), y(4)
+	move x(7), x(1)
+	move x(6), y(0)
+	move x(5), y(1)
+	move x(4), y(2)
+	move x(2), y(3)
+	move x(0), y(5)
+	move x(1), y(7)
+ 	#line 385
+	call_fun 2
+	is_atom L906, x(0)
+	select_val x(0), L906, [
+		(false, L897),
+		(true, L898)
+	]
+L897:
+	test_heap 2, 0
+	put_list y(4), y(2), x(4)
+	move y(6), x(3)
+	move y(3), x(2)
+	move y(1), x(5)
+	move y(5), x(1)
+	move y(0), x(6)
+	move y(7), x(0)
+	call_last 7, L896, 8
+L898:
+	move y(7), x(1)
+	move y(3), x(2)
+	move y(4), x(0)
+ 	#line 386
+	call_fun 2
+	is_atom L905, x(0)
+	select_val x(0), L905, [
+		(false, L899),
+		(true, L900)
+	]
+L899:
+	test_heap 2, 0
+	put_list y(4), y(2), x(4)
+	move y(6), x(3)
+	move y(3), x(2)
+	move y(1), x(5)
+	move y(7), x(1)
+	move y(0), x(6)
+	move y(5), x(0)
+	call_last 7, L896, 8
+L900:
+	move y(7), x(1)
+	move y(3), x(2)
+	move y(0), x(0)
+ 	#line 387
+	call_fun 2
+	is_atom L904, x(0)
+	select_val x(0), L904, [
+		(false, L901),
+		(true, L902)
+	]
+L901:
+	test_heap 6, 0
+	put_list y(4), y(2), x(6)
+	put_list y(5), x(6), x(6)
+	put_list x(6), y(1), x(5)
+	move y(3), x(2)
+	move y(6), x(3)
+	move y(0), x(1)
+	move nil, x(4)
+	move y(7), x(0)
+	call_last 6, L886, 8
+L902:
+	test_heap 6, 0
+	put_list y(4), y(2), x(6)
+	put_list y(5), x(6), x(6)
+	put_list x(6), y(1), x(5)
+	move y(3), x(2)
+	move y(6), x(3)
+	move y(7), x(1)
+	move nil, x(4)
+	move y(0), x(0)
+	call_last 6, L886, 8
+L903:
+	is_nil L895, x(3)
+	test_heap 10, 7
+	put_list x(1), x(4), x(4)
+	put_list x(0), x(4), x(0)
+	put_list x(0), x(5), x(4)
+	put_list x(6), nil, x(5)
+	put_list x(5), x(4), x(0)
+	move desc, x(3)
+	move nil, x(1)
+	call_only 4, L908
+L904:
+ 	#line 387
+	case_end x(0)
+L905:
+ 	#line 386
+	case_end x(0)
+L906:
+ 	#line 385
+	case_end x(0)
+L907:
+ 	#line 388
+	#function lists:fmergel/4
+L908:
+	is_nonempty_list L912, x(0)
+	get_list x(0), x(4), x(5)
+	is_nonempty_list L909, x(5)
+	get_list x(5), x(6), x(7)
+	is_nonempty_list L909, x(6)
+	get_list x(6), x(8), x(9)
+	is_eq_exact L909, x(3), asc
+	allocate 3, 10
+	move x(1), y(0)
+	move x(8), x(1)
+	move x(9), x(3)
+	move x(4), x(0)
+	move nil, x(4)
+	move x(2), y(1)
+	move x(7), y(2)
+ 	#line 389
+	call 5, L919
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move y(1), x(2)
+	move asc, x(3)
+	move y(2), x(0)
+	call_last 4, L908, 3
+L909:
+	is_nonempty_list L910, x(4)
+	get_list x(4), x(6), x(7)
+	is_nonempty_list L910, x(5)
+	get_list x(5), x(8), x(9)
+	is_eq_exact L910, x(3), desc
+	allocate 3, 10
+	move x(1), y(0)
+	move x(7), x(3)
+	move x(6), x(1)
+	move nil, x(4)
+	move x(8), x(0)
+	move x(2), y(1)
+	move x(9), y(2)
+ 	#line 390
+	call 5, L919
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move y(1), x(2)
+	move desc, x(3)
+	move y(2), x(0)
+	call_last 4, L908, 3
+L910:
+	is_nil L907, x(5)
+	is_nil L911, x(1)
+	move x(4), x(0)
+	return 
+L911:
+	allocate 3, 5
+	move x(1), y(0)
+	move nil, x(1)
+	move x(4), x(0)
+	move x(3), y(1)
+	move x(2), y(2)
+ 	#line 391
+	call_ext lists:reverse/2 2
+	test_heap 2, 1
+	put_list x(0), y(0), x(0)
+	move y(2), x(2)
+	move y(1), x(3)
+	move nil, x(1)
+	call_last 4, L914, 3
+L912:
+	is_nil L907, x(0)
+	move x(1), x(0)
+	move nil, x(1)
+	call_only 4, L914
+L913:
+ 	#line 392
+	#function lists:rfmergel/4
+L914:
+	is_nonempty_list L917, x(0)
+	get_list x(0), x(4), x(5)
+	is_nonempty_list L915, x(4)
+	get_list x(4), x(6), x(7)
+	is_nonempty_list L916, x(5)
+	get_list x(5), x(8), x(9)
+	is_eq_exact L915, x(3), asc
+	allocate 3, 10
+	move x(1), y(0)
+	move x(7), x(3)
+	move x(6), x(1)
+	move nil, x(4)
+	move x(8), x(0)
+	move x(2), y(1)
+	move x(9), y(2)
+ 	#line 393
+	call 5, L931
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move y(1), x(2)
+	move asc, x(3)
+	move y(2), x(0)
+	call_last 4, L914, 3
+L915:
+	is_nonempty_list L916, x(5)
+	get_list x(5), x(6), x(7)
+	is_nonempty_list L913, x(6)
+	get_list x(6), x(8), x(9)
+	is_eq_exact L913, x(3), desc
+	allocate 3, 10
+	move x(1), y(0)
+	move x(8), x(1)
+	move x(9), x(3)
+	move x(4), x(0)
+	move nil, x(4)
+	move x(2), y(1)
+	move x(7), y(2)
+ 	#line 394
+	call 5, L931
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move y(1), x(2)
+	move desc, x(3)
+	move y(2), x(0)
+	call_last 4, L914, 3
+L916:
+	is_nil L913, x(5)
+	allocate 3, 5
+	move x(1), y(0)
+	move nil, x(1)
+	move x(4), x(0)
+	move x(3), y(1)
+	move x(2), y(2)
+ 	#line 395
+	call_ext lists:reverse/2 2
+	test_heap 2, 1
+	put_list x(0), y(0), x(0)
+	move y(2), x(2)
+	move y(1), x(3)
+	move nil, x(1)
+	call_last 4, L908, 3
+L917:
+	is_nil L913, x(0)
+	move x(1), x(0)
+	move nil, x(1)
+	call_only 4, L908
+L918:
+ 	#line 396
+	#function lists:fmerge2_1/5
+L919:
+	is_nonempty_list L922, x(0)
+	allocate 6, 5
+	get_list x(0), x(0), y(4)
+	move x(4), y(0)
+	move x(3), y(1)
+	move x(2), y(2)
+	move x(1), y(3)
+	move x(0), y(5)
+ 	#line 397
+	call_fun 2
+	is_atom L923, x(0)
+	select_val x(0), L923, [
+		(false, L920),
+		(true, L921)
+	]
+L920:
+	test_heap 2, 0
+	put_list y(3), y(0), x(4)
+	move y(2), x(2)
+	move y(4), x(1)
+	move y(1), x(3)
+	move y(5), x(0)
+	call_last 5, L925, 6
+L921:
+	test_heap 2, 0
+	put_list y(5), y(0), x(4)
+	move y(2), x(2)
+	move y(3), x(1)
+	move y(1), x(3)
+	move y(4), x(0)
+	call_last 5, L919, 6
+L922:
+	is_nil L918, x(0)
+	test_heap 2, 5
+	put_list x(1), x(4), x(1)
+	move x(3), x(0)
+ 	#line 398
+	call_ext_only lists:reverse/2 2
+L923:
+ 	#line 397
+	case_end x(0)
+L924:
+ 	#line 399
+	#function lists:fmerge2_2/5
+L925:
+	is_nonempty_list L928, x(3)
+	allocate 6, 5
+	get_list x(3), x(5), y(4)
+	move x(1), y(2)
+	move x(5), x(1)
+	move x(4), y(0)
+	move x(2), y(1)
+	move x(0), y(3)
+	move x(1), y(5)
+ 	#line 400
+	call_fun 2
+	is_atom L929, x(0)
+	select_val x(0), L929, [
+		(true, L926),
+		(false, L927)
+	]
+L926:
+	test_heap 2, 0
+	put_list y(3), y(0), x(4)
+	move y(1), x(2)
+	move y(5), x(1)
+	move y(4), x(3)
+	move y(2), x(0)
+	call_last 5, L919, 6
+L927:
+	test_heap 2, 0
+	put_list y(5), y(0), x(4)
+	move y(1), x(2)
+	move y(2), x(1)
+	move y(4), x(3)
+	move y(3), x(0)
+	call_last 5, L925, 6
+L928:
+	is_nil L924, x(3)
+	test_heap 2, 5
+	put_list x(0), x(4), x(2)
+	move x(1), x(0)
+	move x(2), x(1)
+ 	#line 401
+	call_ext_only lists:reverse/2 2
+L929:
+ 	#line 400
+	case_end x(0)
+L930:
+ 	#line 402
+	#function lists:rfmerge2_1/5
+L931:
+	is_nonempty_list L934, x(0)
+	allocate 6, 5
+	get_list x(0), x(0), y(4)
+	move x(4), y(0)
+	move x(3), y(1)
+	move x(2), y(2)
+	move x(1), y(3)
+	move x(0), y(5)
+ 	#line 403
+	call_fun 2
+	is_atom L935, x(0)
+	select_val x(0), L935, [
+		(true, L932),
+		(false, L933)
+	]
+L932:
+	test_heap 2, 0
+	put_list y(3), y(0), x(4)
+	move y(2), x(2)
+	move y(4), x(1)
+	move y(1), x(3)
+	move y(5), x(0)
+	call_last 5, L937, 6
+L933:
+	test_heap 2, 0
+	put_list y(5), y(0), x(4)
+	move y(2), x(2)
+	move y(3), x(1)
+	move y(1), x(3)
+	move y(4), x(0)
+	call_last 5, L931, 6
+L934:
+	is_nil L930, x(0)
+	test_heap 2, 5
+	put_list x(1), x(4), x(1)
+	move x(3), x(0)
+ 	#line 404
+	call_ext_only lists:reverse/2 2
+L935:
+ 	#line 403
+	case_end x(0)
+L936:
+ 	#line 405
+	#function lists:rfmerge2_2/5
+L937:
+	is_nonempty_list L940, x(3)
+	allocate 6, 5
+	get_list x(3), x(5), y(4)
+	move x(1), y(2)
+	move x(5), x(1)
+	move x(4), y(0)
+	move x(2), y(1)
+	move x(0), y(3)
+	move x(1), y(5)
+ 	#line 406
+	call_fun 2
+	is_atom L941, x(0)
+	select_val x(0), L941, [
+		(false, L938),
+		(true, L939)
+	]
+L938:
+	test_heap 2, 0
+	put_list y(3), y(0), x(4)
+	move y(1), x(2)
+	move y(5), x(1)
+	move y(4), x(3)
+	move y(2), x(0)
+	call_last 5, L931, 6
+L939:
+	test_heap 2, 0
+	put_list y(5), y(0), x(4)
+	move y(1), x(2)
+	move y(2), x(1)
+	move y(4), x(3)
+	move y(3), x(0)
+	call_last 5, L937, 6
+L940:
+	is_nil L936, x(3)
+	test_heap 2, 5
+	put_list x(0), x(4), x(2)
+	move x(1), x(0)
+	move x(2), x(1)
+ 	#line 407
+	call_ext_only lists:reverse/2 2
+L941:
+ 	#line 406
+	case_end x(0)
+L942:
+ 	#line 408
+	#function lists:ufsplit_1/6
+L943:
+	is_nonempty_list L952, x(3)
+	allocate 7, 6
+	get_list x(3), x(6), y(5)
+	move x(1), y(3)
+	move x(6), x(1)
+	move x(5), y(0)
+	move x(4), y(1)
+	move x(2), y(2)
+	move x(0), y(4)
+	move x(1), y(6)
+ 	#line 409
+	call_fun 2
+	is_atom L956, x(0)
+	select_val x(0), L956, [
+		(true, L944),
+		(false, L946)
+	]
+L944:
+	move y(4), x(1)
+	move y(2), x(2)
+	move y(6), x(0)
+ 	#line 410
+	call_fun 2
+	is_atom L953, x(0)
+	select_val x(0), L953, [
+		(false, L945),
+		(true, L951)
+	]
+L945:
+	test_heap 2, 0
+	put_list y(3), y(1), x(4)
+	move y(2), x(2)
+	move y(5), x(3)
+	move y(4), x(1)
+	move y(0), x(5)
+	move y(6), x(0)
+	call_last 6, L943, 7
+L946:
+	move y(6), x(1)
+	move y(2), x(2)
+	move y(3), x(0)
+ 	#line 411
+	call_fun 2
+	is_atom L955, x(0)
+	select_val x(0), L955, [
+		(false, L947),
+		(true, L949)
+	]
+L947:
+	is_eq_exact L948, y(1), nil
+	test_heap 2, 0
+	put_list y(6), nil, x(4)
+	move y(2), x(2)
+	move y(5), x(3)
+	move y(3), x(1)
+	move y(0), x(5)
+	move y(4), x(0)
+	call_last 6, L943, 7
+L948:
+	move y(5), x(3)
+	move y(1), x(4)
+	move y(2), x(2)
+	move y(0), x(5)
+	move y(3), x(1)
+	move y(6), x(6)
+	move y(4), x(0)
+	call_last 7, L958, 7
+L949:
+	move y(3), x(1)
+	move y(2), x(2)
+	move y(6), x(0)
+ 	#line 412
+	call_fun 2
+	is_atom L954, x(0)
+	select_val x(0), L954, [
+		(false, L950),
+		(true, L951)
+	]
+L950:
+	test_heap 2, 0
+	put_list y(3), y(1), x(4)
+	move y(2), x(2)
+	move y(5), x(3)
+	move y(6), x(1)
+	move y(0), x(5)
+	move y(4), x(0)
+	call_last 6, L943, 7
+L951:
+	move y(5), x(3)
+	move y(2), x(2)
+	move y(1), x(4)
+	move y(3), x(1)
+	move y(0), x(5)
+	move y(4), x(0)
+	call_last 6, L943, 7
+L952:
+	is_nil L942, x(3)
+	test_heap 6, 6
+	put_list x(1), x(4), x(3)
+	put_list x(0), x(3), x(3)
+	put_list x(3), x(5), x(0)
+	move nil, x(1)
+	call_only 3, L991
+L953:
+ 	#line 410
+	case_end x(0)
+L954:
+ 	#line 412
+	case_end x(0)
+L955:
+ 	#line 411
+	case_end x(0)
+L956:
+ 	#line 409
+	case_end x(0)
+L957:
+ 	#line 413
+	#function lists:ufsplit_1_1/7
+L958:
+	is_nonempty_list L969, x(3)
+	allocate 8, 7
+	get_list x(3), x(7), y(6)
+	move x(1), y(4)
+	move x(7), x(1)
+	move x(6), y(0)
+	move x(5), y(1)
+	move x(4), y(2)
+	move x(2), y(3)
+	move x(0), y(5)
+	move x(1), y(7)
+ 	#line 414
+	call_fun 2
+	is_atom L975, x(0)
+	select_val x(0), L975, [
+		(true, L959),
+		(false, L961)
+	]
+L959:
+	move y(5), x(1)
+	move y(3), x(2)
+	move y(7), x(0)
+ 	#line 415
+	call_fun 2
+	is_atom L970, x(0)
+	select_val x(0), L970, [
+		(false, L960),
+		(true, L968)
+	]
+L960:
+	test_heap 2, 0
+	put_list y(4), y(2), x(4)
+	move y(6), x(3)
+	move y(3), x(2)
+	move y(1), x(5)
+	move y(5), x(1)
+	move y(0), x(6)
+	move y(7), x(0)
+	call_last 7, L958, 8
+L961:
+	move y(7), x(1)
+	move y(3), x(2)
+	move y(4), x(0)
+ 	#line 416
+	call_fun 2
+	is_atom L974, x(0)
+	select_val x(0), L974, [
+		(true, L962),
+		(false, L964)
+	]
+L962:
+	move y(4), x(1)
+	move y(3), x(2)
+	move y(7), x(0)
+ 	#line 417
+	call_fun 2
+	is_atom L971, x(0)
+	select_val x(0), L971, [
+		(false, L963),
+		(true, L968)
+	]
+L963:
+	test_heap 2, 0
+	put_list y(4), y(2), x(4)
+	move y(6), x(3)
+	move y(3), x(2)
+	move y(1), x(5)
+	move y(7), x(1)
+	move y(0), x(6)
+	move y(5), x(0)
+	call_last 7, L958, 8
+L964:
+	move y(7), x(1)
+	move y(3), x(2)
+	move y(0), x(0)
+ 	#line 418
+	call_fun 2
+	is_atom L973, x(0)
+	select_val x(0), L973, [
+		(false, L965),
+		(true, L966)
+	]
+L965:
+	test_heap 6, 0
+	put_list y(4), y(2), x(6)
+	put_list y(5), x(6), x(6)
+	put_list x(6), y(1), x(5)
+	move y(3), x(2)
+	move y(6), x(3)
+	move y(7), x(1)
+	move nil, x(4)
+	move y(0), x(0)
+	call_last 6, L943, 8
+L966:
+	move y(0), x(1)
+	move y(3), x(2)
+	move y(7), x(0)
+ 	#line 419
+	call_fun 2
+	is_atom L972, x(0)
+	select_val x(0), L972, [
+		(false, L967),
+		(true, L968)
+	]
+L967:
+	test_heap 6, 0
+	put_list y(4), y(2), x(6)
+	put_list y(5), x(6), x(6)
+	put_list x(6), y(1), x(5)
+	move y(3), x(2)
+	move y(6), x(3)
+	move y(0), x(1)
+	move nil, x(4)
+	move y(7), x(0)
+	call_last 6, L943, 8
+L968:
+	move y(6), x(3)
+	move y(2), x(4)
+	move y(3), x(2)
+	move y(1), x(5)
+	move y(4), x(1)
+	move y(0), x(6)
+	move y(5), x(0)
+	call_last 7, L958, 8
+L969:
+	is_nil L957, x(3)
+	test_heap 10, 7
+	put_list x(1), x(4), x(3)
+	put_list x(0), x(3), x(0)
+	put_list x(0), x(5), x(3)
+	put_list x(6), nil, x(4)
+	put_list x(4), x(3), x(0)
+	move nil, x(1)
+	call_only 3, L991
+L970:
+ 	#line 415
+	case_end x(0)
+L971:
+ 	#line 417
+	case_end x(0)
+L972:
+ 	#line 419
+	case_end x(0)
+L973:
+ 	#line 418
+	case_end x(0)
+L974:
+ 	#line 416
+	case_end x(0)
+L975:
+ 	#line 414
+	case_end x(0)
+L976:
+ 	#line 420
+	#function lists:ufsplit_2/4
+L977:
+	is_nonempty_list L982, x(1)
+	allocate 5, 4
+	get_list x(1), x(1), y(3)
+	move x(3), y(0)
+	move x(2), y(1)
+	move x(0), y(2)
+	move x(1), y(4)
+ 	#line 421
+	call_fun 2
+	is_atom L984, x(0)
+	select_val x(0), L984, [
+		(false, L978),
+		(true, L979)
+	]
+L978:
+	test_heap 2, 0
+	put_list y(2), y(0), x(3)
+	move y(3), x(1)
+	move y(1), x(2)
+	move y(4), x(0)
+	call_last 4, L977, 5
+L979:
+	move y(2), x(1)
+	move y(1), x(2)
+	move y(4), x(0)
+ 	#line 422
+	call_fun 2
+	is_atom L983, x(0)
+	select_val x(0), L983, [
+		(true, L980),
+		(false, L981)
+	]
+L980:
+	move y(1), x(2)
+	move y(3), x(1)
+	move y(0), x(3)
+	move y(2), x(0)
+	call_last 4, L977, 5
+L981:
+	move nil, x(1)
+	move y(0), x(0)
+	trim 1, 4
+ 	#line 423
+	call_ext lists:reverse/2 2
+	test_heap 2, 1
+	put_list x(0), nil, x(5)
+	move y(0), x(2)
+	move y(2), x(3)
+	move y(1), x(1)
+	move nil, x(4)
+	move y(3), x(0)
+	call_last 6, L943, 4
+L982:
+	is_nil L976, x(1)
+	test_heap 2, 4
+	put_list x(0), x(3), x(0)
+	return 
+L983:
+ 	#line 422
+	case_end x(0)
+L984:
+ 	#line 421
+	case_end x(0)
+L985:
+ 	#line 424
+	#function lists:ufmergel/3
+L986:
+	is_nonempty_list L989, x(0)
+	get_list x(0), x(3), x(4)
+	is_nonempty_list L987, x(3)
+	get_list x(3), x(5), x(6)
+	is_nonempty_list L987, x(4)
+	allocate 3, 7
+	get_list x(4), x(3), y(2)
+	move x(1), y(0)
+	move x(6), x(1)
+	move nil, x(4)
+	move x(5), x(0)
+	move x(2), y(1)
+ 	#line 425
+	call 5, L1007
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move y(1), x(2)
+	move y(2), x(0)
+	call_last 3, L986, 3
+L987:
+	is_nil L985, x(4)
+	is_nil L988, x(1)
+	move x(3), x(0)
+	return 
+L988:
+	allocate 2, 4
+	move x(1), y(0)
+	move nil, x(1)
+	move x(3), x(0)
+	move x(2), y(1)
+ 	#line 426
+	call_ext lists:reverse/2 2
+	test_heap 2, 1
+	put_list x(0), y(0), x(0)
+	move y(1), x(2)
+	move nil, x(1)
+	call_last 3, L991, 2
+L989:
+	is_nil L985, x(0)
+	move x(1), x(0)
+	move nil, x(1)
+	call_only 3, L991
+L990:
+ 	#line 427
+	#function lists:rufmergel/3
+L991:
+	is_nonempty_list L993, x(0)
+	get_list x(0), x(3), x(4)
+	is_nonempty_list L992, x(3)
+	get_list x(3), x(5), x(6)
+	is_nonempty_list L992, x(4)
+	allocate 3, 7
+	get_list x(4), x(0), y(2)
+	move x(1), y(0)
+	move x(6), x(3)
+	move x(5), x(1)
+	move nil, x(4)
+	move x(2), y(1)
+ 	#line 428
+	call 5, L1013
+	test_heap 2, 1
+	put_list x(0), y(0), x(1)
+	move y(1), x(2)
+	move y(2), x(0)
+	call_last 3, L991, 3
+L992:
+	is_nil L990, x(4)
+	allocate 2, 4
+	move x(1), y(0)
+	move nil, x(1)
+	move x(3), x(0)
+	move x(2), y(1)
+ 	#line 429
+	call_ext lists:reverse/2 2
+	test_heap 2, 1
+	put_list x(0), y(0), x(0)
+	move y(1), x(2)
+	move nil, x(1)
+	call_last 3, L986, 2
+L993:
+	is_nil L990, x(0)
+	move x(1), x(0)
+	move nil, x(1)
+	call_only 3, L986
+L994:
+ 	#line 430
+	#function lists:ufmerge2_1/6
+L995:
+	is_nonempty_list L1000, x(0)
+	allocate 7, 6
+	get_list x(0), x(0), y(5)
+	move x(5), y(0)
+	move x(4), y(1)
+	move x(3), y(2)
+	move x(2), y(3)
+	move x(1), y(4)
+	move x(0), y(6)
+ 	#line 431
+	call_fun 2
+	is_atom L1004, x(0)
+	select_val x(0), L1004, [
+		(true, L996),
+		(false, L997)
+	]
+L996:
+	test_heap 2, 0
+	put_list y(6), y(1), x(4)
+	move y(3), x(2)
+	move y(2), x(3)
+	move y(4), x(1)
+	move y(6), x(5)
+	move y(5), x(0)
+	call_last 6, L995, 7
+L997:
+	move y(0), x(1)
+	move y(3), x(2)
+	init y(0)
+	move y(4), x(0)
+ 	#line 432
+	call_fun 2
+	is_atom L1003, x(0)
+	select_val x(0), L1003, [
+		(false, L998),
+		(true, L999)
+	]
+L998:
+	test_heap 2, 0
+	put_list y(4), y(1), x(4)
+	move y(3), x(2)
+	move y(5), x(1)
+	move y(2), x(3)
+	move y(6), x(0)
+	call_last 5, L1007, 7
+L999:
+	move y(3), x(2)
+	move y(2), x(3)
+	move y(5), x(1)
+	move y(1), x(4)
+	move y(6), x(0)
+	call_last 5, L1007, 7
+L1000:
+	is_nil L994, x(0)
+	allocate 3, 6
+	move x(1), x(0)
+	move x(5), x(1)
+	move x(4), y(0)
+	move x(3), y(1)
+	move x(0), y(2)
+ 	#line 433
+	call_fun 2
+	is_atom L1005, x(0)
+	select_val x(0), L1005, [
+		(false, L1001),
+		(true, L1002)
+	]
+L1001:
+	test_heap 2, 0
+	put_list y(2), y(0), x(1)
+	move y(1), x(0)
+ 	#line 434
+	call_ext_last lists:reverse/2 2 3
+L1002:
+	move y(0), x(1)
+	move y(1), x(0)
+ 	#line 435
+	call_ext_last lists:reverse/2 2 3
+L1003:
+ 	#line 432
+	case_end x(0)
+L1004:
+ 	#line 431
+	case_end x(0)
+L1005:
+ 	#line 433
+	case_end x(0)
+L1006:
+ 	#line 436
+	#function lists:ufmerge2_2/5
+L1007:
+	is_nonempty_list L1010, x(3)
+	allocate 6, 5
+	get_list x(3), x(5), y(4)
+	move x(1), y(2)
+	move x(5), x(1)
+	move x(4), y(0)
+	move x(2), y(1)
+	move x(0), y(3)
+	move x(1), y(5)
+ 	#line 437
+	call_fun 2
+	is_atom L1011, x(0)
+	select_val x(0), L1011, [
+		(true, L1008),
+		(false, L1009)
+	]
+L1008:
+	test_heap 2, 0
+	put_list y(3), y(0), x(4)
+	move y(1), x(2)
+	move y(4), x(3)
+	move y(5), x(1)
+	move y(3), x(5)
+	move y(2), x(0)
+	call_last 6, L995, 6
+L1009:
+	test_heap 2, 0
+	put_list y(5), y(0), x(4)
+	move y(1), x(2)
+	move y(2), x(1)
+	move y(4), x(3)
+	move y(3), x(0)
+	call_last 5, L1007, 6
+L1010:
+	is_nil L1006, x(3)
+	test_heap 2, 5
+	put_list x(0), x(4), x(2)
+	move x(1), x(0)
+	move x(2), x(1)
+ 	#line 438
+	call_ext_only lists:reverse/2 2
+L1011:
+ 	#line 437
+	case_end x(0)
+L1012:
+ 	#line 439
+	#function lists:rufmerge2_1/5
+L1013:
+	is_nonempty_list L1016, x(0)
+	allocate 6, 5
+	get_list x(0), x(0), y(4)
+	move x(4), y(0)
+	move x(3), y(1)
+	move x(2), y(2)
+	move x(1), y(3)
+	move x(0), y(5)
+ 	#line 440
+	call_fun 2
+	is_atom L1017, x(0)
+	select_val x(0), L1017, [
+		(false, L1014),
+		(true, L1015)
+	]
+L1014:
+	test_heap 2, 0
+	put_list y(5), y(0), x(4)
+	move y(2), x(2)
+	move y(3), x(1)
+	move y(1), x(3)
+	move y(4), x(0)
+	call_last 5, L1013, 6
+L1015:
+	move y(1), x(3)
+	move y(2), x(2)
+	move y(0), x(4)
+	move y(4), x(1)
+	move y(3), x(5)
+	move y(5), x(0)
+	call_last 6, L1019, 6
+L1016:
+	is_nil L1012, x(0)
+	test_heap 2, 5
+	put_list x(1), x(4), x(1)
+	move x(3), x(0)
+ 	#line 441
+	call_ext_only lists:reverse/2 2
+L1017:
+ 	#line 440
+	case_end x(0)
+L1018:
+ 	#line 442
+	#function lists:rufmerge2_2/6
+L1019:
+	is_nonempty_list L1024, x(3)
+	allocate 7, 6
+	get_list x(3), x(6), y(5)
+	move x(1), y(3)
+	move x(6), x(1)
+	move x(5), y(0)
+	move x(4), y(1)
+	move x(2), y(2)
+	move x(0), y(4)
+	move x(1), y(6)
+ 	#line 443
+	call_fun 2
+	is_atom L1028, x(0)
+	select_val x(0), L1028, [
+		(true, L1020),
+		(false, L1021)
+	]
+L1020:
+	test_heap 2, 0
+	put_list y(0), y(1), x(4)
+	move y(2), x(2)
+	move y(5), x(3)
+	move y(3), x(1)
+	move y(6), x(5)
+	move y(4), x(0)
+	call_last 6, L1019, 7
+L1021:
+	move y(4), x(1)
+	move y(2), x(2)
+	move y(0), x(0)
+ 	#line 444
+	call_fun 2
+	is_atom L1027, x(0)
+	select_val x(0), L1027, [
+		(false, L1022),
+		(true, L1023)
+	]
+L1022:
+	test_heap 4, 0
+	put_list y(0), y(1), x(5)
+	put_list y(4), x(5), x(4)
+	move y(2), x(2)
+	move y(6), x(1)
+	move y(5), x(3)
+	move y(3), x(0)
+	call_last 5, L1013, 7
+L1023:
+	test_heap 2, 0
+	put_list y(4), y(1), x(4)
+	move y(2), x(2)
+	move y(6), x(1)
+	move y(5), x(3)
+	move y(3), x(0)
+	call_last 5, L1013, 7
+L1024:
+	is_nil L1018, x(3)
+	allocate 4, 6
+	move x(1), y(2)
+	move x(0), x(1)
+	move x(5), x(0)
+	move x(0), y(0)
+	move x(4), y(1)
+	move x(1), y(3)
+ 	#line 445
+	call_fun 2
+	is_atom L1029, x(0)
+	select_val x(0), L1029, [
+		(false, L1025),
+		(true, L1026)
+	]
+L1025:
+	test_heap 4, 0
+	put_list y(0), y(1), x(2)
+	put_list y(3), x(2), x(1)
+	move y(2), x(0)
+ 	#line 446
+	call_ext_last lists:reverse/2 2 4
+L1026:
+	test_heap 2, 0
+	put_list y(3), y(1), x(1)
+	move y(2), x(0)
+ 	#line 447
+	call_ext_last lists:reverse/2 2 4
+L1027:
+ 	#line 444
+	case_end x(0)
+L1028:
+ 	#line 443
+	case_end x(0)
+L1029:
+ 	#line 445
+	case_end x(0)
+L1030:
+ 	#line 0
+	#function lists:module_info/0
+L1031:
+	move lists, x(0)
+ 	#line 0
+	call_ext_only erlang:get_module_info/1 1
+L1032:
+ 	#line 0
+	#function lists:module_info/1
+L1033:
+	move x(0), x(1)
+	move lists, x(0)
+ 	#line 0
+	call_ext_only erlang:get_module_info/2 2
+L1034:
+ 	#line 448
+	#function lists:-filter/2-lc$^0/1-0-/2
+L1035:
+	is_nonempty_list L1038, x(0)
+	allocate 3, 2
+	get_list x(0), x(0), y(1)
+	move x(1), y(0)
+	move x(0), y(2)
+ 	#line 448
+	call_fun 1
+	is_atom L1039, x(0)
+	select_val x(0), L1039, [
+		(false, L1036),
+		(true, L1037)
+	]
+L1036:
+	move y(0), x(1)
+	move y(1), x(0)
+	call_last 2, L1035, 3
+L1037:
+	move y(0), x(1)
+	move y(1), x(0)
+	trim 2, 1
+ 	#line 448
+	call 2, L1035
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L1038:
+	is_nil L1040, x(0)
+	return 
+L1039:
+ 	#line 448
+	case_end x(0)
+L1040:
+	test_heap 2, 1
+	put_list x(0), nil, x(1)
+	move function_clause, x(0)
+ 	#line 448
+	call_ext erlang:error/2 2
+L1041:
+ 	#line 449
+	#function lists:-concat/1-fun-0-/1
+L1042:
+	call_only 1, L160
+	int_code_end 

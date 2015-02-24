@@ -1,6 +1,6 @@
 from beam_file import *
 from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObject, W_FloatObject
-from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject
+from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
 from pyrlang.interpreter.datatypes.pid import W_PidObject
@@ -30,8 +30,10 @@ def print_Root(root):
 	print_ImpT(root.impTChunk, atoms)
 
 def print_labelTable(lt):
+	print "================ Label Table ==================="
 	for i in range(0, len(lt)):
 		print "L%d: #%d"%(i+1, lt[i])
+	print "============= End of Label Talbe ==============="
 
 def print_hex(s):
 	res = ''
@@ -54,22 +56,48 @@ def value_str(v):
 	elif isinstance(v, W_PidObject):
 		(node_num, process_num, serial) = get_pid_contents(v)
 		return "<%d.%d.%d>"%(node_num, process_num, serial)
-	elif isinstance(v, W_ListObject):
+	elif isinstance(v, W_StrListObject):
 		s = []
-		i = 0
-		too_long = False
-		while not isinstance(v.tail(), W_NilObject):
-			s.append(value_str(v.head()))
-			v = v.tail()
-			i += 1
-			if(i >= 30):
-				too_long = True
+		# when printing a list object, Pyrlang will firstly
+		# tried to print it as a string, if failed, it will
+		# print it as a normal list
+		is_str = True
+		while not isinstance(v, W_NilObject):
+			head = v.head()
+			if isinstance(head, W_IntObject):
+				try:
+					s.append(chr(get_int_val(head)))
+					v = v.tail()
+				except ValueError:
+					is_str = False
+					break
+			else:
+				is_str = False
 				break
-		if too_long:
-			s.append("...")
+		if is_str:
+			return '"' + ''.join(s) + '"'
 		else:
-			s.append(value_str(v.head()))
-		return "[%s]"%(",".join(s))
+			return list_str(v)
+	elif isinstance(v, W_ListObject):
+		return list_str(v)
+
+def list_str(v):
+	assert isinstance(v, W_ListObject)
+	s = []
+	i = 0
+	too_long = False
+	while not isinstance(v.tail(), W_NilObject):
+		s.append(value_str(v.head()))
+		v = v.tail()
+		i += 1
+		if(i >= 30):
+			too_long = True
+			break
+	if too_long:
+		s.append("...")
+	else:
+		s.append(value_str(v.head()))
+	return "[%s]"%(",".join(s))
 
 def print_value(v):
 	print value_str(v)

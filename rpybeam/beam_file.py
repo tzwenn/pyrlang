@@ -63,6 +63,7 @@ class BeamRoot(BaseNode):
 	def dispatchChunk(self, stream):
 		self.litTChunk = None # in case of there is not 'LitT' in beam file
 		self.locTChunk = None
+		self.funTChunk = None
 		while(True):
 			flag = self._readString(stream, 4)
 			if flag == 'Atom':
@@ -214,7 +215,28 @@ class LocTChunk(Chunk):
 
 class FunTChuck(Chunk):
 	def parse(self, stream):
+		self.count = self.readInt4(stream)
+		self.entries = []
+		for i in range(self.count):
+			e = ClosureEntry(stream)
+			self.readlen += e.readlen
+			self.entries.append(e)
 		self.discardRemain(stream)
+
+	def asArray(self):
+		return self.entries
+
+class ClosureEntry(BaseNode):
+	def parse(self, stream):
+		self.fun_index = self.readInt4(stream)
+		self.arity = self.readInt4(stream)
+		self.label_index = self.readInt4(stream)
+		self.index = self.readInt4(stream)
+		self.num_free = self.readInt4(stream)
+		self.old_sig = self.readAny(stream, 4)
+
+	def asArray(self):
+		return (self.fun_index, self.arity, self.label_index, self.num_free, self.old_sig)
 
 class LitTChunk(Chunk):
 	def parse(self, stream):

@@ -26,6 +26,8 @@ class CodeParser:
 			self.lit_table = beam.litTChunk.asArray()
 		if beam.locTChunk:
 			self.loc_table = beam.locTChunk.asArray()
+		if beam.funTChunk:
+			self.fun_table = beam.funTChunk.asArray()
 			#print "loc_table:"
 			#print self.loc_table
 		self.func_list = []
@@ -104,12 +106,12 @@ class CodeParser:
 
 	@jit.unroll_safe
 	def _encode_hex(self, s):
-		unit = []
+		sum = 0
 		for i in range(0, len(s)):
-			hex_num = ord(s[i])
-			unit.append(str((0xf0 & hex_num) >> 4))
-			unit.append(str(0x0f & hex_num))
-		return ''.join(unit)
+			hex_sum = ord(s[i])
+			sum = sum << 8
+			sum += hex_sum
+		return sum
 
 	@jit.unroll_safe
 	def _next(self, pc, n=1):
@@ -179,7 +181,7 @@ class CodeParser:
 			return pc, tag >> 4
 
 	def _decode_bignit(self, s):
-		v = int(self._encode_hex(s), 16)
+		v = self._encode_hex(s)
 		if ord(s[0]) > 0x80:
 			return v-(1 << (len(s))*8)
 		else:
@@ -215,6 +217,7 @@ class CodeParser:
 		assert(tag == opcodes.TAGX_ALLOCLIST)
 		return self._parse_alloclist(pc)
 	
+	@jit.unroll_safe
 	def _parse_alloclist(self, pc):
 		pc, length = self.parseInt(pc)
 		res = []
@@ -237,7 +240,7 @@ class CodeParser:
 		pc, length = self.parseInt(pc)
 		res = []
 		for i in range(0, length >> 1):
-			pc, tmp1 = self.parseInt(pc)
+			pc, tmp1 = self.parseBase(pc)
 			pc, tmp2 = self.parseInt(pc)
 			res.append((tmp1, tmp2))
 		return pc, res
@@ -275,7 +278,7 @@ class CodeParser:
 				entry = self._import_header[header_index]
 				if ModuleDict.is_bif_from_tuple(self.get_name_entry(entry)):
 					# at this time, the func index are already replaced
-					replace_list.append((pc - 1, pc_end - pc_begin,
+					replace_list.append((pc_begin, pc_end - pc_begin,
 							self.import_header[header_index][1]))
 			elif instr == opcodes.LINE:
 				pc, num = self.parseInt(pc)
@@ -291,6 +294,7 @@ class CodeParser:
 			# that tell interpreter it's actually a bif rather 
 			# than a module function
 			e_lst = self.createOne(index, opcodes.TAG_LABEL)
+			#print "replace %d(size:%d) with %s" % (addr, word_len, str(e_lst))
 			if len(e_lst) == word_len:
 				for i in range(len(e_lst)):
 					code_list[addr + i + global_offset] = e_lst[i]
@@ -302,10 +306,12 @@ class CodeParser:
 				code_list.insert(insert_pos, e_lst[1])
 				global_offset += 1
 			else:
+				#print code_list[addr - 10:]
 				assert len(e_lst) == 1 and word_len == 2
 				code_list[addr + global_offset] = e_lst[0]
 				del code_list[addr + global_offset + 1]
 				global_offset -= 1
+				#print code_list[addr - 10:]
 		self.code = ''.join(code_list)
 
 		# second pass, to build the label table
@@ -318,9 +324,10 @@ class CodeParser:
 			#print "   " + str(pc - 1) + "[" + opcodes.opnames[instr].upper() + "]"
 			if instr == opcodes.LABEL:
 				pc, num = self.parseInt(pc)
-				#print "L" + str(num) + ":"
 				self.labelTable.append(pc)
+				#print "L" + str(num) + ":" + str(pc)
 			else:
+				#print "[%d]"%(pc) + opcodes.opnames[instr].upper()
 				pc = self.discard_operands(instr, pc)
 
 	@jit.unroll_safe
@@ -335,12 +342,17 @@ class CodeParser:
 				pc = self.discard_operands(instr, pc)
 		return self.find_func_def_from_label(len(self.labelTable) - 3)
 
+	# find some address within the range of label table,
+	# begined with 1
 	@jit.unroll_safe
-	def find_func_def_from_addr(self, addr):
+	def find_label_from_address(self, addr):
 		for label in range(len(self.labelTable)):
 			if addr < self.labelTable[label]:
-				return self.find_func_def_from_label(label-2)
-		return self.find_func_def_from_label(len(self.labelTable) - 2)
+				return label
+		return len(self.labelTable)
+
+	def find_func_def_from_addr(self, addr):
+		return self.find_func_def_from_label(self.find_label_from_address(addr) - 2)
 
 	# label index should begin with 0
 	@jit.unroll_safe
@@ -376,6 +388,7 @@ class CodeParser:
 		# function, so it's reasonable to return a line 0 for them
 		return 0  
 
+	@jit.unroll_safe
 	def discard_operands(self, instr, pc):
 		arity = opcodes.arity[instr]
 		for i in range(0, arity):

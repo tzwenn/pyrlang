@@ -1,5 +1,6 @@
 from root import W_Root
 from rpython.rlib.rarithmetic import ovfcheck
+from rpython.rlib import jit
 from rpython.rlib.rbigint import (
 		InvalidEndiannessError, InvalidSignednessError, rbigint)
 
@@ -21,15 +22,12 @@ class W_IntObject(W_AbstractIntObject):
 
 	def add(self, other): 
 		if isinstance(other, W_IntObject):
-			if other.is_positive():
-				try:
-					return W_IntObject(ovfcheck(self.intval + other.intval))
-				except OverflowError:
-					b_i = rbigint.fromint(self.intval)
-					o_i = rbigint.fromint(other.intval)
-					return W_BigIntObject(b_i.add(o_i))
-			else:
-				return W_IntObject(self.intval + other.intval)
+			try:
+				return W_IntObject(ovfcheck(self.intval + other.intval))
+			except OverflowError:
+				b_i = rbigint.fromint(self.intval)
+				o_i = rbigint.fromint(other.intval)
+				return W_BigIntObject(b_i.add(o_i))
 		else:
 			return self.to_bigint().add(other)
 
@@ -49,17 +47,34 @@ class W_IntObject(W_AbstractIntObject):
 
 	def sub(self, other):
 		if isinstance(other, W_IntObject):
-			if other.is_positive():
-				try: 
-					return W_IntObject(ovfcheck(self.intval - other.intval))
-				except OverflowError:
-					b_i = rbigint.fromint(self.intval)
-					o_i = rbigint.fromint(other.intval)
-					return W_BigIntObject(b_i.sub(o_i))
-			else:
-				return W_IntObject(self.intval - other.intval)
+			try: 
+				return W_IntObject(ovfcheck(self.intval - other.intval))
+			except OverflowError:
+				b_i = rbigint.fromint(self.intval)
+				o_i = rbigint.fromint(other.intval)
+				return W_BigIntObject(b_i.sub(o_i))
 		else:
 			return self.to_bigint().sub(other)
+
+	def lshift(self, other):
+		assert isinstance(other, W_IntObject)
+		if other.intval > 0: 
+			try:
+				return W_IntObject(ovfcheck(self.intval << other.intval))
+			except OverflowError:
+				return self.to_bigint().lshift(other)
+		else:
+			return W_IntObject(self.intval >> -other.intval)
+
+	def rshift(self, other):
+		assert isinstance(other, W_IntObject)
+		if other.intval > 0:
+			return W_IntObject(self.intval >> other.intval)
+		else:
+			try:
+				return W_IntObject(ovfcheck(self.intval << -other.intval))
+			except OverflowError:
+				return self.to_bigint().lshift(W_IntObject(-other.intval))
 
 	# Never overflow
 	def div(self, other):
@@ -87,6 +102,7 @@ class W_IntObject(W_AbstractIntObject):
 			else:
 				return False
 
+	@jit.unroll_safe
 	def to_list(self):
 		if self.intval == 0:
 			return [0]
@@ -184,6 +200,7 @@ class W_BigIntObject(W_AbstractIntObject):
 		return self.bigintval.sign != -1
 
 	def add(self, other):
+		print other
 		if isinstance(other, W_IntObject):
 			return self._add(other.to_bigint())
 		else:
@@ -191,10 +208,7 @@ class W_BigIntObject(W_AbstractIntObject):
 
 	def _add(self, other):
 		assert isinstance(other, W_BigIntObject)
-		if other.is_positive():
-			return W_BigIntObject(self.bigintval.add(other.bigintval))
-		else:
-			return self.return_wrap(self.bigintval.add(other.bigintval))
+		return self.return_wrap(self.bigintval.add(other.bigintval))
 
 	def sub(self, other):
 		if isinstance(other, W_IntObject):
@@ -204,8 +218,6 @@ class W_BigIntObject(W_AbstractIntObject):
 
 	def _sub(self, other):
 		assert isinstance(other, W_BigIntObject)
-		if other.is_positive():
-			return W_BigIntObject(self.bigintval.sub(other.bigintval))
 		return self.return_wrap(self.bigintval.sub(other.bigintval))
 
 	def mul(self, other):
@@ -241,6 +253,20 @@ class W_BigIntObject(W_AbstractIntObject):
 		assert isinstance(other, W_BigIntObject)
 		return self.return_wrap(self.bigintval.mod(other.bigintval))
 
+	def lshift(self, other):
+		assert isinstance(other, W_IntObject)
+		if other.intval > 0:
+			return self.return_wrap(self.bigintval.lshift(other.intval))
+		else:
+			return self.return_wrap(self.bigintval.rshift(-other.intval))
+
+	def rshift(self, other):
+		assert isinstance(other, W_IntObject)
+		if other.intval > 0:
+			return self.return_wrap(self.bigintval.rshift(other.intval))
+		else:
+			return self.return_wrap(self.bigintval.lshift(-other.intval))
+
 	def lt(self, other):
 		if isinstance(other, W_IntObject):
 			return self._lt(other.to_bigint())
@@ -251,6 +277,7 @@ class W_BigIntObject(W_AbstractIntObject):
 		assert isinstance(other, W_BigIntObject)
 		return self.bigintval.lt(other.bigintval)
 
+	@jit.unroll_safe
 	def to_list(self):
 		lst = list(self.bigintval.str())
 		return [ord(s[0]) for s in lst]

@@ -1,9 +1,10 @@
 from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObject, W_BigIntObject, W_FloatObject
-from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject
+from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
 from pyrlang.interpreter.datatypes.pid import W_PidObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject, W_CodeParserWrapperObject
+from pyrlang.interpreter.datatypes.closure import W_ClosureObject
 from rpython.rlib import jit
 
 def get_tuple_vals(v):
@@ -51,3 +52,15 @@ def build_list_object(object_lst):
 	for i in range(0, length):
 		right = W_ListObject(object_lst[length - i - 1], right)
 	return right
+
+@jit.unroll_safe
+def build_strlist_object(object_lst):
+	right = W_NilObject()
+	length = len(object_lst)
+	for i in range(0, length):
+		right = W_StrListObject(object_lst[length - i - 1], right)
+	return right
+
+def get_closure_fields(v):
+	assert isinstance(v, W_ClosureObject)
+	return (v.cp, v.pc, v.arity, v.free_variables())

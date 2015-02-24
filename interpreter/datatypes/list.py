@@ -53,3 +53,17 @@ class W_ListObject(W_Root):
 			return self.left.is_equal(other.left) and self.right.is_equal(other.right)
 		else:
 			return False
+
+class W_StrListObject(W_ListObject):
+	def clone(self):
+		return W_StrListObject(self.left.clone(), self.right.clone())
+
+	def append(self, other):
+		if isinstance(other, W_StrListObject):
+			return self._append(other)
+		else:
+			return W_ListObject._append(self, other)
+
+	def _append(self, other):
+		tail = self.tail()
+		return W_StrListObject(self.head(), tail._append(other))

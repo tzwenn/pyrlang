@@ -9,7 +9,10 @@
 		test_nthtail/0,
 		test_reverse/0,
 		test_partition/0,
-		test_partition2/0]).
+		test_partition2/0,
+		test_map/0,
+		test_foreach/0,
+		test_seq/0]).
 
 test_append() ->
 	lists:append([[1,2,3], [a, b], [4, 5, 6]]).
@@ -56,3 +59,15 @@ test_partition2() ->
 
 test_reverse() ->
 	lists:reverse([], [a,b]).
+
+test_map() ->
+	lists:map(fun(N) -> depth(N) end, [1]).
+
+depth(N) ->
+	N + 1.
+
+test_foreach() ->
+	lists:foreach(fun(E) -> erlang:display(E) end, [1,2,3,4,5]).
+
+test_seq() ->
+	lists:seq(1, 20, 3).

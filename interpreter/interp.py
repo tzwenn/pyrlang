@@ -9,10 +9,11 @@ from pyrlang.interpreter.cont_stack import ContinuationStack
 from pyrlang.interpreter.datatypes.root import W_Root
 from pyrlang.interpreter.datatypes.pid import W_PidObject
 from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObject, W_FloatObject
-from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject
+from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject, W_CodeParserWrapperObject 
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
+from pyrlang.interpreter.datatypes.closure import W_ClosureObject
 from pyrlang.interpreter import constant
 from pyrlang.utils.deque import MessageDeque
 from pyrlang.utils import eterm_operators
@@ -21,7 +22,8 @@ from rpython.rlib import jit
 
 def printable_loc(pc, cp):
 	index = ord(cp.code[pc])
-	return str(pc) + " " + opcodes.opnames[index].upper()
+	#return "L%d(%d) %s"%(cp.find_label_from_address(pc), pc, opcodes.opnames[index].upper())
+	return "%d %s"%(pc, opcodes.opnames[index].upper())
 
 driver = jit.JitDriver(greens = ['pc', 'cp'],
 		reds = ['reduction', 'single', 's_self', 'x_reg', 's_y_reg'],
@@ -72,14 +74,24 @@ class Process:
 				pc, label = cp.parseInt(pc)
 				pc = self.call(pc, cp, arity, label)
 
+				reduction -= 1
+				if not single and reduction <= 0:
+					break
+				# let's do a crazy experiment!
+				else:
+					driver.can_enter_jit(pc = pc,
+							cp = cp,
+							reduction = reduction,
+							single = single,
+							s_self = self, 
+							x_reg = x_reg,
+							s_y_reg = self.y_reg)
+
 			elif instr == opcodes.CALL_LAST: # 5
 				pc, arity = cp.parseInt(pc)
 				pc, label = cp.parseInt(pc)
 				pc, n = cp.parseInt(pc)
 				pc = self.call_last(cp, arity, label, n)
-				#reduction -= 1
-				#if not single and reduction <= 0:
-					#break
 
 			elif instr == opcodes.CALL_ONLY: # 6
 				pc, arity = cp.parseInt(pc)
@@ -105,7 +117,14 @@ class Process:
 					cp, pc = self.call_ext(cp, pc, entry, real_arity)
 				else:
 					assert tag == opcodes.TAG_LABEL
+					self.y_reg.push(W_TupleObject([W_CodeParserWrapperObject(cp), W_AddrObject(pc)]))
 					pc = self._call_ext_bif(pc, cp, header_index)
+					# calling a bif means the dispatch loop 
+					# need a extra k_return semantics 
+					if self.y_reg.is_empty():
+						return (constant.STATE_TERMINATE, pc, cp)
+					else:
+						(cp, pc) = self.k_return(cp)
 				#reduction -= 1
 				#if not single and reduction <= 0:
 					#break
@@ -174,6 +193,12 @@ class Process:
 				pc, stack_need = cp.parseInt(pc)
 				pc, live = cp.parseInt(pc)
 				self.allocate_zero(stack_need, live)
+
+			elif instr == opcodes.ALLOCATE_HEAP_ZERO: # 15
+				pc, stack_need = cp.parseInt(pc)
+				pc, heap_need = cp.parseInt(pc)
+				pc, live = cp.parseInt(pc)
+				self.allocate_heap_zero(stack_need, heap_need, live)
 
 			elif instr == opcodes.TEST_HEAP: # 16
 				pc, term1 = cp.parseBase(pc)
@@ -398,6 +423,7 @@ class Process:
 			elif instr == opcodes.LINE: # 153
 				pc, cp.current_line = cp.parseInt(pc)
 			else:
+				pretty_print.print_value(self.create_call_stack_info(cp, pc))
 				raise Exception("Unimplemented opcode: %d"%(instr))
 		return (constant.STATE_SWITH, pc, cp)
 
@@ -460,6 +486,7 @@ class Process:
 		else:
 			return cp.label_to_addr(label)
 
+	@jit.unroll_safe
 	def term_to_value(self, t):
 		if isinstance(t, NewFloatTerm):
 			return W_FloatObject(t.floatval)
@@ -475,7 +502,7 @@ class Process:
 			i_lst = []
 			for intval in lst:
 				i_lst.append(W_IntObject(intval))
-			return eterm_operators.build_list_object(i_lst)
+			return eterm_operators.build_strlist_object(i_lst)
 		elif isinstance(t, AnyListTerm):
 			lst = t.vals
 			o_lst = []
@@ -644,6 +671,12 @@ class Process:
 		for i in range(0, stack_need):
 			self.y_reg.push(W_IntObject(0))
 
+	# 15
+	@jit.unroll_safe
+	def allocate_heap_zero(self, stack_need, heap_need, live):
+		for i in range(0, stack_need):
+			self.y_reg.push(W_IntObject(0))
+
 	# 16
 	def test_heap(self, alloc, live):
 		pass
@@ -789,14 +822,16 @@ class Process:
 	# 59
 	@jit.unroll_safe
 	def select_val(self, cp, val_reg, label, slist):
-		val = self.fetch_basereg(val_reg)
-		assert isinstance(val, W_AtomObject)
-		atom_str = val.strval
-		#print "select_val:"
-		#print "atom: %d"%(val.index)
+		val = self.get_basic_value(cp, val_reg)
+		#print "val:"
+		#pretty_print.print_value(val)
 		for i in range(0, len(slist)):
-			(v, l) = slist[i]
-			if cp.atoms[v-1] == atom_str:
+			((tag, v), l) = slist[i]
+			#print "tag:" + str(tag)
+			#print "value:" + str(v)
+			if tag == opcodes.TAG_ATOM and val.is_equal(W_AtomObject(cp.atoms[v-1])):
+				return cp.label_to_addr(l)
+			elif tag == opcodes.TAG_INTEGER and val.is_equal(W_IntObject(v)):
 				return cp.label_to_addr(l)
 		return cp.label_to_addr(label)
 
@@ -890,33 +925,37 @@ class Process:
 		return eterm_operators.get_addr_val(addr)
 
 	# 75
+	@jit.unroll_safe
 	def call_fun(self, pc, cp, arity):
 		self.y_reg.push(W_TupleObject([W_CodeParserWrapperObject(cp), W_AddrObject(pc)]))
-		tuple_obj = self.fetch_basereg((opcodes.TAG_XREG, arity))
-		(cp_obj, addr_obj) = eterm_operators.get_tuple_vals(tuple_obj)
-		return (eterm_operators.get_cp_val(cp_obj), eterm_operators.get_addr_val(addr_obj))
+		closure = self.fetch_basereg((opcodes.TAG_XREG, arity))
+		(cp, addr, real_arity, fvs) = eterm_operators.get_closure_fields(closure)
+		for i in range(len(fvs)):
+			self.x_reg.store(arity + i, fvs[i])
+		return (cp, addr)
 
 	def call_ext_only(self, cp, entry, real_arity):
 		return self._call_ext_only(cp, entry)
 
 	# 103
+	@jit.unroll_safe
 	def make_fun2(self, cp, index):
-		label = cp.loc_table[index][2]
-		self.store_basereg((opcodes.TAG_XREG, 0), 
-				W_TupleObject([W_CodeParserWrapperObject(cp),
-					W_AddrObject(cp.label_to_addr(label))]))
+		fun_entry = cp.fun_table[index]
+		label = fun_entry.label_index
+		addr = cp.label_to_addr(label)
+		fvs = []
+		for i in range(fun_entry.num_free):
+			fvs.append(self.x_reg.get(i))
+		closure_obj = W_ClosureObject(cp, addr, fun_entry.arity, fvs)
+		self.store_basereg((opcodes.TAG_XREG, 0), closure_obj)
 
 	# 115
 	def is_function2(self, pc, cp, label, a1, a2):
-		a1_v = self.get_basic_value(cp, a1) # the pair of cp, addr
+		a1_v = self.get_basic_value(cp, a1) # the object of closure
 		a2_v = self.get_basic_value(cp, a2) # the arity
-		if isinstance(a1_v, W_TupleObject):
-			contents = eterm_operators.get_tuple_vals(a1_v)
-			if len(contents) == 2 and isinstance(contents[0], W_CodeParserWrapperObject) and isinstance(contents[1], W_AddrObject):
-				pushed_cp = eterm_operators.get_cp_val(contents[0])
-				entry = pushed_cp.find_func_def_from_addr(eterm_operators.get_addr_val(contents[1]))
-				if entry[2] == eterm_operators.get_int_val(a2_v):
-					return pc
+		if isinstance(a1_v, W_ClosureObject):
+			if a1_v.arity - len(a1_v.free_variables()) == eterm_operators.get_int_val(a2_v):
+				return pc
 		return cp.label_to_addr(label)
 
 	# 124
