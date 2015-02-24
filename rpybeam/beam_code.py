@@ -7,7 +7,9 @@ import opcodes
 import pretty_print
 
 class CodeParser:
-	_immutable_fields_ = ['file_name', 'atoms[*]', 'labelTable']
+	_immutable_fields_ = ['file_name', 'parent_cp', 'code', 'total_lines', 'atoms[*]', 'labelTable', 'bif_map',
+			'import_header', '_import_header', 'lit_table', 'loc_table', 'fun_table', 'func_list', 
+			'import_mods', 'export_header', 'export_funcs_list']
 
 	def __init__(self, beam, name, parent_cp = None):
 		self.file_name = name
@@ -22,6 +24,9 @@ class CodeParser:
 		# the import_header will be rewrite so we need another copy to refer the original version at something
 		self._import_header = list(beam.impTChunk.asArray())
 		self.import_header = list(beam.impTChunk.asArray()) 
+		self.lit_table = None
+		self.loc_table = None
+		self.fun_table = None
 		if beam.litTChunk:
 			self.lit_table = beam.litTChunk.asArray()
 		if beam.locTChunk:
