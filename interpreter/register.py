@@ -24,10 +24,6 @@ class X_Register(AbstractRegister):
 	def store(self, n, val):
 		assert(n >= 0)
 		assert(n < max_x_reg_size)
-		#regs_len = len(self.regs)
-		#if n >= regs_len:
-			#for i in range(0, n - regs_len + 1):
-				#self.regs.append(W_IntObject(-1))
 		self.regs[n] = val
 
 class Y_Register(AbstractRegister):

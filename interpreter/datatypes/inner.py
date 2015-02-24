@@ -8,9 +8,9 @@ def raise_inner_is_equal_error():
 	raise Exception("shouldn't call is_equal function for an inner object anyway")
 
 class W_AddrObject(W_Root):
-	def __init__(self, intval):
-		assert(isinstance(intval, int))
-		self.addrval = intval
+	def __init__(self, cp, intval):
+		self.cp = cp
+		self.pc = intval
 
 	def clone(self):
 		raise_inner_copy_error()

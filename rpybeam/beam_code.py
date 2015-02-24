@@ -15,7 +15,6 @@ class CodeParser:
 		self.file_name = name
 		self.parent_cp = parent_cp
 		self.code = beam.getCode()
-		self.current_line = -1
 		self.total_lines = -1
 		self.current_label = -1
 		self.labelTable = []
@@ -45,6 +44,7 @@ class CodeParser:
 		self.preprocess(0)
 		#pretty_print.print_labelTable(self.labelTable)
 
+	@jit.unroll_safe
 	def import_BIF_and_module(self):
 		mfl = ModFileLoader()
 		for i in range(0, len(self.import_header)):
@@ -98,6 +98,7 @@ class CodeParser:
 				self.atoms[entry[1] - 1],
 				entry[2])
 					
+	@jit.unroll_safe	
 	def search_exports(self, func_name, arity, header, atoms):
 		for i in range(0, len(header)):
 			entry = header[i]

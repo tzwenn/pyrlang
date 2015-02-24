@@ -11,7 +11,7 @@ from pyrlang.interpreter.datatypes.pid import W_PidObject
 from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObject, W_FloatObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
-from pyrlang.interpreter.datatypes.inner import W_AddrObject, W_CodeParserWrapperObject 
+from pyrlang.interpreter.datatypes.inner import W_AddrObject 
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
 from pyrlang.interpreter.datatypes.closure import W_ClosureObject
 from pyrlang.interpreter import constant
@@ -31,6 +31,7 @@ driver = jit.JitDriver(greens = ['pc', 'cp'],
 		get_printable_location=printable_loc)
 
 class Process:
+	_immutable_fields_ = ['pid']
 	def __init__(self, pid, scheduler, priority = constant.PRIORITY_NORMAL):
 		self.x_reg = X_Register()
 		self.y_reg = Y_Register()
@@ -64,6 +65,7 @@ class Process:
 					x_reg = x_reg,
 					s_y_reg = self.y_reg)
 			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, cp) + " reduction: " + str(reduction)
+			#print x_reg.get(1)
 			instr = ord(cp.code[pc])
 			pc = pc + 1
 			if instr == opcodes.LABEL: # 1
@@ -73,11 +75,9 @@ class Process:
 				pc, arity = cp.parseInt(pc)
 				pc, label = cp.parseInt(pc)
 				pc = self.call(pc, cp, arity, label)
-
 				reduction -= 1
 				if not single and reduction <= 0:
 					break
-				# let's do a crazy experiment!
 				else:
 					driver.can_enter_jit(pc = pc,
 							cp = cp,
@@ -87,11 +87,15 @@ class Process:
 							x_reg = x_reg,
 							s_y_reg = self.y_reg)
 
+
 			elif instr == opcodes.CALL_LAST: # 5
 				pc, arity = cp.parseInt(pc)
 				pc, label = cp.parseInt(pc)
 				pc, n = cp.parseInt(pc)
 				pc = self.call_last(cp, arity, label, n)
+				#reduction -= 1
+				#if not single and reduction <= 0:
+					#break
 
 			elif instr == opcodes.CALL_ONLY: # 6
 				pc, arity = cp.parseInt(pc)
@@ -117,7 +121,7 @@ class Process:
 					cp, pc = self.call_ext(cp, pc, entry, real_arity)
 				else:
 					assert tag == opcodes.TAG_LABEL
-					self.y_reg.push(W_TupleObject([W_CodeParserWrapperObject(cp), W_AddrObject(pc)]))
+					self.y_reg.push(W_AddrObject(cp, pc))
 					pc = self._call_ext_bif(pc, cp, header_index)
 					# calling a bif means the dispatch loop 
 					# need a extra k_return semantics 
@@ -537,7 +541,7 @@ class Process:
 			self.x_reg.store(0, None)
 			self.x_reg.store(1, W_AtomObject(fail_class.fail_names[fclass]))
 			self.x_reg.store(2, reason)
-			return W_AddrObject(cp.label_to_addr(label))
+			return W_AddrObject(cp, cp.label_to_addr(label))
 
 	@jit.unroll_safe
 	def create_call_stack_info(self, cp, pc, args = None):
@@ -547,14 +551,8 @@ class Process:
 		while(i < self.y_reg.depth()):
 			obj = self.y_reg.get(-(i+1))
 			i += 1
-			if isinstance(obj, W_AddrObject):
-				res.append(self._one_call_stack_info(_cp, obj.addrval))
-			elif isinstance(obj, W_CodeParserWrapperObject):
-				_cp = obj.cp
-				w_addr = self.y_reg.get(-(i+1))
-				i += 1
-				assert isinstance(w_addr, W_AddrObject)
-				res.append(self._one_call_stack_info(_cp, w_addr.addrval))
+			assert isinstance(obj, W_AddrObject)
+			res.append(self._one_call_stack_info(obj.cp, obj.pc))
 		#res.reverse()
 		return eterm_operators.build_list_object(res)
 
@@ -599,7 +597,7 @@ class Process:
 		assert isinstance(fake_bif, BaseFakeFunc)
 		res = fake_bif.invoke(cp, pc, self)
 		if isinstance(res, W_AddrObject):
-			return res.addrval
+			return res.pc
 		else:
 			self.x_reg.store(0, res)
 			return pc
@@ -616,7 +614,7 @@ class Process:
 
 	# 4
 	def call(self, pc, cp, arity, label):
-		self.y_reg.push(W_TupleObject([W_CodeParserWrapperObject(cp), W_AddrObject(pc)]))
+		self.y_reg.push(W_AddrObject(cp, pc))
 		return cp.label_to_addr(label)
 
 	# 5
@@ -631,7 +629,7 @@ class Process:
 	# 7
 	def call_ext(self, cp, pc, entry, real_arity):
 		# TODO: add some check for two arities
-		self.y_reg.push(W_TupleObject([W_CodeParserWrapperObject(cp), W_AddrObject(pc)]))
+		self.y_reg.push(W_AddrObject(cp, pc))
 		return self._call_ext_only(cp, entry)
 
 	# 8
@@ -693,8 +691,9 @@ class Process:
 
 	# 19
 	def k_return(self, cp):
-		(cp_obj, addr_obj) = eterm_operators.get_tuple_vals(self.y_reg.pop())
-		return (eterm_operators.get_cp_val(cp_obj), eterm_operators.get_addr_val(addr_obj))
+		addr = self.y_reg.pop()
+		assert isinstance(addr, W_AddrObject)
+		return addr.cp, addr.pc
 
 	# 20
 	def send(self):
@@ -842,7 +841,7 @@ class Process:
 	# 62
 	def k_catch(self, cp, reg, label):
 		addr = cp.label_to_addr(label)
-		self.store_basereg(reg, W_AddrObject(addr))
+		self.store_basereg(reg, W_AddrObject(cp, addr))
 		self.cont_stack.push((label, self.y_reg.depth()))
 
 	# 63
@@ -927,12 +926,12 @@ class Process:
 	# 75
 	@jit.unroll_safe
 	def call_fun(self, pc, cp, arity):
-		self.y_reg.push(W_TupleObject([W_CodeParserWrapperObject(cp), W_AddrObject(pc)]))
+		self.y_reg.push(W_AddrObject(cp, pc))
 		closure = self.fetch_basereg((opcodes.TAG_XREG, arity))
 		(cp, addr, real_arity, fvs) = eterm_operators.get_closure_fields(closure)
 		for i in range(len(fvs)):
 			self.x_reg.store(arity + i, fvs[i])
-		return (cp, addr)
+		return cp, addr
 
 	def call_ext_only(self, cp, entry, real_arity):
 		return self._call_ext_only(cp, entry)

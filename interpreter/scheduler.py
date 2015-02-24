@@ -1,6 +1,7 @@
 from pyrlang.utils.deque import Deque
 from pyrlang.interpreter import constant
 from pyrlang.rpybeam import pretty_print
+from rpython.rlib import jit
 class Scheduler:
 	def __init__(self, pid_provider, is_single_run, reduction):
 		self.pid_provider = pid_provider
@@ -19,6 +20,7 @@ class Scheduler:
 
 		self.internal_message_queue = Deque()
 
+	@jit.unroll_safe
 	def schedule(self):
 		low_skip_times = 0
 		while True:

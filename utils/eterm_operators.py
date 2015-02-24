@@ -3,7 +3,7 @@ from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrL
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
 from pyrlang.interpreter.datatypes.pid import W_PidObject
-from pyrlang.interpreter.datatypes.inner import W_AddrObject, W_CodeParserWrapperObject
+from pyrlang.interpreter.datatypes.inner import W_AddrObject
 from pyrlang.interpreter.datatypes.closure import W_ClosureObject
 from rpython.rlib import jit
 
@@ -39,11 +39,7 @@ def get_pid_contents(v):
 
 def get_addr_val(v):
 	assert isinstance(v, W_AddrObject)
-	return v.addrval
-
-def get_cp_val(v):
-	assert isinstance(v, W_CodeParserWrapperObject)
-	return v.cp
+	return v.pc
 
 @jit.unroll_safe
 def build_list_object(object_lst):
