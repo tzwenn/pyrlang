@@ -58,7 +58,8 @@ class Process:
 		x_reg = self.x_reg
 		#print "execute in reduction %d"%(reduction)
 		reduction = hint(reduction, promote=True)
-		single = hint(reduction, promote=True)
+		single = hint(single, promote=True)
+		self = hint(self, promote=True)
 
 		while(True):
 			driver.jit_merge_point(pc = pc,
