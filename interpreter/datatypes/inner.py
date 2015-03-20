@@ -8,6 +8,7 @@ def raise_inner_is_equal_error():
 	raise Exception("shouldn't call is_equal function for an inner object anyway")
 
 class W_AddrObject(W_Root):
+	_immutable_fields_ = ['cp', 'pc']
 	def __init__(self, cp, intval):
 		self.cp = cp
 		self.pc = intval

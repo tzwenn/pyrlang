@@ -8,6 +8,8 @@ class W_AbstractIntObject(W_Root):
 	pass
 
 class W_IntObject(W_AbstractIntObject):
+	_immutable_fields_ = ['intval']
+
 	def __init__(self, intval):
 		self.intval = intval
 
@@ -139,6 +141,7 @@ class W_IntObject(W_AbstractIntObject):
 			return False
 
 class W_FloatObject(W_Root):
+	_immutable_fields_ = ['floatval']
 	def __init__(self, floatval):
 		assert(isinstance(floatval, float))
 		self.floatval = floatval
@@ -178,7 +181,9 @@ class W_FloatObject(W_Root):
 			return False
 
 class W_BigIntObject(W_AbstractIntObject):
+	_immutable_fields_ = ['bigintval']
 	def __init__(self, intval):
+		print "big"
 		self.bigintval = intval
 
 	def str(self):
@@ -200,7 +205,6 @@ class W_BigIntObject(W_AbstractIntObject):
 		return self.bigintval.sign != -1
 
 	def add(self, other):
-		print other
 		if isinstance(other, W_IntObject):
 			return self._add(other.to_bigint())
 		else:
@@ -231,7 +235,7 @@ class W_BigIntObject(W_AbstractIntObject):
 		if other.is_zero():
 			return W_IntObject(0)
 		else:
-			return W_BigIntObject(self.bigintval.mul(other.bigintval))
+			return self.return_wrap(self.bigintval.mul(other.bigintval))
 
 	def div(self, other):
 		if isinstance(other, W_IntObject):

@@ -3,52 +3,52 @@ from rpython.rlib import jit
 from pyrlang.interpreter.mod_file_loader import ModFileLoader
 from pyrlang.lib import ModuleDict
 from pyrlang.rpybeam.beam_file import BeamRoot
+from pyrlang.rpybeam.instruction import Instruction, ListInstruction
 import opcodes
 import pretty_print
+import time
 
 class CodeParser:
-	_immutable_fields_ = ['file_name', 'parent_cp', 'code', 'total_lines', 'atoms[*]', 'labelTable', 'bif_map',
-			'import_header', '_import_header', 'lit_table', 'loc_table', 'fun_table', 'func_list', 
-			'import_mods', 'export_header', 'export_funcs_list']
+	_immutable_fields_ = ['file_name', 'instrs[*]', 'import_header[*]', 
+			'parent_cp', 'total_lines', 'labelTable[*]', 'atoms[*]', 
+			'_import_header[*]', 'lit_table[*]', 'loc_table[*]', 'mod_dict[*]',
+			'fun_table[*]','import_mods[*]','func_list[*]', 'export_header[*]']
 
 	def __init__(self, beam, name, parent_cp = None):
 		self.file_name = name
 		self.parent_cp = parent_cp
 		self.code = beam.getCode()
 		self.total_lines = -1
-		self.current_label = -1
 		self.labelTable = []
-		self.bif_map = {}
 		self.atoms = beam.getAtomTable()
 		# the import_header will be rewrite so we need another copy to refer the original version at something
 		self._import_header = list(beam.impTChunk.asArray())
-		self.import_header = list(beam.impTChunk.asArray()) 
 		self.lit_table = None
 		self.loc_table = None
 		self.fun_table = None
 		if beam.litTChunk:
-			self.lit_table = beam.litTChunk.asArray()
+			self.lit_table = beam.litTChunk.asArray()[:]
 		if beam.locTChunk:
-			self.loc_table = beam.locTChunk.asArray()
+			self.loc_table = beam.locTChunk.asArray()[:]
 		if beam.funTChunk:
-			self.fun_table = beam.funTChunk.asArray()
+			self.fun_table = beam.funTChunk.asArray()[:]
 			#print "loc_table:"
 			#print self.loc_table
-		self.func_list = []
-		self.import_mods = [] # list of CodeParser to represent import module
-		self.mod_dict = {} # mod atom index => import_mods' index
+		#self.mod_dict = {} # mod atom index => import_mods' index
 
-		self.export_header = beam.expTChunk.asArray()
-		self.export_funcs_list = []
-		self.import_BIF_and_module()
-		self.preprocess(0)
-		#pretty_print.print_labelTable(self.labelTable)
+		self.export_header = beam.expTChunk.asArray()[:]
+		(self.func_list, self.import_header, self.import_mods, self.mod_dict) = self.import_BIF_and_module()
+		(self.labelTable, self.instrs) = self.preprocess()
 
 	@jit.unroll_safe
 	def import_BIF_and_module(self):
 		mfl = ModFileLoader()
-		for i in range(0, len(self.import_header)):
-			entry = self.import_header[i];
+		import_mods = []
+		import_header = self._import_header[:]
+		func_list = []
+		mod_dict = {}
+		for i in range(0, len(import_header)):
+			entry = import_header[i];
 			module_atom_index = entry[0] - 1
 			func_atom_index = entry[1] - 1
 			arity = entry[2]
@@ -60,23 +60,19 @@ class CodeParser:
 				# we use function_arity to emulate function overload
 				moduleEntity = ModuleDict.module_dict[moduleName]()
 				bif_name = ModuleDict.get_bif_name(funcName, arity)
-				#print "mod: %s: func_list: %d => %s"%(self.atoms[0], len(self.func_list), bif_name)
-				self.import_header[i] = (entry[0], len(self.func_list), entry[2])
-				if moduleName in self.bif_map:
-					self.bif_map[moduleName][bif_name] = len(self.func_list)
-				else:
-					self.bif_map[moduleName] = {bif_name: len(self.func_list)}
-				self.func_list.append(moduleEntity.searchFunc(bif_name)())
+				import_header[i] = (entry[0], len(func_list), entry[2])
+				func_list.append(moduleEntity.searchFunc(bif_name)())
 			elif not moduleName == self.get_self_module_name():
-				if module_atom_index not in self.mod_dict:
+				if module_atom_index not in mod_dict:
 					#print "searching module [%s] by %s"%(moduleName, self.get_self_module_name())
 					b = mfl.find(moduleName)
-					self.mod_dict[module_atom_index] = len(self.import_mods)
-					self.import_mods.append(CodeParser(b, moduleName + ".erl", self))
-				mod_cp = self.import_mods[self.mod_dict[module_atom_index]]
+					mod_dict[module_atom_index] = len(import_mods)
+					import_mods.append(CodeParser(b, moduleName + ".erl", self))
+				mod_cp = import_mods[mod_dict[module_atom_index]]
 				func_index = self.search_exports(funcName, 
 						arity, mod_cp.export_header, mod_cp.atoms)
-				self.import_header[i] = (self.mod_dict[module_atom_index], func_index, arity)
+				import_header[i] = (mod_dict[module_atom_index], func_index, arity)
+		return func_list[:],import_header[:], import_mods[:], mod_dict.copy()
 
 	def get_self_module_name(self):
 		return self.atoms[0]
@@ -208,7 +204,7 @@ class CodeParser:
 		return self._parse_float(pc)
 
 	def _parse_floatreg(self, pc):
-		return pc, self.parseInt(pc)
+		return self.parseInt(pc)
 
 	def parse_literal(self, pc):
 		pc, tag = self.parseTag(pc)
@@ -228,7 +224,7 @@ class CodeParser:
 		pc, length = self.parseInt(pc)
 		res = []
 		for i in range(0, length):
-			pc, tmp1 = self.parseInt(pc)
+			pc, tmp1 = self.parseBase(pc)
 			pc, tmp2 = self.parseInt(pc)
 			res.append((tmp1, tmp2))
 		return pc, res
@@ -263,90 +259,116 @@ class CodeParser:
 	#
 	# @return 
 	@jit.unroll_safe
-	def preprocess(self, pc):
-		#print "entry_func:%s"%(self.entry_func)
-		#print("atoms:")
-		#print self.atoms
-		#print "entry_arity:%d"%(self.entry_arity)
-
-		#print "self module: %s" % (self.atoms[0])
-		#print self.export_funcs_dict
-		#print "########"
-		replace_list = []
-		# first pass
-		while(pc < len(self.code)):
-			pc, instr = self.parseInstr(pc)
-			if instr in [opcodes.CALL_EXT, opcodes.CALL_EXT_ONLY, opcodes.CALL_EXT_LAST]:
-				pc, real_arity = self.parseInt(pc)
-				pc_begin = pc
-				pc, header_index = self.parseInt(pc)
-				pc_end = pc
+	def preprocess(self):
+		instrs = self.buildInstrs()
+		labelTable = []
+		for i in range(len(instrs)):
+			instr_obj = instrs[i]
+			if instr_obj.opcode in [opcodes.CALL_EXT, 
+					opcodes.CALL_EXT_ONLY, 
+					opcodes.CALL_EXT_LAST]:
+				args = instr_obj.args
+				real_arity = args[0][1]
+				header_index = args[1][1]
 				entry = self._import_header[header_index]
 				if ModuleDict.is_bif_from_tuple(self.get_name_entry(entry)):
-					# at this time, the func index are already replaced
-					replace_list.append((pc_begin, pc_end - pc_begin,
-							self.import_header[header_index][1]))
-			elif instr == opcodes.LINE:
-				pc, num = self.parseInt(pc)
+					args[1] = (opcodes.TAG_LABEL, 
+							self.import_header[header_index][1])
+					instr_obj.args = args
+			elif instr_obj.opcode == opcodes.LINE:
+				(num,) = instr_obj.arg_values()
 				if num > self.total_lines:
 					self.total_lines = num
-			else:
-				pc = self.discard_operands(instr, pc)
-		code_list = list(self.code)
+			elif instr_obj.opcode == opcodes.LABEL:
+				labelTable.append(i)
+		return labelTable[:], instrs[:]
 
-		global_offset = 0
-		for (addr, word_len, index) in replace_list:
-			# [Notice] this is not a real label, it's just a cheat
-			# that tell interpreter it's actually a bif rather 
-			# than a module function
-			e_lst = self.createOne(index, opcodes.TAG_LABEL)
-			#print "replace %d(size:%d) with %s" % (addr, word_len, str(e_lst))
-			if len(e_lst) == word_len:
-				for i in range(len(e_lst)):
-					code_list[addr + i + global_offset] = e_lst[i]
-			elif len(e_lst) > word_len:
-				assert word_len == 1 and len(e_lst) == 2
-				code_list[addr + global_offset] = e_lst[0]
-				insert_pos = addr + global_offset + 1
-				assert insert_pos >= 0
-				code_list.insert(insert_pos, e_lst[1])
-				global_offset += 1
-			else:
-				#print code_list[addr - 10:]
-				assert len(e_lst) == 1 and word_len == 2
-				code_list[addr + global_offset] = e_lst[0]
-				del code_list[addr + global_offset + 1]
-				global_offset -= 1
-				#print code_list[addr - 10:]
-		self.code = ''.join(code_list)
+		# first pass
+		#while(pc < len(self.code)):
+			#pc, instr = self.parseInstr(pc)
+			#if instr in [opcodes.CALL_EXT, opcodes.CALL_EXT_ONLY, opcodes.CALL_EXT_LAST]:
+				#pc, real_arity = self.parseInt(pc)
+				#pc_begin = pc
+				#pc, header_index = self.parseInt(pc)
+				#pc_end = pc
+				#entry = self._import_header[header_index]
+				#if ModuleDict.is_bif_from_tuple(self.get_name_entry(entry)):
+					## at this time, the func index are already replaced
+					#replace_list.append((pc_begin, pc_end - pc_begin,
+							#self.import_header[header_index][1]))
+			#elif instr == opcodes.LINE:
+				#pc, num = self.parseInt(pc)
+				#if num > self.total_lines:
+					#self.total_lines = num
+			#else:
+				#pc = self.discard_operands(instr, pc)
+		#code_list = list(self.code)
 
-		# second pass, to build the label table
-		# note we cannot do it in first pass because
-		# the replacement of fake bif may change
-		# the layout of the code.
-		pc = 0
-		while(pc < len(self.code)):
-			pc, instr = self.parseInstr(pc)
-			#print "   " + str(pc - 1) + "[" + opcodes.opnames[instr].upper() + "]"
-			if instr == opcodes.LABEL:
-				pc, num = self.parseInt(pc)
-				self.labelTable.append(pc)
-				#print "L" + str(num) + ":" + str(pc)
-			else:
-				#print "[%d]"%(pc) + opcodes.opnames[instr].upper()
-				pc = self.discard_operands(instr, pc)
+		#global_offset = 0
+		#for (addr, word_len, index) in replace_list:
+			## [Notice] this is not a real label, it's just a cheat
+			## that tell interpreter it's actually a bif rather 
+			## than a module function
+			#e_lst = self.createOne(index, opcodes.TAG_LABEL)
+			##print "replace %d(size:%d) with %s" % (addr, word_len, str(e_lst))
+			#if len(e_lst) == word_len:
+				#for i in range(len(e_lst)):
+					#code_list[addr + i + global_offset] = e_lst[i]
+			#elif len(e_lst) > word_len:
+				#assert word_len == 1 and len(e_lst) == 2
+				#code_list[addr + global_offset] = e_lst[0]
+				#insert_pos = addr + global_offset + 1
+				#assert insert_pos >= 0
+				#code_list.insert(insert_pos, e_lst[1])
+				#global_offset += 1
+			#else:
+				##print code_list[addr - 10:]
+				#assert len(e_lst) == 1 and word_len == 2
+				#code_list[addr + global_offset] = e_lst[0]
+				#del code_list[addr + global_offset + 1]
+				#global_offset -= 1
+				##print code_list[addr - 10:]
+		#self.code = ''.join(code_list)
 
+		## second pass, to build the label table
+		## note we cannot do it in first pass because
+		## the replacement of fake bif may change
+		## the layout of the code.
+		#pc = 0
+		#while(pc < len(self.code)):
+			#pc, instr = self.parseInstr(pc)
+			##print "   " + str(pc - 1) + "[" + opcodes.opnames[instr].upper() + "]"
+			#if instr == opcodes.LABEL:
+				#pc, num = self.parseInt(pc)
+				#self.labelTable.append(pc)
+				##print "L" + str(num) + ":" + str(pc)
+			#else:
+				##print "[%d]"%(pc) + opcodes.opnames[instr].upper()
+				#pc = self.discard_operands(instr, pc)
+
+	# try to find the function definition of code at pc
 	@jit.unroll_safe
 	def find_func_def(self, pc):
-		str_len = len(self.code)
-		while(pc < str_len):
-			pc, instr = self.parseInstr(pc)
-			if instr == opcodes.LABEL:
-				pc, label_num = self.parseInt(pc)
-				return self.find_func_def_from_label(label_num - 3)
+		while pc != 0:
+			instr = self.instrs[0]
+			if instr.opcode == opcodes.FUNC_INFO:
+				(module_index, func_name_index, arity) = instr.arg_values()
+				return (self.atoms[module_index - 1],
+						self.atoms[func_name_index - 1],
+						arity)
 			else:
-				pc = self.discard_operands(instr, pc)
-		return self.find_func_def_from_label(len(self.labelTable) - 3)
+				pc -= 1
+		raise Exception("cannot find function definition from address %d"%(pc))
+
+		#str_len = len(self.code)
+		#while(pc < str_len):
+			#pc, instr = self.parseInstr(pc)
+			#if instr == opcodes.LABEL:
+				#pc, label_num = self.parseInt(pc)
+				#return self.find_func_def_from_label(label_num - 3)
+			#else:
+				#pc = self.discard_operands(instr, pc)
+		#return self.find_func_def_from_label(len(self.labelTable) - 3)
 
 	# find some address within the range of label table,
 	# begined with 1
@@ -357,64 +379,107 @@ class CodeParser:
 				return label
 		return len(self.labelTable)
 
-	def find_func_def_from_addr(self, addr):
-		return self.find_func_def_from_label(self.find_label_from_address(addr) - 2)
-
 	# label index should begin with 0
-	@jit.unroll_safe
-	def find_func_def_from_label(self, label_index):
-		for l_idx in range(label_index, len(self.labelTable)):
-			pc = self.labelTable[l_idx]
-			pc, instr = self.parseInstr(pc)
-			if instr == opcodes.LINE:
-				pc = self.discard_operands(instr, pc)
-				pc, instr = self.parseInstr(pc)
-				if instr == opcodes.FUNC_INFO:
-					pc, module_index = self.parseInt(pc)
-					pc, func_name_index = self.parseInt(pc)
-					pc, arity = self.parseInt(pc)
-					return (self.atoms[module_index - 1], 
-							self.atoms[func_name_index - 1],
-							arity)
-		raise Exception("can not found function definition from label:%d"%(label_index + 1))
+	#@jit.unroll_safe
+	#def find_func_def_from_label(self, label_index):
+		#for l_idx in range(label_index, len(self.labelTable)):
+			#pc = self.labelTable[l_idx]
+			#pc, instr = self.parseInstr(pc)
+			#if instr == opcodes.LINE:
+				#pc = self.discard_operands(instr, pc)
+				#pc, instr = self.parseInstr(pc)
+				#if instr == opcodes.FUNC_INFO:
+					#pc, module_index = self.parseInt(pc)
+					#pc, func_name_index = self.parseInt(pc)
+					#pc, arity = self.parseInt(pc)
+					#return (self.atoms[module_index - 1], 
+							#self.atoms[func_name_index - 1],
+							#arity)
+		#raise Exception("can not found function definition from label:%d"%(label_index + 1))
 
 	@jit.unroll_safe
 	def find_current_line(self, pc):
-		while(pc < len(self.code)):
-			pc, instr = self.parseInstr(pc)
-			if instr == opcodes.LINE:
-				pc, line_number = self.parseInt(pc)
-				if line_number == 0: # it means we are in the last line
-					return self.total_lines
-				else:
-					return line_number - 1
+		while pc > 0:
+			instr = self.instrs[pc]
+			if instr.opcode == opcodes.LINE:
+				(num,) = instr.arg_values()
+				return num
 			else:
-				pc = self.discard_operands(instr, pc)
-		# the last part of module file should always be built-in module info
-		# function, so it's reasonable to return a line 0 for them
-		return 0  
+				pc -= 0
+		raise Exception("cannot find line number from address %d"%(pc))
+
+		#while(pc < len(self.code)):
+			#pc, instr = self.parseInstr(pc)
+			#if instr == opcodes.LINE:
+				#pc, line_number = self.parseInt(pc)
+				#if line_number == 0: # it means we are in the last line
+					#return self.total_lines
+				#else:
+					#return line_number - 1
+			#else:
+				#pc = self.discard_operands(instr, pc)
+		## the last part of module file should always be built-in module info
+		## function, so it's reasonable to return a line 0 for them
+		#return 0  
+
+	#@jit.unroll_safe
+	#def discard_operands(self, instr, pc):
+		#arity = opcodes.arity[instr]
+		#for i in range(0, arity):
+			#pc, first = self.parseOne(pc)
+			#pc, tag = self._parseTag(pc, first)
+			##print first
+			##print tag
+			#if self.isBaseTag(tag):
+				#pc, _ = self._parseInt(pc, first)
+			#elif tag == opcodes.TAGX_FLOATREG:
+				#pc, _ = self._parse_floatreg(pc)
+			#elif tag == opcodes.TAGX_SELECTLIST:
+				#pc, _ = self._parse_selectlist(pc)
+			#elif tag == opcodes.TAGX_FLOATREG:
+				#pc, _ = self._parse_floatreg(pc)
+			#elif tag == opcodes.TAGX_ALLOCLIST:
+				#pc, _ = self._parse_alloclist(pc)
+			#elif tag == opcodes.TAGX_LITERAL:
+				#pc, _ = self._parse_literal(pc)
+			#else:
+				#pretty_print.print_hex(self.code)
+				#raise Exception("Unknown TAG: %d at position:%d"%(tag, pc-1))
+		#return pc
 
 	@jit.unroll_safe
-	def discard_operands(self, instr, pc):
-		arity = opcodes.arity[instr]
-		for i in range(0, arity):
-			pc, first = self.parseOne(pc)
-			pc, tag = self._parseTag(pc, first)
-			#print first
-			#print tag
-			if self.isBaseTag(tag):
-				pc, _ = self._parseInt(pc, first)
-			elif tag == opcodes.TAGX_FLOATREG:
-				pc, _ = self._parse_floatreg(pc)
-			elif tag == opcodes.TAGX_SELECTLIST:
-				pc, _ = self._parse_selectlist(pc)
-			elif tag == opcodes.TAGX_FLOATREG:
-				pc, _ = self._parse_floatreg(pc)
-			elif tag == opcodes.TAGX_ALLOCLIST:
-				pc, _ = self._parse_alloclist(pc)
-			elif tag == opcodes.TAGX_LITERAL:
-				pc, _ = self._parse_literal(pc)
+	def buildInstrs(self):
+		pc = 0
+		instrs = []
+		while (pc < len(self.code)):
+			pc, instr = self.parseInstr(pc)
+			arity = opcodes.arity[instr]
+			args = []
+			lst_field = None
+			for i in range(0,arity):
+				pc, first = self.parseOne(pc)
+				pc, tag = self._parseTag(pc, first)
+				if self.isBaseTag(tag):
+					pc, val = self._parseInt(pc, first)
+					args.append((tag, val))
+				elif tag == opcodes.TAGX_FLOATLIT:
+					pc, val = self._parse_floatreg(pc)
+					args.append((tag, val))
+				elif tag == opcodes.TAGX_SELECTLIST:
+					pc, lst_field = self._parse_selectlist(pc)
+				elif tag == opcodes.TAGX_FLOATREG:
+					pc, val = self._parseInt(pc, first)
+					args.append((tag, val))
+				elif tag == opcodes.TAGX_ALLOCLIST:
+					pc, lst_field = self._parse_alloclist(pc)
+				elif tag == opcodes.TAGX_LITERAL:
+					pc, val  = self._parse_literal(pc)
+					args.append((tag, val))
+				else:
+					pretty_print.print_hex(self.code)
+					raise Exception("Unknown TAG: %d at position:%d"%(tag, pc-1))
+			if lst_field:
+				instrs.append(ListInstruction(instr, args[:], lst_field))
 			else:
-				pretty_print.print_hex(self.code)
-				raise Exception("Unknown TAG: %d at position:%d"%(tag, pc-1))
-		return pc
+				instrs.append(Instruction(instr, args[:]))
+		return instrs[:]

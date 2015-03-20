@@ -18,6 +18,7 @@ def WrapEtermBoolean(flag):
 class AddFunc(BaseBIF):
 	def invoke(self, args):
 		(a,b) = args
+		#print a.str() + " + " + b.str() + " = " + a.add(b).str()
 		return a.add(b)
 
 class AtomToListFunc_1(BaseFakeFunc):
@@ -46,6 +47,7 @@ class DivFunc_2(BaseBIF):
 class SubFunc(BaseBIF):
 	def invoke(self, args):
 		(a,b) = args
+		#print a.str() + " + " + b.str() + " = " + a.add(b).str()
 		return a.sub(b)
 
 class MulFunc(BaseBIF):

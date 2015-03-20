@@ -59,7 +59,12 @@ bottomUp(I,D) -> {I, bottomUp(2*I-1,D-1), bottomUp(2*I,D-1)}.
 
 itemCheck(nil) -> 0;
 itemCheck({I,Left,Right}) ->
-   I + itemCheck(Left) - itemCheck(Right).
+   LRes = itemCheck(Left),
+   RRes = itemCheck(Right),
+   Res = I + LRes - RRes,
+   %Res = I + itemCheck(Left) - itemCheck(Right),
+   %erlang:display(integer_to_list(I) ++ " + " ++ integer_to_list(LRes) ++ " - " ++ integer_to_list(RRes) ++ " = " ++ integer_to_list(Res)),
+   Res.
 
 test(A, B) ->
 	itemCheck(bottomUp(A,B)).

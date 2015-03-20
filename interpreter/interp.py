@@ -2,6 +2,7 @@ import sys
 
 from pyrlang.rpybeam import opcodes
 from pyrlang.rpybeam import pretty_print
+from pyrlang.rpybeam.instruction import Instruction, ListInstruction
 from pyrlang.interpreter import fail_class
 from pyrlang.rpybeam.beam_file import *
 from pyrlang.interpreter.register import X_Register, Y_Register
@@ -19,11 +20,12 @@ from pyrlang.utils.deque import MessageDeque
 from pyrlang.utils import eterm_operators
 from pyrlang.lib.base import BaseBIF, BaseFakeFunc
 from rpython.rlib import jit
+from rpython.rlib.jit import hint
 
 def printable_loc(pc, cp):
-	index = ord(cp.code[pc])
+	instr = cp.instrs[pc]
 	#return "L%d(%d) %s"%(cp.find_label_from_address(pc), pc, opcodes.opnames[index].upper())
-	return "%d %s"%(pc, opcodes.opnames[index].upper())
+	return "%d %s"%(pc, opcodes.opnames[instr.opcode].upper())
 
 driver = jit.JitDriver(greens = ['pc', 'cp'],
 		reds = ['reduction', 'single', 's_self', 'x_reg', 's_y_reg'],
@@ -55,6 +57,8 @@ class Process:
 		pc = func_addr
 		x_reg = self.x_reg
 		#print "execute in reduction %d"%(reduction)
+		reduction = hint(reduction, promote=True)
+		single = hint(reduction, promote=True)
 
 		while(True):
 			driver.jit_merge_point(pc = pc,
@@ -66,14 +70,16 @@ class Process:
 					s_y_reg = self.y_reg)
 			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, cp) + " reduction: " + str(reduction)
 			#print x_reg.get(1)
-			instr = ord(cp.code[pc])
+			#instr = ord(cp.code[pc])
+			instr_obj = cp.instrs[pc]
+			instr = instr_obj.opcode
+
 			pc = pc + 1
 			if instr == opcodes.LABEL: # 1
-				pc, _ = cp.parseInt(pc)
+				pass
 
 			elif instr == opcodes.CALL: # 4
-				pc, arity = cp.parseInt(pc)
-				pc, label = cp.parseInt(pc)
+				(arity, label) = instr_obj.arg_values()
 				pc = self.call(pc, cp, arity, label)
 				reduction -= 1
 				if not single and reduction <= 0:
@@ -87,19 +93,15 @@ class Process:
 							x_reg = x_reg,
 							s_y_reg = self.y_reg)
 
-
 			elif instr == opcodes.CALL_LAST: # 5
-				pc, arity = cp.parseInt(pc)
-				pc, label = cp.parseInt(pc)
-				pc, n = cp.parseInt(pc)
+				(arity, label, n) = instr_obj.arg_values()
 				pc = self.call_last(cp, arity, label, n)
 				#reduction -= 1
 				#if not single and reduction <= 0:
 					#break
 
 			elif instr == opcodes.CALL_ONLY: # 6
-				pc, arity = cp.parseInt(pc)
-				pc, label = cp.parseInt(pc)
+				(arity, label) = instr_obj.arg_values()
 				pc = self.call_only(cp, arity, label)
 				reduction -= 1
 				if not single and reduction <= 0:
@@ -114,8 +116,9 @@ class Process:
 							s_y_reg = self.y_reg)
 
 			elif instr == opcodes.CALL_EXT: # 7
-				pc, real_arity = cp.parseInt(pc)
-				pc, (tag, header_index) = cp.parseBase(pc)
+				args = instr_obj.args
+				real_arity = args[0][1]
+				(tag, header_index) = args[1]
 				if (tag == opcodes.TAG_LITERAL):
 					entry = cp.import_header[header_index]
 					cp, pc = self.call_ext(cp, pc, entry, real_arity)
@@ -134,9 +137,10 @@ class Process:
 					#break
 
 			elif instr == opcodes.CALL_EXT_LAST: # 8
-				pc, real_arity = cp.parseInt(pc)
-				pc, (tag, header_index) = cp.parseBase(pc)
-				pc, dealloc = cp.parseInt(pc)
+				args = instr_obj.args
+				real_arity = args[0][1]
+				(tag, header_index) = args[1]
+				dealloc = args[2][1]
 				if (tag == opcodes.TAG_LITERAL):
 					entry = cp.import_header[header_index]
 					cp, pc = self.call_ext_last(cp, pc, entry, real_arity, dealloc)
@@ -155,15 +159,15 @@ class Process:
 					#break
 
 			elif instr == opcodes.BIF0: # 9
-				pc, bif_index = cp.parseInt(pc)
-				pc, dst_reg = cp.parseBase(pc)
+				((_, bif_index), dst_reg) = instr_obj.args
 				self.bif0(cp, pc, bif_index, dst_reg)
 
 			elif instr == opcodes.BIF1: # 10
-				pc, fail = cp.parseInt(pc)
-				pc, bif_index = cp.parseInt(pc)
-				pc, rand1 = cp.parseBase(pc)
-				pc, dst_reg = cp.parseBase(pc)
+				args = instr_obj.args
+				fail = args[0][1]
+				bif_index = args[1][1]
+				rand1 = args[2]
+				dst_reg = args[3]
 				pc = self.bif1(cp, pc, fail, 
 						cp.import_header[bif_index][1], rand1, dst_reg)
 				#reduction -= 1
@@ -171,11 +175,12 @@ class Process:
 					#break
 
 			elif instr == opcodes.BIF2: # 11
-				pc, fail = cp.parseInt(pc)
-				pc, bif_index = cp.parseInt(pc)
-				pc, rand1 = cp.parseBase(pc)
-				pc, rand2 = cp.parseBase(pc)
-				pc, dst_reg = cp.parseBase(pc)
+				args = instr_obj.args
+				fail = args[0][1]
+				bif_index = args[1][1]
+				rand1 = args[2]
+				rand2 = args[3]
+				dst_reg = args[4]
 				pc = self.bif2(cp, pc, fail, 
 						cp.import_header[bif_index][1], rand1, rand2, dst_reg)
 				#reduction -= 1
@@ -183,38 +188,31 @@ class Process:
 					#break
 
 			elif instr == opcodes.ALLOCATE: # 12
-				pc, stack_need = cp.parseInt(pc)
-				pc, live = cp.parseInt(pc)
+				(stack_need, live) = instr_obj.arg_values()
 				self.allocate(stack_need, live)
 
 			elif instr == opcodes.ALLOCATE_HEAP: # 13
-				pc, stack_need = cp.parseInt(pc)
-				pc, heap_need = cp.parseInt(pc)
-				pc, live = cp.parseInt(pc)
+				(stack_need, heap_need, live) = instr_obj.arg_values()
 				self.allocate_heap(stack_need, heap_need, live)
 
 			elif instr == opcodes.ALLOCATE_ZERO: # 14
-				pc, stack_need = cp.parseInt(pc)
-				pc, live = cp.parseInt(pc)
+				(stack_need, live) = instr_obj.arg_values()
 				self.allocate_zero(stack_need, live)
 
 			elif instr == opcodes.ALLOCATE_HEAP_ZERO: # 15
-				pc, stack_need = cp.parseInt(pc)
-				pc, heap_need = cp.parseInt(pc)
-				pc, live = cp.parseInt(pc)
+				(stack_need, heap_need, live) = instr_obj.arg_values()
 				self.allocate_heap_zero(stack_need, heap_need, live)
 
 			elif instr == opcodes.TEST_HEAP: # 16
-				pc, term1 = cp.parseBase(pc)
-				pc, term2 = cp.parseBase(pc)
+				(term1, term2) = instr_obj.args
 				self.test_heap(term1, term2)
 
 			elif instr == opcodes.INIT: # 17
-				pc, dst_reg = cp.parseBase(pc)
+				dst_reg = instr_obj.args[0]
 				self.init(dst_reg)
 
 			elif instr == opcodes.DEALLOCATE: # 18
-				pc, n = cp.parseInt(pc)
+				(n,) = instr_obj.arg_values()
 				self.deallcate(n)
 
 			elif instr == opcodes.K_RETURN: # 19
@@ -230,150 +228,124 @@ class Process:
 				self.remove_message()
 
 			elif instr == opcodes.LOOP_REC: # 23
-				pc, label = cp.parseInt(pc)
-				pc, dst_reg = cp.parseBase(pc)
+				args = instr_obj.args
+				label = args[0][1]
+				dst_reg = args[1]
 				pc = self.loop_rec(pc, cp, label, dst_reg)
 
 			elif instr == opcodes.LOOP_REC_END: # 24
-				pc, label = cp.parseInt(pc)
+				(label,) = instr_obj.arg_values()
 				pc = self.loop_rec_end(cp, label)
 
 			elif instr == opcodes.WAIT: # 25
-				pc, label = cp.parseInt(pc)
+				(label,) = instr_obj.arg_values()
 				pc = self.wait(cp, label)
 				return (constant.STATE_HANG_UP, pc, cp)
 
 			elif instr == opcodes.IS_LT: # 39
-				pc, label = cp.parseInt(pc)
-				pc, term1 = cp.parseBase(pc)
-				pc, term2 = cp.parseBase(pc)
+				((_, label), term1, term2) = instr_obj.args
 				pc = self.is_lt(pc, cp, label, term1, term2)
 
 			elif instr == opcodes.IS_GE: # 40
-				pc, label = cp.parseInt(pc)
-				pc, term1 = cp.parseBase(pc)
-				pc, term2 = cp.parseBase(pc)
+				((_, label), term1, term2) = instr_obj.args
 				pc = self.is_ge(pc, cp, label, term1, term2)
 
 			elif instr == opcodes.IS_EQ: # 41
-				pc, label = cp.parseInt(pc)
-				pc, term1 = cp.parseBase(pc)
-				pc, term2 = cp.parseBase(pc)
+				((_, label), term1, term2) = instr_obj.args
 				pc = self.is_eq(pc, cp, label, term1, term2)
 
 			elif instr == opcodes.IS_EQ_EXACT: # 43
-				pc, next_addr = cp.parseInt(pc)
-				pc, test_reg = cp.parseBase(pc)
 				# TODO: maybe other data types here
-				pc, dst_reg  = cp.parseBase(pc)
+				((_, next_addr), test_reg, dst_reg) = instr_obj.args
 				pc = self.is_eq_exact(pc, cp, next_addr, test_reg, dst_reg)
 
 			elif instr == opcodes.IS_INTEGER: # 45
-				pc, label = cp.parseInt(pc)
-				pc, test_v = cp.parseBase(pc)
+				((_, label), test_v) = instr_obj.args
 				pc = self.is_integer(pc, cp, label, test_v)
 
 			elif instr == opcodes.IS_FLOAT: # 46
-				pc, label = cp.parseInt(pc)
-				pc, test_v = cp.parseBase(pc)
+				((_, label), test_v) = instr_obj.args
 				pc = self.is_float(pc, cp, label, test_v)
 
 			elif instr == opcodes.IS_ATOM: # 48
-				pc, label = cp.parseInt(pc)
-				pc, test_v = cp.parseBase(pc)
+				((_, label), test_v) = instr_obj.args
 				pc = self.is_atom(pc, cp, label, test_v)
 
 			elif instr == opcodes.IS_NIL: # 52
-				pc, label = cp.parseInt(pc)
-				pc, test_v = cp.parseBase(pc)
+				((_, label), test_v) = instr_obj.args
 				pc = self.is_nil(pc, cp, label, test_v)
 
 			elif instr == opcodes.IS_LIST: # 55
-				pc, label = cp.parseInt(pc)
-				pc, test_v = cp.parseBase(pc)
+				((_, label), test_v) = instr_obj.args
 				pc = self.is_nil(pc, cp, label, test_v)
 
 			elif instr == opcodes.IS_NONEMPTY_LIST: # 56
-				pc, label = cp.parseInt(pc)
-				pc, test_v = cp.parseBase(pc)
+				((_, label), test_v) = instr_obj.args
 				pc = self.is_nonempty_list(pc, cp, label, test_v)
 
 			elif instr == opcodes.IS_TUPLE: # 57
-				pc, label = cp.parseInt(pc)
-				pc, test_v = cp.parseBase(pc)
+				((_, label), test_v) = instr_obj.args
 				pc = self.is_tuple(pc, cp, label, test_v)
 
 			elif instr == opcodes.TEST_ARITY: # 58
-				pc, label = cp.parseInt(pc)
-				pc, src_reg = cp.parseBase(pc)
-				pc, size = cp.parseInt(pc)
+				((_, label), src_reg, (_, size)) = instr_obj.args
 				pc = self.test_arity(pc, cp, label, src_reg, size)
 				
 			elif instr == opcodes.SELECT_VAL: # 59
-				pc, reg = cp.parseBase(pc)  
-				pc, label = cp.parseInt(pc)
-				pc, sl = cp.parse_selectlist(pc)
+				assert isinstance(instr_obj, ListInstruction)
+				(reg, (_, label)) = instr_obj.args
+				sl = instr_obj.lst
 				pc = self.select_val(cp, reg, label, sl)
 
 			elif instr == opcodes.JUMP: # 61
-				pc, label = cp.parseInt(pc)
+				(label, _) = instr_obj.arg_values()
 				pc = self.jump(cp, label)
 
 			elif instr == opcodes.K_CATCH: # 62
-				pc, reg = cp.parseBase(pc)
-				pc, label = cp.parseInt(pc)
+				(reg, (_, label)) = instr_obj.args
 				self.k_catch(cp, reg, label)
 
 			elif instr == opcodes.CATCH_END: # 63
-				pc, reg = cp.parseBase(pc)
+				reg = instr_obj.args[0]
 				self.catch_end(pc, cp, reg)
 
 			elif instr == opcodes.MOVE: # 64
-				pc, source = cp.parseBase(pc)
-				pc, dst_reg = cp.parseBase(pc)
+				(source, dst_reg) = instr_obj.args
 				self.move(cp, source, dst_reg)
 
 			elif instr == opcodes.GET_LIST: # 65
-				pc, src_reg = cp.parseBase(pc)
-				pc, head_reg = cp.parseBase(pc)
-				pc, tail_reg = cp.parseBase(pc)
+				(src_reg, head_reg, tail_reg) = instr_obj.args
 				self.get_list(src_reg, head_reg, tail_reg)
 
 			elif instr == opcodes.GET_TUPLE_ELEMENT: # 66
-				pc, src_reg = cp.parseBase(pc)
-				pc, index = cp.parseInt(pc)
-				pc, dst_reg = cp.parseBase(pc)
+				(src_reg, (_, index), dst_reg) = instr_obj.args
 				self.get_tuple_element(cp, src_reg, index, dst_reg)
 
 			elif instr == opcodes.PUT_LIST: # 69
-				pc, head_reg = cp.parseBase(pc)
-				pc, tail_reg = cp.parseBase(pc)
-				pc, dst_reg = cp.parseBase(pc)
+				(head_reg, tail_reg, dst_reg) = instr_obj.args
 				self.put_list(cp, head_reg, tail_reg, dst_reg)
 
 			elif instr == opcodes.PUT_TUPLE: # 70
-				pc, arity = cp.parseInt(pc)
-				pc, dst_reg = cp.parseBase(pc)
+				((_, arity), dst_reg) = instr_obj.args
 				self.put_tuple(arity, dst_reg)
 
 			elif instr == opcodes.PUT: # 71
-				pc, src = cp.parseBase(pc)
+				src = instr_obj.args[0]
 				self.put(cp, src)
 
 			elif instr == opcodes.BADMATCH: # 72
-				pc, label = cp.parseInt(pc)
+				(label,) = instr_obj.arg_values()
 				pc = self.badmatch(pc, cp, label)
 
 			elif instr == opcodes.IF_END: # 73
 				pc = self.if_end(pc, cp)
 
 			elif instr == opcodes.CALL_FUN: # 75
-				pc, arity = cp.parseInt(pc)
+				(arity,) = instr_obj.arg_values()
 				(cp, pc) = self.call_fun(pc, cp, arity)
 
 			elif instr == opcodes.CALL_EXT_ONLY: # 78
-				pc, real_arity = cp.parseInt(pc)
-				pc, (tag, header_index) = cp.parseBase(pc)
+				((_, real_arity), (tag, header_index)) = instr_obj.args
 				if tag == opcodes.TAG_LITERAL:
 					entry = cp.import_header[header_index]
 					cp, pc = self.call_ext_only(cp, entry, real_arity)
@@ -388,31 +360,20 @@ class Process:
 						(cp, pc) = self.k_return(cp)
 
 			elif instr == opcodes.MAKE_FUN2: # 103
-				pc, index = cp.parseInt(pc)
+				(index,) = instr_obj.arg_values()
 				self.make_fun2(cp, index)
 
 			elif instr == opcodes.IS_FUNCTION2: # 115
-				pc, label = cp.parseInt(pc)
-				pc, a1 = cp.parseBase(pc)
-				pc, a2 = cp.parseBase(pc)
+				((_, label), a1, a2) = instr_obj.args
 				pc = self.is_function2(pc, cp, label, a1, a2)
 
 			elif instr == opcodes.GC_BIF1: # 124
-				pc, fail = cp.parseInt(pc)
-				pc, alive = cp.parseInt(pc)
-				pc, bif_index = cp.parseInt(pc)
-				pc, rand1 = cp.parseBase(pc)
-				pc, dst_reg = cp.parseBase(pc)
+				((_,fail), (_,alive), (_,bif_index), rand1, dst_reg) = instr_obj.args
 				pc = self.gc_bif1(cp, pc, fail, alive,
 						cp.import_header[bif_index][1], rand1, dst_reg)
 
 			elif instr == opcodes.GC_BIF2: # 125
-				pc, fail = cp.parseInt(pc)
-				pc, alive = cp.parseInt(pc)
-				pc, bif_index = cp.parseInt(pc)
-				pc, rand1 = cp.parseBase(pc)
-				pc, rand2 = cp.parseBase(pc)
-				pc, dst_reg = cp.parseBase(pc)
+				((_,fail), (_,alive), (_,bif_index), rand1, rand2, dst_reg) = instr_obj.args
 				pc = self.gc_bif2(cp, pc, fail, alive, 
 						cp.import_header[bif_index][1], rand1, rand2, dst_reg)
 				#reduction -= 1
@@ -420,12 +381,11 @@ class Process:
 					#break
 
 			elif instr == opcodes.TRIM: # 136
-				pc, n = cp.parseInt(pc)
-				pc, remaining = cp.parseInt(pc)
+				(n, remaining) = instr_obj.arg_values()
 				self.trim(n, remaining)
 
 			elif instr == opcodes.LINE: # 153
-				pc, cp.current_line = cp.parseInt(pc)
+				pass
 			else:
 				pretty_print.print_value(self.create_call_stack_info(cp, pc))
 				raise Exception("Unimplemented opcode: %d"%(instr))
@@ -881,9 +841,13 @@ class Process:
 
 	# 69
 	def put_list(self, cp, head_reg, tail_reg, dst_reg):
+		tag = head_reg[0]
 		head = self.get_basic_value(cp, head_reg)
 		tail = self.get_basic_value(cp, tail_reg)
-		res = W_ListObject(head, tail)
+		if tag in [opcodes.TAG_XREG, opcodes.TAG_YREG]:
+			res = W_ListObject(head, tail)
+		else:
+			res = W_StrListObject(head, tail)
 		self.store_basereg(dst_reg, res)
 
 	# 70
