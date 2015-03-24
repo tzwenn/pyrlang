@@ -42,6 +42,12 @@ class Y_Register(AbstractRegister):
 	def pop(self):
 		return self.regs.pop()
 
+	def delete(self,n):
+		r_l = len(self.regs)
+		from_index = r_l - n
+		assert from_index > 0
+		del self.regs[from_index:]
+
 	def push(self, value):
 		self.regs.append(value)
 

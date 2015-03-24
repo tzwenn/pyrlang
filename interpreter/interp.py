@@ -28,13 +28,14 @@ def printable_loc(pc, cp):
 	return "%d %s"%(pc, opcodes.opnames[instr.opcode].upper())
 
 driver = jit.JitDriver(greens = ['pc', 'cp'],
-		reds = ['reduction', 'single', 's_self', 'x_reg', 's_y_reg'],
-		virtualizables = ['x_reg'],
+		reds = ['jump_pc', 'reduction', 'single', 's_self', 'x_reg', 'y_reg'],
+		virtualizables = ['s_self'],
 		get_printable_location=printable_loc)
 
 class Process:
-	_immutable_fields_ = ['pid']
+	_virtualizable_ = ['x_reg', 'y_reg']
 	def __init__(self, pid, scheduler, priority = constant.PRIORITY_NORMAL):
+		self = jit.hint(self, fresh_virtualizable=True, access_directly=True)
 		self.x_reg = X_Register()
 		self.y_reg = Y_Register()
 
@@ -61,14 +62,17 @@ class Process:
 		single = hint(single, promote=True)
 		self = hint(self, promote=True)
 
+		jump_pc = pc
+
 		while(True):
 			driver.jit_merge_point(pc = pc,
 					cp = cp,
+					jump_pc = jump_pc,
 					reduction = reduction,
 					single = single, 
 					s_self = self,
 					x_reg = x_reg,
-					s_y_reg = self.y_reg)
+					y_reg = self.y_reg)
 			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, cp) + " reduction: " + str(reduction)
 			#print x_reg.get(1)
 			#instr = ord(cp.code[pc])
@@ -81,18 +85,23 @@ class Process:
 
 			elif instr == opcodes.CALL: # 4
 				(arity, label) = instr_obj.arg_values()
+				call_pc = pc
 				pc = self.call(pc, cp, arity, label)
 				reduction -= 1
 				if not single and reduction <= 0:
 					break
 				else:
-					driver.can_enter_jit(pc = pc,
-							cp = cp,
-							reduction = reduction,
-							single = single,
-							s_self = self, 
-							x_reg = x_reg,
-							s_y_reg = self.y_reg)
+					if call_pc == jump_pc:
+						driver.can_enter_jit(pc = pc,
+								cp = cp,
+								jump_pc = jump_pc,
+								reduction = reduction,
+								single = single,
+								s_self = self, 
+								x_reg = x_reg,
+								y_reg = self.y_reg)
+					else:
+						jump_pc = call_pc
 
 			elif instr == opcodes.CALL_LAST: # 5
 				(arity, label, n) = instr_obj.arg_values()
@@ -110,11 +119,12 @@ class Process:
 				else:
 					driver.can_enter_jit(pc = pc,
 							cp = cp,
+							jump_pc = jump_pc,
 							reduction = reduction,
 							single = single,
 							s_self = self, 
 							x_reg = x_reg,
-							s_y_reg = self.y_reg)
+							y_reg = self.y_reg)
 
 			elif instr == opcodes.CALL_EXT: # 7
 				args = instr_obj.args
@@ -220,7 +230,20 @@ class Process:
 				if self.y_reg.is_empty():
 					return (constant.STATE_TERMINATE, pc, cp)
 				else:
+					call_pc = pc
 					(cp, pc) = self.k_return(cp)
+					# try to trace RETURN instruction, too
+					if call_pc == jump_pc:
+						driver.can_enter_jit(pc = pc,
+								cp = cp,
+								jump_pc = jump_pc,
+								reduction = reduction,
+								single = single,
+								s_self = self,
+								x_reg = x_reg,
+								y_reg = self.y_reg)
+					else:
+						jump_pc = call_pc
 
 			elif instr == opcodes.SEND: # 20
 				self.send()
@@ -647,8 +670,9 @@ class Process:
 	# 18
 	@jit.unroll_safe
 	def deallcate(self, n):
-		for i in range(0, n):
-			self.y_reg.pop()
+		self.y_reg.delete(n)
+		#for i in range(0, n):
+			#self.y_reg.pop()
 
 	# 19
 	def k_return(self, cp):
@@ -841,11 +865,13 @@ class Process:
 		self.store_basereg(dst_reg, e)
 
 	# 69
+	@jit.unroll_safe
 	def put_list(self, cp, head_reg, tail_reg, dst_reg):
-		tag = head_reg[0]
 		head = self.get_basic_value(cp, head_reg)
 		tail = self.get_basic_value(cp, tail_reg)
-		if tag in [opcodes.TAG_XREG, opcodes.TAG_YREG]:
+		tag = head_reg[0]
+		tag = hint(tag, promote=True)
+		if tag is opcodes.TAG_XREG or tag is opcodes.TAG_YREG:
 			res = W_ListObject(head, tail)
 		else:
 			res = W_StrListObject(head, tail)
