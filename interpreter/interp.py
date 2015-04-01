@@ -13,9 +13,10 @@ from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObjec
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject 
-from pyrlang.interpreter.datatypes.atom import W_AtomObject
+from pyrlang.interpreter.datatypes.atom import W_AbstractAtomObject, W_StrAtomObject
 from pyrlang.interpreter.datatypes.closure import W_ClosureObject
 from pyrlang.interpreter import constant
+from pyrlang.interpreter import abstract_stack
 from pyrlang.utils.deque import MessageDeque
 from pyrlang.utils import eterm_operators
 from pyrlang.lib.base import BaseBIF, BaseFakeFunc
@@ -29,13 +30,12 @@ def printable_loc(pc, cp):
 
 driver = jit.JitDriver(greens = ['pc', 'cp'],
 		reds = ['jump_pc', 'reduction', 'single', 's_self', 'x_reg', 'y_reg'],
-		virtualizables = ['s_self'],
+		virtualizables = ['x_reg'],
 		get_printable_location=printable_loc)
 
 class Process:
-	_virtualizable_ = ['x_reg', 'y_reg']
+	_immutable_fields_ = ['pid']
 	def __init__(self, pid, scheduler, priority = constant.PRIORITY_NORMAL):
-		self = jit.hint(self, fresh_virtualizable=True, access_directly=True)
 		self.x_reg = X_Register()
 		self.y_reg = Y_Register()
 
@@ -86,12 +86,14 @@ class Process:
 			elif instr == opcodes.CALL: # 4
 				(arity, label) = instr_obj.arg_values()
 				call_pc = pc
-				pc = self.call(pc, cp, arity, label)
+				is_two_state_match = call_pc == jump_pc
+				frame = (cp, pc)
+				pc = self.call(frame, arity, label)
 				reduction -= 1
 				if not single and reduction <= 0:
 					break
 				else:
-					if call_pc == jump_pc:
+					if is_two_state_match:
 						driver.can_enter_jit(pc = pc,
 								cp = cp,
 								jump_pc = jump_pc,
@@ -132,10 +134,28 @@ class Process:
 				(tag, header_index) = args[1]
 				if (tag == opcodes.TAG_LITERAL):
 					entry = cp.import_header[header_index]
-					cp, pc = self.call_ext(cp, pc, entry, real_arity)
+					call_pc = pc
+					is_two_state_match = call_pc == jump_pc
+					frame = (cp, pc)
+					cp, pc = self.call_ext(frame, entry, real_arity)
+					reduction -= 1
+					if not single and reduction <=0:
+						break
+					else:
+						if is_two_state_match:
+							driver.can_enter_jit(pc = pc,
+									cp = cp,
+									jump_pc = jump_pc,
+									reduction = reduction,
+									single = single,
+									s_self = self, 
+									x_reg = x_reg,
+									y_reg = self.y_reg)
+						else:
+							jump_pc = call_pc
 				else:
 					assert tag == opcodes.TAG_LABEL
-					self.y_reg.push(W_AddrObject(cp, pc))
+					self.y_reg.push((cp, pc))
 					pc = self._call_ext_bif(pc, cp, header_index)
 					# calling a bif means the dispatch loop 
 					# need a extra k_return semantics 
@@ -158,7 +178,7 @@ class Process:
 				else:
 					assert tag == opcodes.TAG_LABEL
 					pc = self._call_ext_bif(pc, cp, header_index)
-					self.deallcate(dealloc)
+					self.deallocate(dealloc)
 					# calling a bif means the dispatch loop 
 					# need a extra k_return semantics 
 					if self.y_reg.is_empty():
@@ -224,7 +244,7 @@ class Process:
 
 			elif instr == opcodes.DEALLOCATE: # 18
 				(n,) = instr_obj.arg_values()
-				self.deallcate(n)
+				self.deallocate(n)
 
 			elif instr == opcodes.K_RETURN: # 19
 				if self.y_reg.is_empty():
@@ -438,16 +458,14 @@ class Process:
 		if tag == opcodes.TAG_XREG or tag == opcodes.TAG_YREG:
 			return self.fetch_basereg(pair)
 		elif tag == opcodes.TAG_INTEGER:
-			return W_IntObject(value)
+			return cp.const_table[value]
 		elif tag == opcodes.TAG_ATOM:
 			if value == 0:
-				return W_NilObject()
+				return constant.CONST_NIL
 			else:
-				# TODO: maybe bad performance, if so fix it.
-				return W_AtomObject(cp.atoms[value-1])
+				return cp.atom_objs[value-1]
 		elif tag == opcodes.TAGX_LITERAL:
-			t = cp.lit_table[value]
-			return self.term_to_value(t)
+			return cp.lit_table[value]
 		else:
 			# TODO: take more care for else branch
 			return W_IntObject(value)
@@ -474,41 +492,12 @@ class Process:
 		else:
 			return cp.label_to_addr(label)
 
-	@jit.unroll_safe
-	def term_to_value(self, t):
-		if isinstance(t, NewFloatTerm):
-			return W_FloatObject(t.floatval)
-		elif isinstance(t, SmallIntegerTerm):
-			return W_IntObject(t.val)
-		elif isinstance(t, AtomTerm):
-			return W_AtomObject(t.value)
-		elif isinstance(t, SmallTupleTerm):
-			o_lst = [self.term_to_value(e) for e in t.vals]
-			return W_TupleObject(o_lst)
-		elif isinstance(t, IntListTerm):
-			lst = t.vals
-			i_lst = []
-			for intval in lst:
-				i_lst.append(W_IntObject(intval))
-			return eterm_operators.build_strlist_object(i_lst)
-		elif isinstance(t, AnyListTerm):
-			lst = t.vals
-			o_lst = []
-			for t in lst:
-				o_lst.append(self.term_to_value(t))
-			return eterm_operators.build_list_object(o_lst)
-		else:
-			W_IntObject(-999) # only used for type inference
-
 	def exit(self, s):
 		print s
 		raise Exception()
 
 	# the args is used in erlang:error
 	def fail(self, cp, pc, fclass, reason, args = None):
-		#pretty_print.print_value(W_TupleObject([W_AtomObject('fail'),
-			#W_AtomObject(fail_class.fail_names[fclass]),
-			#reason]))
 		if self.cont_stack.is_empty():
 			if fclass == fail_class.THROWN:
 				self.exit("not catch thrown exception")
@@ -521,9 +510,9 @@ class Process:
 		else:
 			(label, depth) = self.cont_stack.top()
 			new_depth = self.y_reg.depth()
-			self.deallcate(new_depth - depth)
+			self.deallocate(new_depth - depth)
 			self.x_reg.store(0, None)
-			self.x_reg.store(1, W_AtomObject(fail_class.fail_names[fclass]))
+			self.x_reg.store(1, W_StrAtomObject(fail_class.fail_names[fclass]))
 			self.x_reg.store(2, reason)
 			return W_AddrObject(cp, cp.label_to_addr(label))
 
@@ -547,14 +536,14 @@ class Process:
 			arg_part = args
 		else:
 			arg_part = W_IntObject(arity)
-		return W_TupleObject([W_AtomObject(module_name),
-			W_AtomObject(func_name),
+		return W_TupleObject([W_StrAtomObject(module_name),
+			W_StrAtomObject(func_name),
 			arg_part,
-			W_ListObject(W_TupleObject([W_AtomObject('file'), 
+			W_ListObject(W_TupleObject([W_StrAtomObject('file'), 
 				#FIXME: it actually should be a string type,
 				# and it also influent the error_message function
-				W_AtomObject(cp.file_name)]), 
-				W_ListObject(W_TupleObject([W_AtomObject('line'), 
+				eterm_operators.build_strlist_object([W_IntObject(ord(c)) for c in cp.file_name])]), 
+				W_ListObject(W_TupleObject([W_StrAtomObject('line'), 
 					W_IntObject(line_number)])))])
 
 	@jit.unroll_safe
@@ -597,13 +586,13 @@ class Process:
 ########################################################################
 
 	# 4
-	def call(self, pc, cp, arity, label):
-		self.y_reg.push(W_AddrObject(cp, pc))
-		return cp.label_to_addr(label)
+	def call(self, frame, arity, label):
+		self.y_reg.push(frame)
+		return frame[0].label_to_addr(label)
 
 	# 5
 	def call_last(self, cp, arity, label, n):
-		self.deallcate(n)
+		self.deallocate(n)
 		return cp.label_to_addr(label)
 
 	# 6
@@ -611,14 +600,14 @@ class Process:
 		return cp.label_to_addr(label)
 
 	# 7
-	def call_ext(self, cp, pc, entry, real_arity):
+	def call_ext(self, frame, entry, real_arity):
 		# TODO: add some check for two arities
-		self.y_reg.push(W_AddrObject(cp, pc))
-		return self._call_ext_only(cp, entry)
+		self.y_reg.push(frame)
+		return self._call_ext_only(frame[0], entry)
 
 	# 8
 	def call_ext_last(self, cp, pc, entry, real_arity, dealloc):
-		self.deallcate(dealloc)
+		self.deallocate(dealloc)
 		return self._call_ext_only(cp, entry)
 
 	# 9
@@ -636,28 +625,20 @@ class Process:
 		return self.apply_bif(cp, pc, fail, bif_index, [rand1, rand2], dst_reg)
 
 	# 12
-	@jit.unroll_safe
 	def allocate(self, stack_need, live):
-		for i in range(0, stack_need):
-			self.y_reg.push(None)
+		self.y_reg.allocate(stack_need)
 
 	# 13
-	@jit.unroll_safe
 	def allocate_heap(self, stack_need, heap_need, live):
-		for i in range(0, stack_need):
-			self.y_reg.push(None)
+		self.y_reg.allocate(stack_need)
 		
 	# 14
-	@jit.unroll_safe
 	def allocate_zero(self, stack_need, live):
-		for i in range(0, stack_need):
-			self.y_reg.push(W_IntObject(0))
+		self.y_reg.allocate(stack_need, constant.CONST_0)
 
 	# 15
-	@jit.unroll_safe
 	def allocate_heap_zero(self, stack_need, heap_need, live):
-		for i in range(0, stack_need):
-			self.y_reg.push(W_IntObject(0))
+		self.y_reg.allocate(stack_need, constant.CONST_0)
 
 	# 16
 	def test_heap(self, alloc, live):
@@ -669,16 +650,12 @@ class Process:
 
 	# 18
 	@jit.unroll_safe
-	def deallcate(self, n):
-		self.y_reg.delete(n)
-		#for i in range(0, n):
-			#self.y_reg.pop()
+	def deallocate(self, n):
+		self.y_reg.deallocate(n)
 
 	# 19
 	def k_return(self, cp):
-		addr = self.y_reg.pop()
-		assert isinstance(addr, W_AddrObject)
-		return addr.cp, addr.pc
+		return self.y_reg.pop()
 
 	# 20
 	def send(self):
@@ -766,7 +743,7 @@ class Process:
 
 	# 48
 	def is_atom(self, pc, cp, label, test_v):
-		return self.not_jump(pc, cp, label, test_v, W_AtomObject)
+		return self.not_jump(pc, cp, label, test_v, W_AbstractAtomObject)
 
 	# 52
 	def is_nil(self, pc, cp, label, test_v):
@@ -813,9 +790,9 @@ class Process:
 			((tag, v), l) = slist[i]
 			#print "tag:" + str(tag)
 			#print "value:" + str(v)
-			if tag == opcodes.TAG_ATOM and val.is_equal(W_AtomObject(cp.atoms[v-1])):
+			if tag == opcodes.TAG_ATOM and val.is_equal(cp.atom_objs[v-1]):
 				return cp.label_to_addr(l)
-			elif tag == opcodes.TAG_INTEGER and val.is_equal(W_IntObject(v)):
+			elif tag == opcodes.TAG_INTEGER and val.is_equal(cp.const_table[v]):
 				return cp.label_to_addr(l)
 		return cp.label_to_addr(label)
 
@@ -837,14 +814,14 @@ class Process:
 		if not x0: # it means x0 is a none value
 			x1 = self.x_reg.get(1)
 			x2 = self.x_reg.get(2)
-			assert isinstance(x1, W_AtomObject)
+			assert isinstance(x1, W_StrAtomObject)
 			atom_val = x1.strval
 			if atom_val == fail_class.fail_names[fail_class.THROWN]:
 				self.x_reg.store(0, x2)
 			elif atom_val == fail_class.fail_names[fail_class.ERROR]:
 				self.x_reg.store(0, W_TupleObject([x2, self.create_call_stack_info(cp, pc)]))
 			else:
-				self.x_reg.store(0, W_TupleObject([W_AtomObject('EXIT'), x2]))
+				self.x_reg.store(0, W_TupleObject([W_StrAtomObject('EXIT'), x2]))
 		
 	# 64
 	def move(self, cp, source, dst_reg):
@@ -904,20 +881,20 @@ class Process:
 	# 72
 	def badmatch(self, pc, cp, label):
 		if label == 0:
-			addr = self.fail(cp, pc, fail_class.ERROR, W_AtomObject('badmatch'))
+			addr = self.fail(cp, pc, fail_class.ERROR, W_StrAtomObject('badmatch'))
 			return eterm_operators.get_addr_val(addr)
 		else:
 			return self.jump(cp, label)
 
 	# 73
 	def if_end(self, pc, cp):
-		addr = self.fail(cp, pc, fail_class.ERROR, W_AtomObject('if_clause'))
+		addr = self.fail(cp, pc, fail_class.ERROR, W_StrAtomObject('if_clause'))
 		return eterm_operators.get_addr_val(addr)
 
 	# 75
 	@jit.unroll_safe
 	def call_fun(self, pc, cp, arity):
-		self.y_reg.push(W_AddrObject(cp, pc))
+		self.y_reg.push((cp, pc))
 		closure = self.fetch_basereg((opcodes.TAG_XREG, arity))
 		(cp, addr, real_arity, fvs) = eterm_operators.get_closure_fields(closure)
 		for i in range(len(fvs)):
@@ -959,4 +936,4 @@ class Process:
 
 	# 136
 	def trim(self, n, remaining):
-		self.deallcate(n)
+		self.deallocate(n)

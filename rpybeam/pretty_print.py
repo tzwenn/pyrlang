@@ -2,7 +2,7 @@ from beam_file import *
 from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObject, W_FloatObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
-from pyrlang.interpreter.datatypes.atom import W_AtomObject
+from pyrlang.interpreter.datatypes.atom import W_AbstractAtomObject
 from pyrlang.interpreter.datatypes.pid import W_PidObject
 from pyrlang.utils.eterm_operators import * 
 
@@ -48,8 +48,8 @@ def value_str(v):
 		return "%f"%(v.floatval)
 	elif isinstance(v, W_NilObject):
 		return "Nil"
-	elif isinstance(v, W_AtomObject):
-		return v.strval
+	elif isinstance(v, W_AbstractAtomObject):
+		return v.get_str()
 	elif isinstance(v, W_TupleObject):
 		vals = get_tuple_vals(v)
 		return "{%s}"%(", ".join([value_str(t) for t in vals]))

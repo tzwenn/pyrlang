@@ -1,7 +1,7 @@
 from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObject, W_BigIntObject, W_FloatObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
-from pyrlang.interpreter.datatypes.atom import W_AtomObject
+from pyrlang.interpreter.datatypes.atom import W_AbstractAtomObject
 from pyrlang.interpreter.datatypes.pid import W_PidObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject
 from pyrlang.interpreter.datatypes.closure import W_ClosureObject
@@ -26,8 +26,8 @@ def get_list_contents(v):
 		return res
 
 def get_atom_val(v):
-	assert isinstance(v, W_AtomObject)
-	return v.strval
+	assert isinstance(v, W_AbstractAtomObject)
+	return v.get_str()
 
 def get_int_val(v):
 	assert isinstance(v, W_AbstractIntObject)

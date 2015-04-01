@@ -2,6 +2,14 @@ from rpython.rlib.rStringIO import RStringIO
 from rpython.rlib import rzlib
 from rpython.rlib.rstruct.runpack import runpack
 from pretty_print import *
+from pyrlang.interpreter.datatypes.root import W_Root
+from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObject, W_FloatObject
+from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
+from pyrlang.interpreter.datatypes.tuple import W_TupleObject
+from pyrlang.interpreter.datatypes.inner import W_AddrObject 
+from pyrlang.interpreter.datatypes.atom import W_StrAtomObject
+from pyrlang.interpreter.datatypes.closure import W_ClosureObject
+from pyrlang.utils import eterm_operators
 #from beam_code import BeamInstr
 
 class BaseNode:
@@ -278,6 +286,7 @@ class LitTChunk(Chunk):
 			t = SmallTupleTerm(stream)
 			for i in range(0, t.length):
 				t.vals.append(self.create_term(stream))
+			t.value = W_TupleObject([val.value for val in t.vals])
 			return t
 		elif tag == 107: # int list
 			return IntListTerm(stream)
@@ -285,11 +294,12 @@ class LitTChunk(Chunk):
 			t = AnyListTerm(stream)
 			for i in range(0, t.length):
 				t.vals.append(self.create_term(stream))
+			t.value = eterm_operators.build_list_object([val.value for val in t.vals])
 			assert(ord(stream.read(1)[0]) == 0x6a) # list should end with nil
 			return t
 
 	def asArray(self):
-		return self.term_list
+		return [v.value for v in self.term_list]
 
 #class AttrChunk(Chunk):
 	#def parse(self, stream):
@@ -300,23 +310,36 @@ class Term(BaseNode):
 		self.readlen = 0
 		#print self.readUCInt(stream)
 		self.parse(stream)
+		self.value = self._to_value()
 
 	def readBFloat(self, stream):
 		self.readlen += 8
 		return runpack(">d", stream.read(8))
 
+	def _to_value(self):
+		return W_Root()
+
 class NewFloatTerm(Term):
 	def parse(self, stream):
 		self.floatval = self.readBFloat(stream)
+
+	def _to_value(self):
+		return W_FloatObject(self.floatval)
 
 class SmallIntegerTerm(Term):
 	def parse(self, stream):
 		self.val = self.readUCInt(stream)
 
+	def _to_value(self):
+		return W_IntObject(self.val)
+
 class AtomTerm(Term):
 	def parse(self, stream):
 		self.length = self.readInt2(stream)
-		self.value = self.readAny(stream, self.length)
+		self.str_value = self.readAny(stream, self.length)
+
+	def _to_value(self):
+		return W_StrAtomObject(self.str_value)
 
 class IntListTerm(Term):
 	def parse(self, stream):
@@ -324,6 +347,9 @@ class IntListTerm(Term):
 		self.vals = []
 		for i in range(0, self.length):
 			self.vals.append(ord(stream.read(1)[0]))
+
+	def _to_value(self):
+		return eterm_operators.build_strlist_object([W_IntObject(val) for val in self.vals])
 
 class AnyListTerm(Term):
 	def parse(self, stream):

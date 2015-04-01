@@ -2,8 +2,9 @@ from pyrlang.lib.base import BaseModule, BaseBIF, BaseFakeFunc
 from pyrlang.interpreter import fail_class
 from pyrlang.interpreter.datatypes.number import *
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
-from pyrlang.interpreter.datatypes.atom import W_AtomObject
+from pyrlang.interpreter.datatypes.atom import W_AbstractAtomObject, W_StrAtomObject
 from pyrlang.interpreter.datatypes.list import W_NilObject, W_ListObject, W_StrListObject
+from pyrlang.interpreter import constant
 from pyrlang.rpybeam import pretty_print
 from pyrlang.utils import eterm_operators
 from pyrlang.interpreter import constant
@@ -11,9 +12,9 @@ from rpython.rlib import jit
 
 def WrapEtermBoolean(flag):
 	if flag:
-		return W_AtomObject('true')
+		return constant.TRUE_ATOM
 	else:
-		return W_AtomObject('false')
+		return constant.FALSE_ATOM
 
 class AddFunc(BaseBIF):
 	def invoke(self, args):
@@ -25,7 +26,7 @@ class AtomToListFunc_1(BaseFakeFunc):
 	@jit.unroll_safe
 	def invoke(self, cp, pc, process):
 		a_obj = process.x_reg.get(0)
-		assert isinstance(a_obj, W_AtomObject)
+		assert isinstance(a_obj, W_AbstractAtomObject)
 		lst = a_obj.to_list()
 		return eterm_operators.build_strlist_object([W_IntObject(v) for v in lst])
 
@@ -84,7 +85,7 @@ class DisplayFunc_1(BaseFakeFunc):
 	def invoke(self, cp, pc, process):
 		v = process.x_reg.get(0)
 		pretty_print.print_value(v)
-		return W_AtomObject('true')
+		return constant.TRUE_ATOM
 
 class FloatToListFunc_1(BaseBIF):
 	def invoke(self, args):
@@ -115,7 +116,7 @@ class IntegerToListFunc_1(BaseFakeFunc):
 class IsAtomFunc_1(BaseBIF):
 	def invoke(self, args):
 		a_obj = args[0]
-		return WrapEtermBoolean(isinstance(a_obj, W_AtomObject))
+		return WrapEtermBoolean(isinstance(a_obj, W_AbstractAtomObject))
 
 class LengthFunc_1(BaseFakeFunc):
 	def invoke(self, cp, pc, process):

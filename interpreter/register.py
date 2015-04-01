@@ -1,4 +1,3 @@
-from pyrlang.interpreter.datatypes.number import W_IntObject
 from rpython.rlib import jit
 class AbstractRegister:
 	def get(self, n):
@@ -26,34 +25,133 @@ class X_Register(AbstractRegister):
 		assert(n < max_x_reg_size)
 		self.regs[n] = val
 
+#class Y_Register(AbstractRegister):
+	##_virtualizable_ = ['regs[*]']
+
+	#def __init__(self):
+		##self = jit.hint(self, fresh_virtualizable=True, access_directly=True)
+		#self.regs = []
+
+	#def get(self, n):
+		#return self.regs[-(n+1)]
+
+	#def store(self, n, val):
+		#self.regs[-(n+1)] = val
+
+	#def pop(self):
+		#return self.regs.pop()
+
+	#def push(self, value):
+		#self.regs.append(value)
+
+	#def is_empty(self):
+		#return len(self.regs) == 0
+
+	#def depth(self):
+		#return len(self.regs)
+
+#class Abstract_Node:
+	#_immutable_fields_ = ['val']
+	#pass
+
+#class Stack_Node(Abstract_Node):
+	#def __init__(self, val, next):
+		#self.val = val
+		#self.next = next
+
+#class Empty_Node(Abstract_Node):
+	#pass
+
+#class Y_Register(AbstractRegister):
+	#def __init__(self):
+		#self.current_node = Empty_Node()
+
+	#def pop(self):
+		#res = self.current_node
+		#self.current_node = res.next
+		#return res.val
+
+	#def push(self, val):
+		#self.current_node = Stack_Node(val, self.current_node)
+
+	#def is_empty(self):
+		#return isinstance(self.current_node, Empty_Node)
+
+	#@jit.unroll_safe
+	#def get(self, n):
+		#node = self.current_node
+		#for i in range(n+1):
+			#assert isinstance(node, Stack_Node)
+			#if i == n:
+				#return node.val
+			#node = node.next
+		#raise IndexError
+
+	#@jit.unroll_safe
+	#def store(self, n, val):
+		#if n == 0:
+			#next = self.current_node.next
+			#self.current_node = Stack_Node(val, next)
+			#return
+		#node = self.current_node
+		#for i in range(n+1):
+			#assert isinstance(node, Stack_Node)
+			#if i == n - 1:
+				#pre_node = node
+				#current_node = node.next
+				#assert isinstance(current_node, Stack_Node)
+				#next_node = current_node.next
+				#pre_node.next = Stack_Node(val, next_node)
+				#return
+			#node = node.next
+		#raise IndexError
+
+	#def depth(self):
+		#i = 0
+		#node = self.current_node
+		#while isinstance(node, Stack_Node):
+			#i += 1
+			#node = node.next
+		#return i
+
+init_y_reg_size = 8
+
 class Y_Register(AbstractRegister):
-	#_virtualizable_ = ['regs[*]']
-
 	def __init__(self):
-		#self = jit.hint(self, fresh_virtualizable=True, access_directly=True)
-		self.regs = []
+		self.vals = [None] * init_y_reg_size
+		self.addrs = []
+		self.val_top = -1
+		self.val_size = jit.hint(init_y_reg_size, promote=True)
 
-	def get(self, n):
-		return self.regs[-(n+1)]
+	@jit.unroll_safe
+	def allocate(self, n, init_val = None):
+		self.val_top += n
+		while self.val_top >= self.val_size:
+			self.vals = self.vals + [None] * self.val_size
+			self.val_size = self.val_size << 1
+		if init_val:
+			index = self.val_top
+			for i in range(n):
+				self.vals[index] = init_val
+				index -= 1
 
-	def store(self, n, val):
-		self.regs[-(n+1)] = val
+	def deallocate(self, n):
+		self.val_top -= n
+
+	def push(self, val): # (cp, pc)
+		self.addrs.append(val)
 
 	def pop(self):
-		return self.regs.pop()
+		return self.addrs.pop()
 
-	def delete(self,n):
-		r_l = len(self.regs)
-		from_index = r_l - n
-		assert from_index > 0
-		del self.regs[from_index:]
-
-	def push(self, value):
-		self.regs.append(value)
+	def get(self,n):
+		return self.vals[self.val_top - n]
 
 	def is_empty(self):
-		return len(self.regs) == 0
+		return len(self.addrs) == 0
 
 	def depth(self):
-		return len(self.regs)
+		return len(self.addrs)
 
+	def store(self, n, val):
+		self.vals[self.val_top - n] = val

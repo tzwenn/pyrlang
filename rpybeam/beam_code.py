@@ -1,6 +1,8 @@
 from rpython.rlib.rstruct.runpack import runpack
 from rpython.rlib import jit
 from pyrlang.interpreter.mod_file_loader import ModFileLoader
+from pyrlang.interpreter.datatypes.number import W_IntObject
+from pyrlang.interpreter.datatypes.atom import W_IndexAtomObject
 from pyrlang.lib import ModuleDict
 from pyrlang.rpybeam.beam_file import BeamRoot
 from pyrlang.rpybeam.instruction import Instruction, ListInstruction
@@ -10,9 +12,10 @@ import time
 
 class CodeParser:
 	_immutable_fields_ = ['file_name', 'instrs[*]', 'import_header[*]', 
-			'parent_cp', 'total_lines', 'labelTable[*]', 'atoms[*]', 
+			'parent_cp', 'total_lines', 'labelTable[*]', 'atoms[*]', 'atom_objs[*]',
 			'_import_header[*]', 'lit_table[*]', 'loc_table[*]', 'mod_dict[*]',
-			'fun_table[*]','import_mods[*]','func_list[*]', 'export_header[*]']
+			'fun_table[*]','import_mods[*]','func_list[*]', 'export_header[*]',
+			'const_table[*]']
 
 	def __init__(self, beam, name, parent_cp = None):
 		self.file_name = name
@@ -21,6 +24,11 @@ class CodeParser:
 		self.total_lines = -1
 		self.labelTable = []
 		self.atoms = beam.getAtomTable()
+
+		tmp = []
+		for i in range(len(self.atoms)):
+			tmp.append(W_IndexAtomObject(i, self.atoms))
+		self.atom_objs = tmp[:]
 		# the import_header will be rewrite so we need another copy to refer the original version at something
 		self._import_header = list(beam.impTChunk.asArray())
 		self.lit_table = None
@@ -38,7 +46,8 @@ class CodeParser:
 
 		self.export_header = beam.expTChunk.asArray()[:]
 		(self.func_list, self.import_header, self.import_mods, self.mod_dict) = self.import_BIF_and_module()
-		(self.labelTable, self.instrs) = self.preprocess()
+		(self.labelTable, self.instrs, self.const_table) = self.preprocess()
+		#print [v.intval for v in self.const_table]
 
 	@jit.unroll_safe
 	def import_BIF_and_module(self):
@@ -253,17 +262,13 @@ class CodeParser:
 		else:
 			return [chr(tag|0x08), chr(val)]
 
-	##
-	# @brief Two pass pre-process for CodeParser,
-	# @param pc
-	#
-	# @return 
 	@jit.unroll_safe
 	def preprocess(self):
-		instrs = self.buildInstrs()
+		(instrs, const_table) = self.buildInstrs()
 		labelTable = []
 		for i in range(len(instrs)):
 			instr_obj = instrs[i]
+			#print "preprocess: " + opcodes.opnames[instr_obj.opcode]
 			if instr_obj.opcode in [opcodes.CALL_EXT, 
 					opcodes.CALL_EXT_ONLY, 
 					opcodes.CALL_EXT_LAST]:
@@ -281,7 +286,7 @@ class CodeParser:
 					self.total_lines = num
 			elif instr_obj.opcode == opcodes.LABEL:
 				labelTable.append(i)
-		return labelTable[:], instrs[:]
+		return labelTable[:], instrs[:], const_table[:]
 
 		# first pass
 		#while(pc < len(self.code)):
@@ -451,6 +456,7 @@ class CodeParser:
 	def buildInstrs(self):
 		pc = 0
 		instrs = []
+		const_table = []
 		while (pc < len(self.code)):
 			pc, instr = self.parseInstr(pc)
 			arity = opcodes.arity[instr]
@@ -461,6 +467,16 @@ class CodeParser:
 				pc, tag = self._parseTag(pc, first)
 				if self.isBaseTag(tag):
 					pc, val = self._parseInt(pc, first)
+					in_const_table = False
+					if tag == opcodes.TAG_INTEGER:
+						for j in range(len(const_table)):
+							if val == const_table[j]:
+								val = j
+								in_const_table = True
+								break
+						if not in_const_table:
+							const_table.append(val)
+							val = len(const_table) - 1
 					args.append((tag, val))
 				elif tag == opcodes.TAGX_FLOATLIT:
 					pc, val = self._parse_floatreg(pc)
@@ -482,4 +498,4 @@ class CodeParser:
 				instrs.append(ListInstruction(instr, args[:], lst_field))
 			else:
 				instrs.append(Instruction(instr, args[:]))
-		return instrs[:]
+		return instrs[:], [W_IntObject(v) for v in const_table]

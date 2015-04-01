@@ -183,7 +183,6 @@ class W_FloatObject(W_Root):
 class W_BigIntObject(W_AbstractIntObject):
 	_immutable_fields_ = ['bigintval']
 	def __init__(self, intval):
-		print "big"
 		self.bigintval = intval
 
 	def str(self):

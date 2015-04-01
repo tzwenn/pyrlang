@@ -3,6 +3,7 @@ from pyrlang.interpreter import constant
 from pyrlang.rpybeam import pretty_print
 from rpython.rlib import jit
 class Scheduler:
+	_immutable_fields_ = ['pid_provider', 'is_single_run', 'reduction', 'const0']
 	def __init__(self, pid_provider, is_single_run, reduction):
 		self.pid_provider = pid_provider
 		self.is_single_run = is_single_run
