@@ -4,6 +4,8 @@ from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrL
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.atom import W_AbstractAtomObject
 from pyrlang.interpreter.datatypes.pid import W_PidObject
+from pyrlang.rpybeam.instruction import ListInstruction
+from pyrlang.rpybeam import opcodes
 from pyrlang.utils.eterm_operators import * 
 
 def print_ImpT(impt, atomTable):
@@ -125,3 +127,31 @@ def error_message(v):
 		for i in range(1, len(st_list)):
 			s += "\n     in call from %s:%s/%d (%s, line %d)"%_stack_trace_tuple(st_list[i])
 	return s
+
+def instr_str(cp, instr):
+	res = opcodes.opnames[instr.opcode] + " " + rands_to_str(cp, instr.args)
+	if isinstance(instr, ListInstruction):
+		res += ", [%s]"%", ".join(["(%s, L%d)"%(rand_to_str(cp, v), l) for (v,l) in instr.lst]) 
+	return res
+
+def rands_to_str(cp, rands):
+	return ", ".join([rand_to_str(cp, arg) for arg in rands])
+
+def rand_to_str(cp, rand):
+	(tag, val) = rand
+	if tag == opcodes.TAGX_LITERAL:
+		return value_str(cp.lit_table[val-1])
+	elif tag == opcodes.TAG_LITERAL:
+		return str(val)
+	elif tag == opcodes.TAG_INTEGER:
+		return "#%d"%(val)
+	elif tag == opcodes.TAG_ATOM:
+		return cp.atoms[tag-1]
+	elif tag == opcodes.TAG_XREG:
+		return "x(%d)"%val
+	elif tag == opcodes.TAG_YREG:
+		return "y(%d)"%val
+	elif tag == opcodes.TAG_LABEL:
+		return "L%d"%val
+	else:
+		return str(val)

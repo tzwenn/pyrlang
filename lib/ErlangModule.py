@@ -1,4 +1,4 @@
-from pyrlang.lib.base import BaseModule, BaseBIF, BaseFakeFunc
+from pyrlang.lib.base import BaseModule, BaseBIF, BaseBIF0, BaseFakeFunc
 from pyrlang.interpreter import fail_class
 from pyrlang.interpreter.datatypes.number import *
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
@@ -159,7 +159,7 @@ class RemFunc_2(BaseBIF):
 		(a,b) = args
 		return a.rem(b)
 
-class SelfFunc_0(BaseBIF):
+class SelfFunc_0(BaseBIF0):
 	def invoke(self, args):
 		return self.caller.pid
 

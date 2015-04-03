@@ -15,6 +15,7 @@ class BaseBIF(BaseFunc):
 	def invoke(self, args):
 		pass
 
+class BaseBIF0(BaseBIF):
 	def set_caller(self, caller):
 		self.caller = caller
 

@@ -19,14 +19,14 @@ from pyrlang.interpreter import constant
 from pyrlang.interpreter import abstract_stack
 from pyrlang.utils.deque import MessageDeque
 from pyrlang.utils import eterm_operators
-from pyrlang.lib.base import BaseBIF, BaseFakeFunc
+from pyrlang.lib.base import BaseBIF, BaseBIF0, BaseFakeFunc
 from rpython.rlib import jit
 from rpython.rlib.jit import hint
 
 def printable_loc(pc, cp):
 	instr = cp.instrs[pc]
 	#return "L%d(%d) %s"%(cp.find_label_from_address(pc), pc, opcodes.opnames[index].upper())
-	return "%d %s"%(pc, opcodes.opnames[instr.opcode].upper())
+	return "%d %s"%(pc, pretty_print.instr_str(cp, instr))
 
 driver = jit.JitDriver(greens = ['pc', 'cp'],
 		reds = ['jump_pc', 'reduction', 'single', 's_self', 'x_reg', 'y_reg'],
@@ -547,12 +547,10 @@ class Process:
 					W_IntObject(line_number)])))])
 
 	@jit.unroll_safe
-	def apply_bif(self, cp, pc, fail, bif_index, rands, dst_reg):
+	def apply_bif(self, cp, pc, fail, bif, rands, dst_reg):
 		# TODO: wrap them with try-catch to handle inner exception.
 		args = [self.get_basic_value(cp, rand) for rand in rands]
-		bif = cp.func_list[bif_index]
 		assert isinstance(bif, BaseBIF)
-		bif.set_caller(self)
 		res = bif.invoke(args)
 		self.store_basereg(dst_reg, res)
 		return pc
@@ -614,15 +612,20 @@ class Process:
 	def bif0(self, cp, pc, bif_index, dst_reg):
 		# bif0 doesn't have fail jump label, so we
 		# never care the return value of apply_bif here
-		self.apply_bif(cp, pc, -1, bif_index, [], dst_reg)
+		bif = cp.func_list[bif_index]
+		assert isinstance(bif, BaseBIF0)
+		bif.set_caller(self)
+		self.apply_bif(cp, pc, -1, bif, [], dst_reg)
 
 	# 10
 	def bif1(self, cp, pc, fail, bif_index, rand, dst_reg):
-		return self.apply_bif(cp, pc, fail, bif_index, [rand], dst_reg)
+		bif = cp.func_list[bif_index]
+		return self.apply_bif(cp, pc, fail, bif, [rand], dst_reg)
 
 	# 11
 	def bif2(self, cp, pc, fail, bif_index, rand1, rand2, dst_reg):
-		return self.apply_bif(cp, pc, fail, bif_index, [rand1, rand2], dst_reg)
+		bif = cp.func_list[bif_index]
+		return self.apply_bif(cp, pc, fail, bif, [rand1, rand2], dst_reg)
 
 	# 12
 	def allocate(self, stack_need, live):
@@ -784,12 +787,8 @@ class Process:
 	@jit.unroll_safe
 	def select_val(self, cp, val_reg, label, slist):
 		val = self.get_basic_value(cp, val_reg)
-		#print "val:"
-		#pretty_print.print_value(val)
 		for i in range(0, len(slist)):
 			((tag, v), l) = slist[i]
-			#print "tag:" + str(tag)
-			#print "value:" + str(v)
 			if tag == opcodes.TAG_ATOM and val.is_equal(cp.atom_objs[v-1]):
 				return cp.label_to_addr(l)
 			elif tag == opcodes.TAG_INTEGER and val.is_equal(cp.const_table[v]):

@@ -467,22 +467,19 @@ class CodeParser:
 				pc, tag = self._parseTag(pc, first)
 				if self.isBaseTag(tag):
 					pc, val = self._parseInt(pc, first)
-					in_const_table = False
 					if tag == opcodes.TAG_INTEGER:
-						for j in range(len(const_table)):
-							if val == const_table[j]:
-								val = j
-								in_const_table = True
-								break
-						if not in_const_table:
-							const_table.append(val)
-							val = len(const_table) - 1
+						val = self._check_const_table(const_table, val)
 					args.append((tag, val))
 				elif tag == opcodes.TAGX_FLOATLIT:
 					pc, val = self._parse_floatreg(pc)
 					args.append((tag, val))
 				elif tag == opcodes.TAGX_SELECTLIST:
 					pc, lst_field = self._parse_selectlist(pc)
+					for i in range(len(lst_field)):
+						((tag, val), label) = lst_field[i]
+						if tag == opcodes.TAG_INTEGER:
+							val = self._check_const_table(const_table, val)
+							lst_field[i] = ((tag, val), label)
 				elif tag == opcodes.TAGX_FLOATREG:
 					pc, val = self._parseInt(pc, first)
 					args.append((tag, val))
@@ -499,3 +496,15 @@ class CodeParser:
 			else:
 				instrs.append(Instruction(instr, args[:]))
 		return instrs[:], [W_IntObject(v) for v in const_table]
+
+	def _check_const_table(self, const_table, val):
+		in_const_table = False
+		for j in range(len(const_table)):
+			if val == const_table[j]:
+				val = j
+				in_const_table = True
+				break
+		if not in_const_table:
+			const_table.append(val)
+			val = len(const_table) - 1
+		return val

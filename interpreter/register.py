@@ -119,9 +119,12 @@ init_y_reg_size = 8
 class Y_Register(AbstractRegister):
 	def __init__(self):
 		self.vals = [None] * init_y_reg_size
-		self.addrs = []
+		self.addrs = [(None, 0)] * init_y_reg_size
 		self.val_top = -1
 		self.val_size = jit.hint(init_y_reg_size, promote=True)
+
+		self.addr_top = -1
+		self.addr_size = jit.hint(init_y_reg_size, promote=True)
 
 	@jit.unroll_safe
 	def allocate(self, n, init_val = None):
@@ -139,19 +142,27 @@ class Y_Register(AbstractRegister):
 		self.val_top -= n
 
 	def push(self, val): # (cp, pc)
-		self.addrs.append(val)
+		self.addr_top += 1
+		if self.addr_top >= self.addr_size:
+			self.addrs = self.addrs + [(None, 0)] * self.addr_size
+			self.addr_size = self.addr_size << 1
+		self.addrs[self.addr_top] = val
 
 	def pop(self):
-		return self.addrs.pop()
+		val = self.addrs[self.addr_top]
+		self.addr_top -= 1
+		return val
 
 	def get(self,n):
-		return self.vals[self.val_top - n]
+		idx = self.val_top - n
+		assert idx >= 0
+		return self.vals[idx]
 
 	def is_empty(self):
-		return len(self.addrs) == 0
+		return self.addr_top == -1
 
 	def depth(self):
-		return len(self.addrs)
+		return self.addr_top + 1
 
 	def store(self, n, val):
 		self.vals[self.val_top - n] = val
