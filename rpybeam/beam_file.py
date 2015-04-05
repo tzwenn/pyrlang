@@ -7,8 +7,8 @@ from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObjec
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject 
-from pyrlang.interpreter.datatypes.atom import W_StrAtomObject
 from pyrlang.interpreter.datatypes.closure import W_ClosureObject
+from pyrlang.interpreter.atom_table import global_atom_table
 from pyrlang.utils import eterm_operators
 #from beam_code import BeamInstr
 
@@ -337,9 +337,10 @@ class AtomTerm(Term):
 	def parse(self, stream):
 		self.length = self.readInt2(stream)
 		self.str_value = self.readAny(stream, self.length)
+		self.obj = global_atom_table.get_obj_from_str(self.str_value)
 
 	def _to_value(self):
-		return W_StrAtomObject(self.str_value)
+		return self.obj
 
 class IntListTerm(Term):
 	def parse(self, stream):

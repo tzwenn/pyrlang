@@ -1,8 +1,5 @@
-from pyrlang.interpreter.datatypes.atom import W_StrAtomObject
 from pyrlang.interpreter.datatypes.number import W_IntObject
 from pyrlang.interpreter.datatypes.list import W_NilObject
-TRUE_ATOM = W_StrAtomObject('true')
-FALSE_ATOM = W_StrAtomObject('false')
 
 CONST_0 = W_IntObject(0)
 CONST_NIL = W_NilObject()

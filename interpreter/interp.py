@@ -7,13 +7,14 @@ from pyrlang.interpreter import fail_class
 from pyrlang.rpybeam.beam_file import *
 from pyrlang.interpreter.register import X_Register, Y_Register
 from pyrlang.interpreter.cont_stack import ContinuationStack
+from pyrlang.interpreter.atom_table import global_atom_table
 from pyrlang.interpreter.datatypes.root import W_Root
 from pyrlang.interpreter.datatypes.pid import W_PidObject
 from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObject, W_FloatObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject 
-from pyrlang.interpreter.datatypes.atom import W_AbstractAtomObject, W_StrAtomObject
+from pyrlang.interpreter.datatypes.atom import W_AtomObject
 from pyrlang.interpreter.datatypes.closure import W_ClosureObject
 from pyrlang.interpreter import constant
 from pyrlang.interpreter import abstract_stack
@@ -25,7 +26,6 @@ from rpython.rlib.jit import hint
 
 def printable_loc(pc, cp):
 	instr = cp.instrs[pc]
-	#return "L%d(%d) %s"%(cp.find_label_from_address(pc), pc, opcodes.opnames[index].upper())
 	return "%d %s"%(pc, pretty_print.instr_str(cp, instr))
 
 driver = jit.JitDriver(greens = ['pc', 'cp'],
@@ -463,7 +463,7 @@ class Process:
 			if value == 0:
 				return constant.CONST_NIL
 			else:
-				return cp.atom_objs[value-1]
+				return global_atom_table.get_obj_at(value)
 		elif tag == opcodes.TAGX_LITERAL:
 			return cp.lit_table[value]
 		else:
@@ -512,7 +512,7 @@ class Process:
 			new_depth = self.y_reg.depth()
 			self.deallocate(new_depth - depth)
 			self.x_reg.store(0, None)
-			self.x_reg.store(1, W_StrAtomObject(fail_class.fail_names[fclass]))
+			self.x_reg.store(1, global_atom_table.get_obj_from_str(fail_class.fail_names[fclass]))
 			self.x_reg.store(2, reason)
 			return W_AddrObject(cp, cp.label_to_addr(label))
 
@@ -536,14 +536,14 @@ class Process:
 			arg_part = args
 		else:
 			arg_part = W_IntObject(arity)
-		return W_TupleObject([W_StrAtomObject(module_name),
-			W_StrAtomObject(func_name),
+		return W_TupleObject([global_atom_table.get_obj_from_str(module_name),
+			global_atom_table.get_obj_from_str(func_name),
 			arg_part,
-			W_ListObject(W_TupleObject([W_StrAtomObject('file'), 
+			W_ListObject(W_TupleObject([global_atom_table.get_obj_from_str('file'), 
 				#FIXME: it actually should be a string type,
 				# and it also influent the error_message function
 				eterm_operators.build_strlist_object([W_IntObject(ord(c)) for c in cp.file_name])]), 
-				W_ListObject(W_TupleObject([W_StrAtomObject('line'), 
+				W_ListObject(W_TupleObject([global_atom_table.get_obj_from_str('line'), 
 					W_IntObject(line_number)])))])
 
 	@jit.unroll_safe
@@ -746,7 +746,7 @@ class Process:
 
 	# 48
 	def is_atom(self, pc, cp, label, test_v):
-		return self.not_jump(pc, cp, label, test_v, W_AbstractAtomObject)
+		return self.not_jump(pc, cp, label, test_v, W_AtomObject)
 
 	# 52
 	def is_nil(self, pc, cp, label, test_v):
@@ -789,7 +789,7 @@ class Process:
 		val = self.get_basic_value(cp, val_reg)
 		for i in range(0, len(slist)):
 			((tag, v), l) = slist[i]
-			if tag == opcodes.TAG_ATOM and val.is_equal(cp.atom_objs[v-1]):
+			if tag == opcodes.TAG_ATOM and val.is_equal(global_atom_table.get_obj_at(v)):
 				return cp.label_to_addr(l)
 			elif tag == opcodes.TAG_INTEGER and val.is_equal(cp.const_table[v]):
 				return cp.label_to_addr(l)
@@ -813,14 +813,13 @@ class Process:
 		if not x0: # it means x0 is a none value
 			x1 = self.x_reg.get(1)
 			x2 = self.x_reg.get(2)
-			assert isinstance(x1, W_StrAtomObject)
-			atom_val = x1.strval
+			atom_val = eterm_operators.get_atom_val(x1)
 			if atom_val == fail_class.fail_names[fail_class.THROWN]:
 				self.x_reg.store(0, x2)
 			elif atom_val == fail_class.fail_names[fail_class.ERROR]:
 				self.x_reg.store(0, W_TupleObject([x2, self.create_call_stack_info(cp, pc)]))
 			else:
-				self.x_reg.store(0, W_TupleObject([W_StrAtomObject('EXIT'), x2]))
+				self.x_reg.store(0, W_TupleObject([global_atom_table.get_obj_from_str('EXIT'), x2]))
 		
 	# 64
 	def move(self, cp, source, dst_reg):
@@ -880,14 +879,14 @@ class Process:
 	# 72
 	def badmatch(self, pc, cp, label):
 		if label == 0:
-			addr = self.fail(cp, pc, fail_class.ERROR, W_StrAtomObject('badmatch'))
+			addr = self.fail(cp, pc, fail_class.ERROR, global_atom_table.get_obj_from_str('badmatch'))
 			return eterm_operators.get_addr_val(addr)
 		else:
 			return self.jump(cp, label)
 
 	# 73
 	def if_end(self, pc, cp):
-		addr = self.fail(cp, pc, fail_class.ERROR, W_StrAtomObject('if_clause'))
+		addr = self.fail(cp, pc, fail_class.ERROR, global_atom_table.get_obj_from_str('if_clause'))
 		return eterm_operators.get_addr_val(addr)
 
 	# 75

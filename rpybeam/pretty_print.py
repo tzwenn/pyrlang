@@ -2,8 +2,9 @@ from beam_file import *
 from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObject, W_FloatObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
-from pyrlang.interpreter.datatypes.atom import W_AbstractAtomObject
+from pyrlang.interpreter.datatypes.atom import W_AtomObject
 from pyrlang.interpreter.datatypes.pid import W_PidObject
+from pyrlang.interpreter.atom_table import global_atom_table
 from pyrlang.rpybeam.instruction import ListInstruction
 from pyrlang.rpybeam import opcodes
 from pyrlang.utils.eterm_operators import * 
@@ -50,7 +51,7 @@ def value_str(v):
 		return "%f"%(v.floatval)
 	elif isinstance(v, W_NilObject):
 		return "Nil"
-	elif isinstance(v, W_AbstractAtomObject):
+	elif isinstance(v, W_AtomObject):
 		return v.get_str()
 	elif isinstance(v, W_TupleObject):
 		vals = get_tuple_vals(v)
@@ -146,7 +147,7 @@ def rand_to_str(cp, rand):
 	elif tag == opcodes.TAG_INTEGER:
 		return "#%d"%(val)
 	elif tag == opcodes.TAG_ATOM:
-		return cp.atoms[tag-1]
+		return global_atom_table.get_str_at(val)
 	elif tag == opcodes.TAG_XREG:
 		return "x(%d)"%val
 	elif tag == opcodes.TAG_YREG:

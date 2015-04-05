@@ -1,8 +1,8 @@
 from rpython.rlib.rstruct.runpack import runpack
 from rpython.rlib import jit
 from pyrlang.interpreter.mod_file_loader import ModFileLoader
+from pyrlang.interpreter.atom_table import global_atom_table
 from pyrlang.interpreter.datatypes.number import W_IntObject
-from pyrlang.interpreter.datatypes.atom import W_IndexAtomObject
 from pyrlang.lib import ModuleDict
 from pyrlang.rpybeam.beam_file import BeamRoot
 from pyrlang.rpybeam.instruction import Instruction, ListInstruction
@@ -12,7 +12,7 @@ import time
 
 class CodeParser:
 	_immutable_fields_ = ['file_name', 'instrs[*]', 'import_header[*]', 
-			'parent_cp', 'total_lines', 'labelTable[*]', 'atoms[*]', 'atom_objs[*]',
+			'parent_cp', 'total_lines', 'labelTable[*]', 
 			'_import_header[*]', 'lit_table[*]', 'loc_table[*]', 'mod_dict[*]',
 			'fun_table[*]','import_mods[*]','func_list[*]', 'export_header[*]',
 			'const_table[*]']
@@ -23,14 +23,11 @@ class CodeParser:
 		self.code = beam.getCode()
 		self.total_lines = -1
 		self.labelTable = []
-		self.atoms = beam.getAtomTable()
 
-		tmp = []
-		for i in range(len(self.atoms)):
-			tmp.append(W_IndexAtomObject(i, self.atoms))
-		self.atom_objs = tmp[:]
-		# the import_header will be rewrite so we need another copy to refer the original version at something
-		self._import_header = list(beam.impTChunk.asArray())
+
+		# atom preprocess
+		(self._import_header, self.export_header) = self.header_atom_preprocess(beam)
+
 		self.lit_table = None
 		self.loc_table = None
 		self.fun_table = None
@@ -44,10 +41,26 @@ class CodeParser:
 			#print self.loc_table
 		#self.mod_dict = {} # mod atom index => import_mods' index
 
-		self.export_header = beam.expTChunk.asArray()[:]
 		(self.func_list, self.import_header, self.import_mods, self.mod_dict) = self.import_BIF_and_module()
-		(self.labelTable, self.instrs, self.const_table) = self.preprocess()
+		(self.labelTable, self.instrs, self.const_table) = self.preprocess(beam)
 		#print [v.intval for v in self.const_table]
+
+	def header_atom_preprocess(self, beam):
+		atoms = beam.getAtomTable()
+		self.name = atoms[0]
+		global_atom_table.register_atoms(atoms)
+		_import_header = list(beam.impTChunk.asArray())
+		export_header = beam.expTChunk.asArray()[:]
+		for i in range(len(_import_header)):
+			(_mod, _fun, arity) = _import_header[i]
+			mod = global_atom_table.search_index(atoms[_mod-1])
+			fun = global_atom_table.search_index(atoms[_fun-1])
+			_import_header[i] = (mod, fun, arity)
+		for i in range(len(export_header)):
+			(_fun, arity, label) = export_header[i]
+			fun = global_atom_table.search_index(atoms[_fun-1])
+			export_header[i] = (fun, arity, label)
+		return _import_header, export_header
 
 	@jit.unroll_safe
 	def import_BIF_and_module(self):
@@ -58,11 +71,11 @@ class CodeParser:
 		mod_dict = {}
 		for i in range(0, len(import_header)):
 			entry = import_header[i];
-			module_atom_index = entry[0] - 1
-			func_atom_index = entry[1] - 1
+			module_atom_index = entry[0]
+			func_atom_index = entry[1]
 			arity = entry[2]
-			moduleName = self.atoms[module_atom_index]
-			funcName = self.atoms[func_atom_index]
+			moduleName = global_atom_table.get_str_at(module_atom_index)
+			funcName = global_atom_table.get_str_at(func_atom_index)
 			#print "prepare importing function: %s:%s/%d..." % (moduleName, funcName, arity)
 			# BIF
 			if moduleName in ModuleDict.module_dict and ModuleDict.is_bif_from_tuple(self.get_name_entry(entry)):
@@ -79,35 +92,35 @@ class CodeParser:
 					import_mods.append(CodeParser(b, moduleName + ".erl", self))
 				mod_cp = import_mods[mod_dict[module_atom_index]]
 				func_index = self.search_exports(funcName, 
-						arity, mod_cp.export_header, mod_cp.atoms)
+						arity, mod_cp.export_header)
 				import_header[i] = (mod_dict[module_atom_index], func_index, arity)
 		return func_list[:],import_header[:], import_mods[:], mod_dict.copy()
 
 	def get_self_module_name(self):
-		return self.atoms[0]
+		return self.name
 
 	def get_module_cp_by_name(self, module_name):
 		if module_name == self.get_self_module_name():
 			return self
 		else:
-			mod_index = self.mod_dict[self.atoms.index(module_name)]
+			mod_index = self.mod_dict[global_atom_table.search_index(module_name)]
 			return self.import_mods[mod_index]
 
 	def get_func_addr_by_name(self, func_name, arity):
-		index = self.search_exports(func_name, arity, self.export_header, self.atoms)
+		index = self.search_exports(func_name, arity, self.export_header)
 		label = self.export_header[index][2]
 		return self.label_to_addr(label)
 
 	def get_name_entry(self, entry):
-		return (self.atoms[entry[0] - 1],
-				self.atoms[entry[1] - 1],
+		return (global_atom_table.get_str_at(entry[0]),
+				global_atom_table.get_str_at(entry[1]),
 				entry[2])
 					
 	@jit.unroll_safe	
-	def search_exports(self, func_name, arity, header, atoms):
+	def search_exports(self, func_name, arity, header):
 		for i in range(0, len(header)):
 			entry = header[i]
-			if atoms[entry[0] - 1] == func_name and arity == entry[1]:
+			if global_atom_table.get_str_at(entry[0]) == func_name and arity == entry[1]:
 				return i
 		return -1
 
@@ -263,8 +276,8 @@ class CodeParser:
 			return [chr(tag|0x08), chr(val)]
 
 	@jit.unroll_safe
-	def preprocess(self):
-		(instrs, const_table) = self.buildInstrs()
+	def preprocess(self, beam):
+		(instrs, const_table) = self.buildInstrs(beam)
 		labelTable = []
 		for i in range(len(instrs)):
 			instr_obj = instrs[i]
@@ -358,8 +371,8 @@ class CodeParser:
 			instr = self.instrs[0]
 			if instr.opcode == opcodes.FUNC_INFO:
 				(module_index, func_name_index, arity) = instr.arg_values()
-				return (self.atoms[module_index - 1],
-						self.atoms[func_name_index - 1],
+				return (global_atom_table.get_str_at(module_index),
+						global_atom_table.get_str_at(func_name_index),
 						arity)
 			else:
 				pc -= 1
@@ -453,10 +466,11 @@ class CodeParser:
 		#return pc
 
 	@jit.unroll_safe
-	def buildInstrs(self):
+	def buildInstrs(self, beam):
 		pc = 0
 		instrs = []
 		const_table = []
+		atoms = beam.getAtomTable()
 		while (pc < len(self.code)):
 			pc, instr = self.parseInstr(pc)
 			arity = opcodes.arity[instr]
@@ -469,6 +483,8 @@ class CodeParser:
 					pc, val = self._parseInt(pc, first)
 					if tag == opcodes.TAG_INTEGER:
 						val = self._check_const_table(const_table, val)
+					elif tag == opcodes.TAG_ATOM and not val == 0:
+						val = global_atom_table.search_index(atoms[val-1])
 					args.append((tag, val))
 				elif tag == opcodes.TAGX_FLOATLIT:
 					pc, val = self._parse_floatreg(pc)
@@ -479,6 +495,8 @@ class CodeParser:
 						((tag, val), label) = lst_field[i]
 						if tag == opcodes.TAG_INTEGER:
 							val = self._check_const_table(const_table, val)
+						elif tag == opcodes.TAG_ATOM and not val == 0:
+							val = global_atom_table.search_index(atoms[val-1])
 							lst_field[i] = ((tag, val), label)
 				elif tag == opcodes.TAGX_FLOATREG:
 					pc, val = self._parseInt(pc, first)
