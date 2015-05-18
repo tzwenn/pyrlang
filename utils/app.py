@@ -39,6 +39,7 @@ class App:
 			main_process.execute(cp, func_addr, is_single_run, default_reduction_counter)
 			print "================ Result ================="
 			pretty_print.print_value(main_process.x_reg.get(0))
+			#print main_process.counter_n
 		else:
 			scheduler.push_to_priority_queue((main_process, cp, func_addr),
 					main_process.priority)

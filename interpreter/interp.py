@@ -2,7 +2,7 @@ import sys
 
 from pyrlang.rpybeam import opcodes
 from pyrlang.rpybeam import pretty_print
-from pyrlang.rpybeam.instruction import Instruction, ListInstruction
+from pyrlang.rpybeam.instruction import Instruction, ListInstruction, PatternMatchingInstruction, PatternMatchingListInstruction, LoopInstruction
 from pyrlang.interpreter import fail_class
 from pyrlang.rpybeam.beam_file import *
 from pyrlang.interpreter.register import X_Register, Y_Register
@@ -24,12 +24,15 @@ from pyrlang.lib.base import BaseBIF, BaseBIF0, BaseFakeFunc
 from rpython.rlib import jit
 from rpython.rlib.jit import hint
 
-def printable_loc(pc, cp):
+def printable_loc(pc, _call_pc, cp):
 	instr = cp.instrs[pc]
 	return "%d %s"%(pc, pretty_print.instr_str(cp, instr))
 
-driver = jit.JitDriver(greens = ['pc', 'cp'],
-		reds = ['jump_pc', 'reduction', 'single', 's_self', 'x_reg', 'y_reg'],
+driver = jit.JitDriver(greens = ['pc', 'call_pc', 'cp'],
+		reds = ['reduction', 
+			#'init_stack_depth', 
+			#'call_jit_lock', 
+			'single', 's_self', 'x_reg', 'y_reg'],
 		virtualizables = ['x_reg'],
 		get_printable_location=printable_loc)
 
@@ -62,48 +65,57 @@ class Process:
 		single = hint(single, promote=True)
 		self = hint(self, promote=True)
 
-		jump_pc = pc
+		#################################################
+		#self.counter_n = 0 # use it for experiment counting, DON'T forget to discard it !!!
+		#################################################
+
+		#jump_pc = pc
+		call_pc = pc
+		#init_stack_depth = -1
+		#call_jit_lock = False
 
 		while(True):
 			driver.jit_merge_point(pc = pc,
+					call_pc = call_pc,
 					cp = cp,
-					jump_pc = jump_pc,
+					#jump_pc = jump_pc,
 					reduction = reduction,
+					#init_stack_depth = init_stack_depth,
+					#call_jit_lock = call_jit_lock,
 					single = single, 
 					s_self = self,
 					x_reg = x_reg,
 					y_reg = self.y_reg)
-			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, cp) + " reduction: " + str(reduction)
-			#print x_reg.get(1)
-			#instr = ord(cp.code[pc])
+			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, call_pc, cp) + " reduction: " + str(reduction)
+			should_enter = False
 			instr_obj = cp.instrs[pc]
-			instr = instr_obj.opcode
-
+			#call_pc = pc
 			pc = pc + 1
+			if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
+				should_enter = True
+
+			instr = instr_obj.opcode
+			depth = -1
+
 			if instr == opcodes.LABEL: # 1
 				pass
 
 			elif instr == opcodes.CALL: # 4
 				(arity, label) = instr_obj.arg_values()
-				call_pc = pc
-				is_two_state_match = call_pc == jump_pc
+				call_pc = pc - 1
+				#is_two_state_match = call_pc == jump_pc
 				frame = (cp, pc)
 				pc = self.call(frame, arity, label)
 				reduction -= 1
 				if not single and reduction <= 0:
 					break
-				else:
-					if is_two_state_match:
-						driver.can_enter_jit(pc = pc,
-								cp = cp,
-								jump_pc = jump_pc,
-								reduction = reduction,
-								single = single,
-								s_self = self, 
-								x_reg = x_reg,
-								y_reg = self.y_reg)
-					else:
-						jump_pc = call_pc
+				#else:
+					#if not call_jit_lock:
+						#should_enter = True
+						#if init_stack_depth == -1:
+							#init_stack_depth = self.y_reg.depth()-1
+					# for testing
+					#should_enter = True
 
 			elif instr == opcodes.CALL_LAST: # 5
 				(arity, label, n) = instr_obj.arg_values()
@@ -114,19 +126,19 @@ class Process:
 
 			elif instr == opcodes.CALL_ONLY: # 6
 				(arity, label) = instr_obj.arg_values()
+				#call_pc = pc
 				pc = self.call_only(cp, arity, label)
 				reduction -= 1
 				if not single and reduction <= 0:
 					break
-				else:
-					driver.can_enter_jit(pc = pc,
-							cp = cp,
-							jump_pc = jump_pc,
-							reduction = reduction,
-							single = single,
-							s_self = self, 
-							x_reg = x_reg,
-							y_reg = self.y_reg)
+				# for testing
+				#else:
+					#assert isinstance(instr_obj, LoopInstruction)
+					#old_depth = instr_obj.depth
+					#if self.y_reg.depth() == old_depth:
+						#should_enter = True
+					#else:
+						#instr_obj.depth = self.y_reg.depth()
 
 			elif instr == opcodes.CALL_EXT: # 7
 				args = instr_obj.args
@@ -135,37 +147,23 @@ class Process:
 				if (tag == opcodes.TAG_LITERAL):
 					entry = cp.import_header[header_index]
 					call_pc = pc
-					is_two_state_match = call_pc == jump_pc
+					#is_two_state_match = call_pc == jump_pc
 					frame = (cp, pc)
 					cp, pc = self.call_ext(frame, entry, real_arity)
 					reduction -= 1
 					if not single and reduction <=0:
 						break
-					else:
-						if is_two_state_match:
-							driver.can_enter_jit(pc = pc,
-									cp = cp,
-									jump_pc = jump_pc,
-									reduction = reduction,
-									single = single,
-									s_self = self, 
-									x_reg = x_reg,
-									y_reg = self.y_reg)
-						else:
-							jump_pc = call_pc
+					should_enter = True
 				else:
 					assert tag == opcodes.TAG_LABEL
 					self.y_reg.push((cp, pc))
-					pc = self._call_ext_bif(pc, cp, header_index)
+					cp, pc = self._call_ext_bif(pc, cp, header_index)
 					# calling a bif means the dispatch loop 
 					# need a extra k_return semantics 
 					if self.y_reg.is_empty():
 						return (constant.STATE_TERMINATE, pc, cp)
 					else:
 						(cp, pc) = self.k_return(cp)
-				#reduction -= 1
-				#if not single and reduction <= 0:
-					#break
 
 			elif instr == opcodes.CALL_EXT_LAST: # 8
 				args = instr_obj.args
@@ -177,7 +175,7 @@ class Process:
 					cp, pc = self.call_ext_last(cp, pc, entry, real_arity, dealloc)
 				else:
 					assert tag == opcodes.TAG_LABEL
-					pc = self._call_ext_bif(pc, cp, header_index)
+					cp, pc = self._call_ext_bif(pc, cp, header_index)
 					self.deallocate(dealloc)
 					# calling a bif means the dispatch loop 
 					# need a extra k_return semantics 
@@ -185,9 +183,6 @@ class Process:
 						return (constant.STATE_TERMINATE, pc, cp)
 					else:
 						(cp, pc) = self.k_return(cp)
-				#reduction -= 1
-				#if not single and reduction <= 0:
-					#break
 
 			elif instr == opcodes.BIF0: # 9
 				((_, bif_index), dst_reg) = instr_obj.args
@@ -201,9 +196,6 @@ class Process:
 				dst_reg = args[3]
 				pc = self.bif1(cp, pc, fail, 
 						cp.import_header[bif_index][1], rand1, dst_reg)
-				#reduction -= 1
-				#if not single and reduction <= 0:
-					#break
 
 			elif instr == opcodes.BIF2: # 11
 				args = instr_obj.args
@@ -214,9 +206,6 @@ class Process:
 				dst_reg = args[4]
 				pc = self.bif2(cp, pc, fail, 
 						cp.import_header[bif_index][1], rand1, rand2, dst_reg)
-				#reduction -= 1
-				#if not single and reduction <= 0:
-					#break
 
 			elif instr == opcodes.ALLOCATE: # 12
 				(stack_need, live) = instr_obj.arg_values()
@@ -250,20 +239,16 @@ class Process:
 				if self.y_reg.is_empty():
 					return (constant.STATE_TERMINATE, pc, cp)
 				else:
-					call_pc = pc
+					call_pc = pc-1
 					(cp, pc) = self.k_return(cp)
 					# try to trace RETURN instruction, too
-					if call_pc == jump_pc:
-						driver.can_enter_jit(pc = pc,
-								cp = cp,
-								jump_pc = jump_pc,
-								reduction = reduction,
-								single = single,
-								s_self = self,
-								x_reg = x_reg,
-								y_reg = self.y_reg)
-					else:
-						jump_pc = call_pc
+					should_enter = True
+					#if call_jit_lock and init_stack_depth == self.y_reg.depth()+1:
+						#init_stack_depth = -1
+						#call_jit_lock = False
+					#else:
+						#call_jit_lock = True
+					#print "return", "initial stack depth:%d"%init_stack_depth, "lock:%r"%call_jit_lock, "depth:%d"%self.y_reg.depth()
 
 			elif instr == opcodes.SEND: # 20
 				self.send()
@@ -339,6 +324,7 @@ class Process:
 				assert isinstance(instr_obj, ListInstruction)
 				(reg, (_, label)) = instr_obj.args
 				sl = instr_obj.lst
+				call_pc = pc
 				pc = self.select_val(cp, reg, label, sl)
 
 			elif instr == opcodes.JUMP: # 61
@@ -395,7 +381,7 @@ class Process:
 					cp, pc = self.call_ext_only(cp, entry, real_arity)
 				else:
 					assert tag == opcodes.TAG_LABEL
-					pc = self._call_ext_bif(pc, cp, header_index)
+					cp, pc = self._call_ext_bif(pc, cp, header_index)
 					# calling a bif means the dispatch loop 
 					# need a extra k_return semantics 
 					if self.y_reg.is_empty():
@@ -417,6 +403,9 @@ class Process:
 						cp.import_header[bif_index][1], rand1, dst_reg)
 
 			elif instr == opcodes.GC_BIF2: # 125
+				#################################################
+				#self.counter_n += 1
+				#################################################
 				((_,fail), (_,alive), (_,bif_index), rand1, rand2, dst_reg) = instr_obj.args
 				pc = self.gc_bif2(cp, pc, fail, alive, 
 						cp.import_header[bif_index][1], rand1, rand2, dst_reg)
@@ -433,6 +422,19 @@ class Process:
 			else:
 				pretty_print.print_value(self.create_call_stack_info(cp, pc))
 				raise Exception("Unimplemented opcode: %d"%(instr))
+			if should_enter:
+				driver.can_enter_jit(pc = pc,
+						call_pc = call_pc,
+						cp = cp,
+						reduction = reduction,
+						#init_stack_depth = init_stack_depth,
+						#call_jit_lock = call_jit_lock,
+						#should_enter = should_enter, 
+						single = single, 
+						s_self = self,
+						x_reg = x_reg,
+						y_reg = self.y_reg)
+
 		return (constant.STATE_SWITH, pc, cp)
 
 	def _send_by_pid(self, pid, msg):
@@ -568,10 +570,10 @@ class Process:
 		assert isinstance(fake_bif, BaseFakeFunc)
 		res = fake_bif.invoke(cp, pc, self)
 		if isinstance(res, W_AddrObject):
-			return res.pc
+			return res.cp, res.pc
 		else:
 			self.x_reg.store(0, res)
-			return pc
+			return cp, pc
 
 	def _spawn(self, cp, pc, args, priority):
 		pid = self.scheduler.create_pid()

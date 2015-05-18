@@ -4,12 +4,14 @@ from pyrlang.interpreter.datatypes.number import *
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
 from pyrlang.interpreter.datatypes.list import W_NilObject, W_ListObject, W_StrListObject
+from pyrlang.interpreter.datatypes.inner import W_AddrObject
 from pyrlang.interpreter.atom_table import global_atom_table
 from pyrlang.interpreter import constant
 from pyrlang.rpybeam import pretty_print
 from pyrlang.utils import eterm_operators
 from pyrlang.interpreter import constant
 from rpython.rlib import jit
+import time
 
 def WrapEtermBoolean(flag):
 	if flag:
@@ -30,6 +32,20 @@ class AtomToListFunc_1(BaseFakeFunc):
 		assert isinstance(a_obj, W_AtomObject)
 		lst = a_obj.to_list()
 		return eterm_operators.build_strlist_object([W_IntObject(v) for v in lst])
+
+#class ApplyFunc_2(BaseFakeFunc):
+	#def invoke(self, cp, pc, process):
+		#closure = process.x_reg.get(0)
+		#args = eterm_operators.get_list_contents(process.x_reg.get(1))
+		#(new_cp, addr, real_arity, fvs) = eterm_operators.get_closure_fields(closure)
+		#if len(args) == real_arity:
+			#for i in range(real_arity):
+				#self.x_reg.store(i, args[i])
+			#for i in range(len(fvs)):
+				#self.x_reg.store(real_arity + i, fvs[i])
+			#return W_AddrObject(new_cp, addr)
+		#else:
+			#raise Exception("arity mismatch")
 
 class BslFunc_2(BaseBIF):
 	def invoke(self, args):
@@ -155,6 +171,15 @@ class NifErrorFunc_1(BaseFakeFunc):
 		reason = process.x_reg.get(0)
 		return process.fail(cp, pc, fail_class.ERROR, reason)
 
+class NowFunc_0(BaseFakeFunc):
+	def invoke(self, cp, pc, process):
+		t = time.time()
+		mega_sec = int(t / 1000000)
+		tmp = mega_sec * 1000000
+		sec = int(t - tmp)
+		m_sec = int((t - tmp - sec) * 1000000)
+		return W_TupleObject([W_IntObject(mega_sec), W_IntObject(sec), W_IntObject(m_sec)])
+
 class RemFunc_2(BaseBIF):
 	def invoke(self, args):
 		(a,b) = args
@@ -206,6 +231,8 @@ class TupleSizeFunc_1(BaseBIF):
 class ModuleEntity(BaseModule):
 	_func_dict = { "+_2" : AddFunc,
 				  "atom_to_list_1" : AtomToListFunc_1,
+				  #"apply_2" : ApplyFunc_2,
+				  #"apply_3" : ApplyFunc_3,
 				  "bsl_2" : BslFunc_2,
 				  "bsr_2" : BsrFunc_2,
 				  "div_2" : DivFunc_2,
@@ -224,6 +251,7 @@ class ModuleEntity(BaseModule):
 				  "is_atom_1" : IsAtomFunc_1,
 				  "length_1" : LengthFunc_1,
 				  "nif_error_1" : NifErrorFunc_1,
+				  "now_0" : NowFunc_0,
 				  "++_2" : ListAppendFunc_2,
 				  "--_2" : ListFilterFunc_2,
 				  "rem_2" : RemFunc_2,

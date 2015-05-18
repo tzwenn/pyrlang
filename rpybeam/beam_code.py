@@ -5,7 +5,7 @@ from pyrlang.interpreter.atom_table import global_atom_table
 from pyrlang.interpreter.datatypes.number import W_IntObject
 from pyrlang.lib import ModuleDict
 from pyrlang.rpybeam.beam_file import BeamRoot
-from pyrlang.rpybeam.instruction import Instruction, ListInstruction
+from pyrlang.rpybeam.instruction import Instruction, ListInstruction, PatternMatchingListInstruction, PatternMatchingInstruction, LoopInstruction
 import opcodes
 import pretty_print
 import time
@@ -14,7 +14,7 @@ class CodeParser:
 	_immutable_fields_ = ['file_name', 'instrs[*]', 'import_header[*]', 
 			'parent_cp', 'total_lines', 'labelTable[*]', 
 			'_import_header[*]', 'lit_table[*]', 'loc_table[*]', 'mod_dict[*]',
-			'fun_table[*]','import_mods[*]','func_list[*]', 'export_header[*]',
+			'fun_table[*]','import_mods[*]','func_list[*]', 'func_dict[*]', 'export_header[*]',
 			'const_table[*]']
 
 	def __init__(self, beam, name, parent_cp = None):
@@ -41,8 +41,14 @@ class CodeParser:
 			#print self.loc_table
 		#self.mod_dict = {} # mod atom index => import_mods' index
 
-		(self.func_list, self.import_header, self.import_mods, self.mod_dict) = self.import_BIF_and_module()
+		# func_list: index => bif
+		# func_dict: function name atom index => index in func_list (used for apply/1, apply/2, apply/3)
+		# import_header: index => entry
+		# import_mods: index => cp object
+		# mod_dict: module atom index => index in import_mods
+		(self.func_list, self.func_dict, self.import_header, self.import_mods, self.mod_dict) = self.import_BIF_and_module()
 		(self.labelTable, self.instrs, self.const_table) = self.preprocess(beam)
+		#print "\n".join([opcodes.opnames[instr.opcode] + ":" + str(instr.__class__) for instr in self.instrs])
 		#print [v.intval for v in self.const_table]
 
 	def header_atom_preprocess(self, beam):
@@ -68,6 +74,7 @@ class CodeParser:
 		import_mods = []
 		import_header = self._import_header[:]
 		func_list = []
+		func_dict = {}
 		mod_dict = {}
 		for i in range(0, len(import_header)):
 			entry = import_header[i];
@@ -83,6 +90,7 @@ class CodeParser:
 				moduleEntity = ModuleDict.module_dict[moduleName]()
 				bif_name = ModuleDict.get_bif_name(funcName, arity)
 				import_header[i] = (entry[0], len(func_list), entry[2])
+				func_dict[func_atom_index] = len(func_list)
 				func_list.append(moduleEntity.searchFunc(bif_name)())
 			elif not moduleName == self.get_self_module_name():
 				if module_atom_index not in mod_dict:
@@ -94,7 +102,7 @@ class CodeParser:
 				func_index = self.search_exports(funcName, 
 						arity, mod_cp.export_header)
 				import_header[i] = (mod_dict[module_atom_index], func_index, arity)
-		return func_list[:],import_header[:], import_mods[:], mod_dict.copy()
+		return func_list[:], func_dict.copy(), import_header[:], import_mods[:], mod_dict.copy()
 
 	def get_self_module_name(self):
 		return self.name
@@ -278,6 +286,8 @@ class CodeParser:
 	@jit.unroll_safe
 	def preprocess(self, beam):
 		(instrs, const_table) = self.buildInstrs(beam)
+		#for instr in instrs:
+			#print instr.__class__, opcodes.opnames[instr.opcode]
 		labelTable = []
 		for i in range(len(instrs)):
 			instr_obj = instrs[i]
@@ -301,69 +311,6 @@ class CodeParser:
 				labelTable.append(i)
 		return labelTable[:], instrs[:], const_table[:]
 
-		# first pass
-		#while(pc < len(self.code)):
-			#pc, instr = self.parseInstr(pc)
-			#if instr in [opcodes.CALL_EXT, opcodes.CALL_EXT_ONLY, opcodes.CALL_EXT_LAST]:
-				#pc, real_arity = self.parseInt(pc)
-				#pc_begin = pc
-				#pc, header_index = self.parseInt(pc)
-				#pc_end = pc
-				#entry = self._import_header[header_index]
-				#if ModuleDict.is_bif_from_tuple(self.get_name_entry(entry)):
-					## at this time, the func index are already replaced
-					#replace_list.append((pc_begin, pc_end - pc_begin,
-							#self.import_header[header_index][1]))
-			#elif instr == opcodes.LINE:
-				#pc, num = self.parseInt(pc)
-				#if num > self.total_lines:
-					#self.total_lines = num
-			#else:
-				#pc = self.discard_operands(instr, pc)
-		#code_list = list(self.code)
-
-		#global_offset = 0
-		#for (addr, word_len, index) in replace_list:
-			## [Notice] this is not a real label, it's just a cheat
-			## that tell interpreter it's actually a bif rather 
-			## than a module function
-			#e_lst = self.createOne(index, opcodes.TAG_LABEL)
-			##print "replace %d(size:%d) with %s" % (addr, word_len, str(e_lst))
-			#if len(e_lst) == word_len:
-				#for i in range(len(e_lst)):
-					#code_list[addr + i + global_offset] = e_lst[i]
-			#elif len(e_lst) > word_len:
-				#assert word_len == 1 and len(e_lst) == 2
-				#code_list[addr + global_offset] = e_lst[0]
-				#insert_pos = addr + global_offset + 1
-				#assert insert_pos >= 0
-				#code_list.insert(insert_pos, e_lst[1])
-				#global_offset += 1
-			#else:
-				##print code_list[addr - 10:]
-				#assert len(e_lst) == 1 and word_len == 2
-				#code_list[addr + global_offset] = e_lst[0]
-				#del code_list[addr + global_offset + 1]
-				#global_offset -= 1
-				##print code_list[addr - 10:]
-		#self.code = ''.join(code_list)
-
-		## second pass, to build the label table
-		## note we cannot do it in first pass because
-		## the replacement of fake bif may change
-		## the layout of the code.
-		#pc = 0
-		#while(pc < len(self.code)):
-			#pc, instr = self.parseInstr(pc)
-			##print "   " + str(pc - 1) + "[" + opcodes.opnames[instr].upper() + "]"
-			#if instr == opcodes.LABEL:
-				#pc, num = self.parseInt(pc)
-				#self.labelTable.append(pc)
-				##print "L" + str(num) + ":" + str(pc)
-			#else:
-				##print "[%d]"%(pc) + opcodes.opnames[instr].upper()
-				#pc = self.discard_operands(instr, pc)
-
 	# try to find the function definition of code at pc
 	@jit.unroll_safe
 	def find_func_def(self, pc):
@@ -378,42 +325,12 @@ class CodeParser:
 				pc -= 1
 		raise Exception("cannot find function definition from address %d"%(pc))
 
-		#str_len = len(self.code)
-		#while(pc < str_len):
-			#pc, instr = self.parseInstr(pc)
-			#if instr == opcodes.LABEL:
-				#pc, label_num = self.parseInt(pc)
-				#return self.find_func_def_from_label(label_num - 3)
-			#else:
-				#pc = self.discard_operands(instr, pc)
-		#return self.find_func_def_from_label(len(self.labelTable) - 3)
-
-	# find some address within the range of label table,
-	# begined with 1
 	@jit.unroll_safe
 	def find_label_from_address(self, addr):
 		for label in range(len(self.labelTable)):
 			if addr < self.labelTable[label]:
 				return label
 		return len(self.labelTable)
-
-	# label index should begin with 0
-	#@jit.unroll_safe
-	#def find_func_def_from_label(self, label_index):
-		#for l_idx in range(label_index, len(self.labelTable)):
-			#pc = self.labelTable[l_idx]
-			#pc, instr = self.parseInstr(pc)
-			#if instr == opcodes.LINE:
-				#pc = self.discard_operands(instr, pc)
-				#pc, instr = self.parseInstr(pc)
-				#if instr == opcodes.FUNC_INFO:
-					#pc, module_index = self.parseInt(pc)
-					#pc, func_name_index = self.parseInt(pc)
-					#pc, arity = self.parseInt(pc)
-					#return (self.atoms[module_index - 1], 
-							#self.atoms[func_name_index - 1],
-							#arity)
-		#raise Exception("can not found function definition from label:%d"%(label_index + 1))
 
 	@jit.unroll_safe
 	def find_current_line(self, pc):
@@ -509,10 +426,18 @@ class CodeParser:
 				else:
 					pretty_print.print_hex(self.code)
 					raise Exception("Unknown TAG: %d at position:%d"%(tag, pc-1))
-			if lst_field:
-				instrs.append(ListInstruction(instr, args[:], lst_field))
+			if instr in opcodes.loop_instrs:
+				instrs.append(LoopInstruction(instr, args[:]))
+			elif lst_field:
+				if instr in opcodes.possible_pattern_matches:
+					instrs.append(PatternMatchingListInstruction(instr, args[:], lst_field))
+				else:
+					instrs.append(ListInstruction(instr, args[:], lst_field))
 			else:
-				instrs.append(Instruction(instr, args[:]))
+				if instr in opcodes.possible_pattern_matches:
+					instrs.append(PatternMatchingInstruction(instr, args[:]))
+				else:
+					instrs.append(Instruction(instr, args[:]))
 		return instrs[:], [W_IntObject(v) for v in const_table]
 
 	def _check_const_table(self, const_table, val):

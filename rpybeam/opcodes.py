@@ -147,6 +147,30 @@ RECV_SET            = 0x97
 GC_BIF3             = 0x98
 LINE                = 0x99
 
+possible_pattern_matches = (
+		IS_LT,
+		IS_GE,
+		IS_EQ,
+		IS_NE,
+		IS_EQ_EXACT,
+		IS_NE_EXACT,
+		IS_INTEGER,
+		IS_FLOAT,
+		IS_NUMBER,
+		IS_ATOM,
+		IS_PID,
+		IS_REFERENCE,
+		IS_PORT,
+		IS_NIL,
+		IS_BINARY,
+		IS_LIST,
+		IS_NONEMPTY_LIST,
+		IS_TUPLE,
+		SELECT_VAL,
+		SELECT_TUPLE_ARITY)
+
+loop_instrs = (CALL_ONLY,CALL_EXT_ONLY)
+
 """ Opcode arity """
 arity = [
 		0,1,3,0,2,3,2,2,3,2,4,5,
