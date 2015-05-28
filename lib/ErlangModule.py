@@ -2,9 +2,9 @@ from pyrlang.lib.base import BaseModule, BaseBIF, BaseBIF0, BaseFakeFunc
 from pyrlang.interpreter import fail_class
 from pyrlang.interpreter.datatypes.number import *
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
-from pyrlang.interpreter.datatypes.atom import W_AtomObject
-from pyrlang.interpreter.datatypes.list import W_NilObject, W_ListObject, W_StrListObject
+from pyrlang.interpreter.datatypes.atom import W_AtomObject, W_BoolAtomObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject
+from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
 from pyrlang.interpreter.atom_table import global_atom_table
 from pyrlang.interpreter import constant
 from pyrlang.rpybeam import pretty_print
@@ -33,6 +33,13 @@ class AtomToListFunc_1(BaseFakeFunc):
 		lst = a_obj.to_list()
 		return eterm_operators.build_strlist_object([W_IntObject(v) for v in lst])
 
+class AndFunc_2(BaseBIF):
+	def invoke(self, args):
+		(left, right) = args
+		assert isinstance(left, W_BoolAtomObject)
+		assert isinstance(right, W_BoolAtomObject)
+		return WrapEtermBoolean(left == global_atom_table.TRUE_ATOM and right == global_atom_table.TRUE_ATOM)
+
 #class ApplyFunc_2(BaseFakeFunc):
 	#def invoke(self, cp, pc, process):
 		#closure = process.x_reg.get(0)
@@ -46,6 +53,11 @@ class AtomToListFunc_1(BaseFakeFunc):
 			#return W_AddrObject(new_cp, addr)
 		#else:
 			#raise Exception("arity mismatch")
+
+class BandFunc_2(BaseBIF):
+	def invoke(self, args):
+		(a,b) = args
+		return a.and_(b)
 
 class BslFunc_2(BaseBIF):
 	def invoke(self, args):
@@ -111,6 +123,7 @@ class FloatToListFunc_1(BaseBIF):
 class ElementFunc_2(BaseBIF):
 	def invoke(self, args):
 		(index, tuple_val) = args
+		#print index.intval, tuple_val.vals
 		assert isinstance(tuple_val, W_TupleObject)
 		return tuple_val.element_from_int_obj(index)
 
@@ -121,6 +134,12 @@ class GetModuleInfoFunc_1(BaseBIF):
 class GetModuleInfoFunc_2(BaseBIF):
 	def invoke(self,arg):
 		return W_FloatObject(2.3333333)
+
+class HdFunc_1(BaseBIF):
+	def invoke(self, arg):
+		list_val = arg[0]
+		assert isinstance(list_val, W_ListObject)
+		return list_val.head()
 
 class IntegerToListFunc_1(BaseFakeFunc):
 	@jit.unroll_safe
@@ -135,21 +154,23 @@ class IsAtomFunc_1(BaseBIF):
 		a_obj = args[0]
 		return WrapEtermBoolean(isinstance(a_obj, W_AtomObject))
 
-class LengthFunc_1(BaseFakeFunc):
-	def invoke(self, cp, pc, process):
-		l_obj = process.x_reg.get(0)
+class LengthFunc_1(BaseBIF):
+	def invoke(self, args):
+		l_obj = args[0]
 		assert isinstance(l_obj, W_ListObject) or isinstance(l_obj, W_NilObject)
 		return W_IntObject(l_obj.length())
 
 class ListAppendFunc_2(BaseFakeFunc):
 	def invoke(self, cp, pc, process):
-		lst1 = process.x_reg.get(0)
-		lst2 = process.x_reg.get(1)
-		if isinstance(lst1, W_ListObject):
-			return lst1.append(lst2)
-		elif isinstance(lst1, W_NilObject):
-			assert isinstance(lst2, W_ListObject) or isinstance(lst2, W_NilObject)
-			return lst2
+		lst_obj1 = process.x_reg.get(0)
+		lst_obj2 = process.x_reg.get(1)
+		lst1 = eterm_operators.get_list_contents(lst_obj1)
+		lst2 = eterm_operators.get_list_contents(lst_obj2)
+		if isinstance(lst_obj1, W_StrListObject):
+			return eterm_operators.build_strlist_object(lst1 + lst2)
+		else:
+			assert isinstance(lst_obj1, W_ListObject) or isinstance(lst_obj1, W_NilObject)
+			return eterm_operators.build_list_object(lst1 + lst2)
 
 class ListFilterFunc_2(BaseBIF):
 	@jit.unroll_safe
@@ -171,6 +192,15 @@ class NifErrorFunc_1(BaseFakeFunc):
 		reason = process.x_reg.get(0)
 		return process.fail(cp, pc, fail_class.ERROR, reason)
 
+class NotFunc_1(BaseBIF):
+	def invoke(self, args):
+		arg = args[0]
+		assert isinstance(arg, W_BoolAtomObject)
+		if arg == global_atom_table.TRUE_ATOM:
+			return global_atom_table.FALSE_ATOM
+		else:
+			return global_atom_table.TRUE_ATOM
+
 class NowFunc_0(BaseFakeFunc):
 	def invoke(self, cp, pc, process):
 		t = time.time()
@@ -179,6 +209,13 @@ class NowFunc_0(BaseFakeFunc):
 		sec = int(t - tmp)
 		m_sec = int((t - tmp - sec) * 1000000)
 		return W_TupleObject([W_IntObject(mega_sec), W_IntObject(sec), W_IntObject(m_sec)])
+
+class OrFunc_2(BaseBIF):
+	def invoke(self, args):
+		(left, right) = args
+		assert isinstance(left, W_BoolAtomObject)
+		assert isinstance(right, W_BoolAtomObject)
+		return WrapEtermBoolean(left == global_atom_table.TRUE_ATOM or right == global_atom_table.TRUE_ATOM)
 
 class RemFunc_2(BaseBIF):
 	def invoke(self, args):
@@ -222,6 +259,12 @@ class SpawnFunc_3(BaseFakeFunc):
 		else:
 			return self._invoke(module_name, func_name, args, cp, process)
 
+class TlFunc_1(BaseBIF):
+	def invoke(self, args):
+		list_val = args[0]
+		assert isinstance(list_val, W_ListObject)
+		return list_val.tail()
+
 class TupleSizeFunc_1(BaseBIF):
 	def invoke(self, args):
 		tuple_val = args[0]
@@ -231,8 +274,10 @@ class TupleSizeFunc_1(BaseBIF):
 class ModuleEntity(BaseModule):
 	_func_dict = { "+_2" : AddFunc,
 				  "atom_to_list_1" : AtomToListFunc_1,
+				  "and_2" : AndFunc_2,
 				  #"apply_2" : ApplyFunc_2,
 				  #"apply_3" : ApplyFunc_3,
+				  "band_2" : BandFunc_2,
 				  "bsl_2" : BslFunc_2,
 				  "bsr_2" : BsrFunc_2,
 				  "div_2" : DivFunc_2,
@@ -248,16 +293,20 @@ class ModuleEntity(BaseModule):
 				  "get_module_info_1" : GetModuleInfoFunc_1,
 				  "get_module_info_2" : GetModuleInfoFunc_2,
 				  "integer_to_list_1" : IntegerToListFunc_1,
+				  "hd_1" : HdFunc_1,
 				  "is_atom_1" : IsAtomFunc_1,
 				  "length_1" : LengthFunc_1,
 				  "nif_error_1" : NifErrorFunc_1,
+				  "not_1" : NotFunc_1,
 				  "now_0" : NowFunc_0,
 				  "++_2" : ListAppendFunc_2,
 				  "--_2" : ListFilterFunc_2,
+				  "or_2" : OrFunc_2,
 				  "rem_2" : RemFunc_2,
 				  "self_0" : SelfFunc_0,
 				  "setelement_3" : SetElementFunc_3,
 				  "spawn_3" : SpawnFunc_3,
+				  "tl_1" : TlFunc_1,
 				  "tuple_size_1" : TupleSizeFunc_1}
 
 	def initFuncDict(self):

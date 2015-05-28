@@ -74,6 +74,9 @@ class Process:
 		#init_stack_depth = -1
 		#call_jit_lock = False
 
+		#for n in cp.lit_table:
+			#pretty_print.print_value(n)
+
 		while(True):
 			driver.jit_merge_point(pc = pc,
 					call_pc = call_pc,
@@ -87,6 +90,8 @@ class Process:
 					x_reg = x_reg,
 					y_reg = self.y_reg)
 			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, call_pc, cp) + " reduction: " + str(reduction)
+			#self.x_reg.print_content()
+			#self.y_reg.print_content()
 			should_enter = False
 			instr_obj = cp.instrs[pc]
 			#call_pc = pc
@@ -224,8 +229,12 @@ class Process:
 				self.allocate_heap_zero(stack_need, heap_need, live)
 
 			elif instr == opcodes.TEST_HEAP: # 16
-				(term1, term2) = instr_obj.args
-				self.test_heap(term1, term2)
+				if isinstance(instr_obj, ListInstruction):
+					# TODO: term2 also need to be past if we begin to implement TEST_HEAP
+					self.test_heap((0,0), instr_obj.args[0])
+				else:
+					(term1, term2) = instr_obj.args
+					self.test_heap(term1, term2)
 
 			elif instr == opcodes.INIT: # 17
 				dst_reg = instr_obj.args[0]
@@ -306,7 +315,7 @@ class Process:
 
 			elif instr == opcodes.IS_LIST: # 55
 				((_, label), test_v) = instr_obj.args
-				pc = self.is_nil(pc, cp, label, test_v)
+				pc = self.is_list(pc, cp, label, test_v)
 
 			elif instr == opcodes.IS_NONEMPTY_LIST: # 56
 				((_, label), test_v) = instr_obj.args
@@ -328,7 +337,7 @@ class Process:
 				pc = self.select_val(cp, reg, label, sl)
 
 			elif instr == opcodes.JUMP: # 61
-				(label, _) = instr_obj.arg_values()
+				(label,) = instr_obj.arg_values()
 				pc = self.jump(cp, label)
 
 			elif instr == opcodes.K_CATCH: # 62
@@ -388,6 +397,37 @@ class Process:
 						return (constant.STATE_TERMINATE, pc, cp)
 					else:
 						(cp, pc) = self.k_return(cp)
+
+			elif instr == opcodes.FCLEARERROR: # 94
+				self.fclearerror()
+
+			elif instr == opcodes.FCHECKERROR: # 95
+				label = instr_obj.args[0]
+				self.fcheckerror(label)
+
+			elif instr == opcodes.FMOVE: # 96
+				(source, dst_reg) = instr_obj.args
+				self.fmove(cp, source, dst_reg)
+
+			elif instr == opcodes.FCONV: # 97
+				(source, dst_reg) = instr_obj.args
+				self.fconv(cp, source, dst_reg)
+
+			elif instr == opcodes.FADD: # 98
+				((_,label), reg1, reg2, dst_reg) = instr_obj.args
+				self.fadd(cp, label, reg1, reg2, dst_reg)
+
+			elif instr == opcodes.FSUB: # 99
+				((_,label), reg1, reg2, dst_reg) = instr_obj.args
+				self.fsub(cp, label, reg1, reg2, dst_reg)
+
+			elif instr == opcodes.FMUL: # 100
+				((_,label), reg1, reg2, dst_reg) = instr_obj.args
+				self.fmul(cp, label, reg1, reg2, dst_reg)
+
+			elif instr == opcodes.FDIV: # 101
+				((_,label), reg1, reg2, dst_reg) = instr_obj.args
+				self.fdiv(cp, label, reg1, reg2, dst_reg)
 
 			elif instr == opcodes.MAKE_FUN2: # 103
 				(index,) = instr_obj.arg_values()
@@ -468,6 +508,8 @@ class Process:
 				return global_atom_table.get_obj_at(value)
 		elif tag == opcodes.TAGX_LITERAL:
 			return cp.lit_table[value]
+		elif tag == opcodes.TAGX_FLOATREG:
+			return self.x_reg.get_float(value)
 		else:
 			# TODO: take more care for else branch
 			return W_IntObject(value)
@@ -484,6 +526,8 @@ class Process:
 		#print "store value %d to reg %d(%d)"%(res.intval, tag, val)
 		if tag == opcodes.TAG_XREG:
 			self.x_reg.store(val, res)
+		elif tag == opcodes.TAGX_FLOATREG:
+			self.x_reg.store_float(val, res)
 		else:
 			self.y_reg.store(val, res)
 
@@ -552,6 +596,7 @@ class Process:
 	def apply_bif(self, cp, pc, fail, bif, rands, dst_reg):
 		# TODO: wrap them with try-catch to handle inner exception.
 		args = [self.get_basic_value(cp, rand) for rand in rands]
+		#print bif.__class__
 		assert isinstance(bif, BaseBIF)
 		res = bif.invoke(args)
 		self.store_basereg(dst_reg, res)
@@ -761,9 +806,9 @@ class Process:
 	def is_list(self, pc, cp, label, test_v):
 		value = self.get_basic_value(cp, test_v)
 		if isinstance(value, W_ListObject) or isinstance(value, W_NilObject):
-			return cp.label_to_addr(label)
-		else:
 			return pc
+		else:
+			return cp.label_to_addr(label)
 
 	# 56
 	def is_nonempty_list(self, pc, cp, label, test_v):
@@ -903,6 +948,59 @@ class Process:
 
 	def call_ext_only(self, cp, entry, real_arity):
 		return self._call_ext_only(cp, entry)
+
+	# 94
+	# TODO: don't know the semantics of this instruction now
+	def fclearerror(self):
+		pass
+
+	# 95
+	# TODO: add some check here
+	def fcheckerror(self, label):
+		pass
+
+	# 96
+	def fmove(self, cp, source, dst_reg):
+		self.move(cp, source, dst_reg)
+
+	# 97
+	def fconv(self, cp, source, dst_reg):
+		(tag, pos) = dst_reg
+		assert tag == opcodes.TAGX_FLOATREG
+		val = self.get_basic_value(cp, source)
+		if isinstance(val, W_FloatObject):
+			self.x_reg.store_float(pos, val)
+		else:
+			assert isinstance(val, W_AbstractIntObject)
+			self.x_reg.store_float(pos, W_FloatObject(float(val.to_int())))
+
+	# 98
+	def fadd(self, cp, label, reg1, reg2, dst_reg):
+		val1 = self.get_basic_value(cp, reg1)
+		val2 = self.get_basic_value(cp, reg2)
+		assert isinstance(val1, W_FloatObject)
+		self.store_basereg(dst_reg, val1.add(val2))
+
+	# 99
+	def fsub(self, cp, label, reg1, reg2, dst_reg):
+		val1 = self.get_basic_value(cp, reg1)
+		val2 = self.get_basic_value(cp, reg2)
+		assert isinstance(val1, W_FloatObject)
+		self.store_basereg(dst_reg, val1.sub(val2))
+
+	# 100
+	def fmul(self, cp, label, reg1, reg2, dst_reg):
+		val1 = self.get_basic_value(cp, reg1)
+		val2 = self.get_basic_value(cp, reg2)
+		assert isinstance(val1, W_FloatObject)
+		self.store_basereg(dst_reg, val1.mul(val2))
+
+	# 101
+	def fdiv(self, cp, label, reg1, reg2, dst_reg):
+		val1 = self.get_basic_value(cp, reg1)
+		val2 = self.get_basic_value(cp, reg2)
+		assert isinstance(val1, W_FloatObject)
+		self.store_basereg(dst_reg, val1.div(val2))
 
 	# 103
 	@jit.unroll_safe

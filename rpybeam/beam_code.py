@@ -180,7 +180,7 @@ class CodeParser:
 
 	def _parseInt(self, pc, first):
 		pc, tag = self._parseTag(pc, first)
-		assert(tag < opcodes.TAGX_BASE)
+		#assert(tag < opcodes.TAGX_BASE)
 		return self._createInt(pc, first)
 
 	def build_atom(self, int_val):
@@ -416,7 +416,7 @@ class CodeParser:
 							val = global_atom_table.search_index(atoms[val-1])
 							lst_field[i] = ((tag, val), label)
 				elif tag == opcodes.TAGX_FLOATREG:
-					pc, val = self._parseInt(pc, first)
+					pc, val = self._parse_floatreg(pc)
 					args.append((tag, val))
 				elif tag == opcodes.TAGX_ALLOCLIST:
 					pc, lst_field = self._parse_alloclist(pc)

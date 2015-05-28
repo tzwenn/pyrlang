@@ -1,5 +1,5 @@
 -module(sumLoop).
--export([test/1]).
+-export([test/0, test/1]).
 
 tail_rec(N) ->
 	tail_rec(N, 0).
@@ -10,3 +10,6 @@ tail_rec(N, Sum) ->
 
 test(N) ->
 	tail_rec(N).
+
+test() ->
+	test(100000000).

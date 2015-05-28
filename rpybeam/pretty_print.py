@@ -48,9 +48,9 @@ def value_str(v):
 	if isinstance(v, W_AbstractIntObject):
 		return v.str()
 	elif isinstance(v, W_FloatObject):
-		return "%f"%(v.floatval)
+		return str(v.floatval)
 	elif isinstance(v, W_NilObject):
-		return "Nil"
+		return "[]"
 	elif isinstance(v, W_AtomObject):
 		return v.get_str()
 	elif isinstance(v, W_TupleObject):
@@ -141,7 +141,7 @@ def rands_to_str(cp, rands):
 def rand_to_str(cp, rand):
 	(tag, val) = rand
 	if tag == opcodes.TAGX_LITERAL:
-		return value_str(cp.lit_table[val-1])
+		return value_str(cp.lit_table[val])
 	elif tag == opcodes.TAG_LITERAL:
 		return str(val)
 	elif tag == opcodes.TAG_INTEGER:
@@ -154,5 +154,7 @@ def rand_to_str(cp, rand):
 		return "y(%d)"%val
 	elif tag == opcodes.TAG_LABEL:
 		return "L%d"%val
+	elif tag == opcodes.TAGX_FLOATREG:
+		return "f(%d)"%val
 	else:
 		return str(val)

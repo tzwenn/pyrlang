@@ -45,3 +45,6 @@ class W_AtomObject(W_Root):
 	@jit.unroll_safe
 	def to_list(self):
 		return [ord(c) for c in self.get_str()]
+
+class W_BoolAtomObject(W_AtomObject):
+	pass

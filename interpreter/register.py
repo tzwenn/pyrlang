@@ -1,4 +1,7 @@
 from rpython.rlib import jit
+from pyrlang.interpreter.datatypes.number import W_FloatObject
+from pyrlang.rpybeam import pretty_print
+
 class AbstractRegister:
 	def get(self, n):
 		pass
@@ -9,11 +12,12 @@ class AbstractRegister:
 max_x_reg_size = 16
 
 class X_Register(AbstractRegister):
-	_virtualizable_ = ['regs[*]']
+	_virtualizable_ = ['regs[*]', 'floats[*]']
 
 	def __init__(self):
 		self = jit.hint(self, fresh_virtualizable=True, access_directly=True)
 		self.regs = [None] * max_x_reg_size
+		self.floats = [None] * max_x_reg_size
 
 	def get(self, n):
 		assert(n >= 0)
@@ -24,6 +28,27 @@ class X_Register(AbstractRegister):
 		assert(n >= 0)
 		assert(n < max_x_reg_size)
 		self.regs[n] = val
+
+	def get_float(self, n):
+		assert(n >= 0)
+		assert(n < max_x_reg_size)
+		return self.floats[n]
+
+	def store_float(self, n, val):
+		assert(n >= 0)
+		assert(n < max_x_reg_size)
+		assert isinstance(val, W_FloatObject)
+		self.floats[n] = val
+
+	def print_content(self):
+		print "Normal:"
+		for i,v in enumerate(self.regs):
+			if v:
+				print i, pretty_print.value_str(v)
+		print "Floats:"
+		for i, f in enumerate(self.floats):
+			if f:
+				print i, pretty_print.value_str(f)
 
 #class Y_Register(AbstractRegister):
 	##_virtualizable_ = ['regs[*]']
@@ -166,3 +191,9 @@ class Y_Register(AbstractRegister):
 
 	def store(self, n, val):
 		self.vals[self.val_top - n] = val
+
+	def print_content(self):
+		print "Y register"
+		for (i,v) in enumerate(self.vals):
+			if v:
+				print i, pretty_print.value_str(v)

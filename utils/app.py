@@ -30,6 +30,8 @@ class App:
 		main_process = Process(pid_provider.create_pid(), scheduler, constant.PRIORITY_NORMAL)
 		scheduler.process_pool[main_process.pid] = main_process
 		cp = CodeParser(b, file_name)
+		#from pyrlang.interpreter.atom_table import global_atom_table
+		#print global_atom_table._str_table
 		func_addr = cp.get_func_addr_by_name(self.arg_pairs["entry"], len(self.entry_args))
 		main_process.init_entry_arguments([W_IntObject(int(arg)) for arg in self.entry_args])
 

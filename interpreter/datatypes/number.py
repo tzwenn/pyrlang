@@ -5,7 +5,8 @@ from rpython.rlib.rbigint import (
 		InvalidEndiannessError, InvalidSignednessError, rbigint)
 
 class W_AbstractIntObject(W_Root):
-	pass
+	def to_int(self):
+		return -999
 
 class W_IntObject(W_AbstractIntObject):
 	_immutable_fields_ = ['intval']
@@ -32,6 +33,13 @@ class W_IntObject(W_AbstractIntObject):
 				return W_BigIntObject(b_i.add(o_i))
 		else:
 			return self.to_bigint().add(other)
+
+	# Never Overflow
+	def and_(self, other):
+		if isinstance(other, W_IntObject):
+			return W_IntObject(self.intval & other.intval)
+		else:
+			return self.to_bigint().and_(other)
 
 	def to_bigint(self):
 		return W_BigIntObject(rbigint.fromint(self.intval))
@@ -151,6 +159,21 @@ class W_FloatObject(W_Root):
 			raise Exception("wrong type")
 		return W_FloatObject(self.floatval + other.floatval)
 
+	def sub(self, other):
+		if not isinstance(other, W_FloatObject):
+			raise Exception("wrong type")
+		return W_FloatObject(self.floatval - other.floatval)
+
+	def mul(self, other):
+		if not isinstance(other, W_FloatObject):
+			raise Exception("wrong type")
+		return W_FloatObject(self.floatval * other.floatval)
+
+	def div(self, other):
+		if not isinstance(other, W_FloatObject):
+			raise Exception("wrong type")
+		return W_FloatObject(self.floatval / other.floatval)
+
 	def lt(self, other): 
 		if not isinstance(other, W_FloatObject):
 			raise Exception("wrong type")
@@ -212,6 +235,10 @@ class W_BigIntObject(W_AbstractIntObject):
 	def _add(self, other):
 		assert isinstance(other, W_BigIntObject)
 		return self.return_wrap(self.bigintval.add(other.bigintval))
+
+	def and_(self, other):
+		assert isinstance(other, W_BigIntObject)
+		return self.return_wrap(self.bigintval.and_(other.bigintval))
 
 	def sub(self, other):
 		if isinstance(other, W_IntObject):

@@ -8,7 +8,7 @@ class W_TupleObject(W_Root):
 
 	def element_from_int_obj(self, index):
 		assert isinstance(index, W_AbstractIntObject)
-		return self.element(index.toint())
+		return self.element(index.toint()-1)
 
 	def element(self, index):
 		assert isinstance(index, int)
