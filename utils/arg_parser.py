@@ -48,11 +48,13 @@ def _is_out_of_index(i, arg_lst):
 option_names = {
 		"s" : "single scheduler",
 		"r" : "reduction time",
+		"run" : "erlang style running option",
 		}
 
 option_arities = {
 		"s" : False,
 		"r" : True,
+		"run" : False,
 		}
 
 default_args_dict = {

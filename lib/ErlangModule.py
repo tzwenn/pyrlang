@@ -1,4 +1,4 @@
-from pyrlang.lib.base import BaseModule, BaseBIF, BaseBIF0, BaseFakeFunc
+from pyrlang.lib.base import BaseModule, BaseBIF, BaseBIF0, BaseFakeFunc, WrapEtermBoolean
 from pyrlang.interpreter import fail_class
 from pyrlang.interpreter.datatypes.number import *
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
@@ -12,12 +12,6 @@ from pyrlang.utils import eterm_operators
 from pyrlang.interpreter import constant
 from rpython.rlib import jit
 import time
-
-def WrapEtermBoolean(flag):
-	if flag:
-		return global_atom_table.TRUE_ATOM
-	else:
-		return global_atom_table.FALSE_ATOM
 
 class AddFunc(BaseBIF):
 	def invoke(self, args):
@@ -160,6 +154,11 @@ class LengthFunc_1(BaseBIF):
 		assert isinstance(l_obj, W_ListObject) or isinstance(l_obj, W_NilObject)
 		return W_IntObject(l_obj.length())
 
+class ListToIntegerFunc_1(BaseFakeFunc):
+	def invoke(self, cp, pc, process):
+		lst_obj = process.x_reg.get(0)
+		return W_IntObject(int(eterm_operators.get_str_list_contents(lst_obj)))
+
 class ListAppendFunc_2(BaseFakeFunc):
 	def invoke(self, cp, pc, process):
 		lst_obj1 = process.x_reg.get(0)
@@ -296,6 +295,7 @@ class ModuleEntity(BaseModule):
 				  "hd_1" : HdFunc_1,
 				  "is_atom_1" : IsAtomFunc_1,
 				  "length_1" : LengthFunc_1,
+				  "list_to_integer_1" : ListToIntegerFunc_1,
 				  "nif_error_1" : NifErrorFunc_1,
 				  "not_1" : NotFunc_1,
 				  "now_0" : NowFunc_0,

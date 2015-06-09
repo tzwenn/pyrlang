@@ -25,6 +25,13 @@ def get_list_contents(v):
 			v = v.tail()
 		return res
 
+def get_str_list_contents(v):
+	res = get_list_contents(v)
+	s = ""
+	for e in res:
+		s += chr(get_int_val(e))
+	return s
+
 def get_atom_val(v):
 	assert isinstance(v, W_AtomObject)
 	return v.get_str()
@@ -56,6 +63,9 @@ def build_strlist_object(object_lst):
 	for i in range(0, length):
 		right = W_StrListObject(object_lst[length - i - 1], right)
 	return right
+
+def build_strlist_object_from_string(s):
+	return build_strlist_object([W_IntObject(ord(c)) for c in s])
 
 def get_closure_fields(v):
 	assert isinstance(v, W_ClosureObject)

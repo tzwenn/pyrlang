@@ -10,6 +10,9 @@ class W_NilObject(W_Root):
 	def length(self):
 		return 0
 
+	def member(self, v):
+		return False
+
 class W_ListObject(W_Root):
 	_immutable_fields_ = ['left', 'right']
 
@@ -44,6 +47,15 @@ class W_ListObject(W_Root):
 			return self.left.is_equal(other.left) and self.right.is_equal(other.right)
 		else:
 			return False
+
+	def member(self, v):
+		curr = self
+		while isinstance(curr, W_ListObject):
+			#print curr.head().intval,v.intval
+			if curr.head().is_equal(v):
+				return True
+			curr = curr.tail()
+		return False
 
 class W_StrListObject(W_ListObject):
 	def clone(self):

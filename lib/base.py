@@ -1,3 +1,11 @@
+from pyrlang.interpreter.atom_table import global_atom_table
+
+def WrapEtermBoolean(flag):
+	if flag:
+		return global_atom_table.TRUE_ATOM
+	else:
+		return global_atom_table.FALSE_ATOM
+
 class BaseModule:
 	def __init__(self):
 		self.func_dict = self.initFuncDict()

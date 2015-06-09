@@ -96,8 +96,8 @@ class Process:
 			instr_obj = cp.instrs[pc]
 			#call_pc = pc
 			pc = pc + 1
-			if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
-				should_enter = True
+			#if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
+				#should_enter = True
 
 			instr = instr_obj.opcode
 			depth = -1
@@ -114,7 +114,8 @@ class Process:
 				reduction -= 1
 				if not single and reduction <= 0:
 					break
-				#else:
+				else:
+					should_enter = True
 					#if not call_jit_lock:
 						#should_enter = True
 						#if init_stack_depth == -1:
@@ -136,6 +137,8 @@ class Process:
 				reduction -= 1
 				if not single and reduction <= 0:
 					break
+				else:
+					should_enter = True
 				# for testing
 				#else:
 					#assert isinstance(instr_obj, LoopInstruction)
@@ -386,6 +389,7 @@ class Process:
 			elif instr == opcodes.CALL_EXT_ONLY: # 78
 				((_, real_arity), (tag, header_index)) = instr_obj.args
 				if tag == opcodes.TAG_LITERAL:
+					should_enter = True
 					entry = cp.import_header[header_index]
 					cp, pc = self.call_ext_only(cp, entry, real_arity)
 				else:
