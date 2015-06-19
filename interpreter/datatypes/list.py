@@ -1,4 +1,5 @@
 from root import W_Root
+from rpython.rlib import jit
 
 class W_NilObject(W_Root):
 	def clone(self):
@@ -34,6 +35,7 @@ class W_ListObject(W_Root):
 	def clone(self):
 		return W_ListObject(self.left.clone(), self.right.clone())
 
+	@jit.unroll_safe
 	def length(self):
 		l = 1
 		tail = self
@@ -48,6 +50,7 @@ class W_ListObject(W_Root):
 		else:
 			return False
 
+	@jit.unroll_safe
 	def member(self, v):
 		curr = self
 		while isinstance(curr, W_ListObject):

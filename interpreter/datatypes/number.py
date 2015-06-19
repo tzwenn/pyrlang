@@ -23,6 +23,9 @@ class W_IntObject(W_AbstractIntObject):
 	def is_zero(self):
 		return self.intval == 0
 
+	#def abs(self):
+		#return W_IntObject(abs(self.intval))
+
 	def add(self, other): 
 		if isinstance(other, W_IntObject):
 			try:
@@ -207,6 +210,9 @@ class W_BigIntObject(W_AbstractIntObject):
 	_immutable_fields_ = ['bigintval']
 	def __init__(self, intval):
 		self.bigintval = intval
+
+	#def abs(self):
+		#return W_BigIntObject(self.bigintval.abs())
 
 	def str(self):
 		return self.bigintval.str()

@@ -26,3 +26,6 @@ LOW_PRIORITY_PROCESS_SKIP_TIMES = 5
 
 # use it to represent an undefined register tuple of (address, tag)
 INVALID_REG = (0,0)
+
+# used for jit.loop_unrolling_heuristic hint
+UNROLLING_CUTOFF = 5

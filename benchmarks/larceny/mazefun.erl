@@ -1,5 +1,5 @@
 -module(mazefun).
--export([test/2,test/0]).
+-export([test/2, test/0, run_benchmark/1]).
 
 -define(INITIAL_RANDOM, 0).
 
@@ -156,3 +156,7 @@ test() ->
 
 test(N,M) ->
 	make_maze(N,M).
+
+run_benchmark([Arg]) -> run_benchmark(list_to_integer(Arg));
+run_benchmark(0) -> true;
+run_benchmark(N) -> test(),run_benchmark(N-1).

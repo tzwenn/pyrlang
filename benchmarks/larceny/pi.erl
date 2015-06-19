@@ -1,5 +1,5 @@
 -module(pi).
--export([test/0,test/3]).
+-export([test/0, test/3, run_benchmark/1]).
 
 exp(_,0) -> 1;
 exp(X,N) when N rem 2 == 1 ->
@@ -86,3 +86,7 @@ test() ->
 	test(50, 500, 50).
 
 test(N,M,S) -> pies(N,M,S).
+
+run_benchmark([Arg]) -> run_benchmark(list_to_integer(Arg));
+run_benchmark(0) -> true;
+run_benchmark(N) -> test(),run_benchmark(N-1).

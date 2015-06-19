@@ -813,7 +813,7 @@ class Process:
 	# 56
 	def is_nonempty_list(self, pc, cp, label, test_v):
 		value = self.get_basic_value(cp, test_v)
-		if isinstance(value, W_NilObject):
+		if isinstance(value, W_NilObject) or (not isinstance(value, W_ListObject)):
 			return cp.label_to_addr(label)
 		else:
 			return pc

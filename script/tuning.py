@@ -1,6 +1,7 @@
 import re
 import subprocess
 import time
+import os
 
 repeat = 1
 
@@ -67,22 +68,26 @@ def rewrite_and_compile():
 		if err:
 			print err
 			err_count += 1
-		cmd_lst = ["ERL_AFLAGS=\'-smp disable\'", "erlc", "-o", benchmark_path + "_hipe", "+native", "+\"{hipe, [o3]}\"", f_name]
-		p = subprocess.Popen(cmd_lst, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		my_env = os.environ.copy()
+		my_env["ERL_AFLAGS"] = "-smp disable"
+		cmd_lst = ["erlc", "-o", benchmark_path + "_hipe/", "+native", "+\"{hipe, [o3]}\"", f_name]
+		#print " ".join(cmd_lst)
+		p = subprocess.Popen(cmd_lst, env=my_env, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		out, err = p.communicate()
+		#print out
 		if err:
 			print err
 			err_count += 1
 	print "compile completed with %d error"%(err_count)
 
 def run_bench(bin):
-	print "begin running benchmark with repeat value %d..."%repeat
+	print "begin running benchmark with binary %s, repeat value %d..."%(bin, repeat)
 	sorted_keys = benchmarks.keys()
 	sorted_keys.sort()
 	res = {}
 	for b in sorted_keys:
 		if bin == 'erl':
-			cmd_lst = [bin,
+			cmd_lst = ["/opt/local/bin/erl",
 					"-run",
 					b,
 					benchmark_func_name,
@@ -96,7 +101,7 @@ def run_bench(bin):
 					"-pa",
 					benchmark_path]
 		elif bin == "hipe":
-			cmd_lst = [bin,
+			cmd_lst = ["/opt/local/bin/erl",
 					"-run",
 					b,
 					benchmark_func_name,
@@ -108,14 +113,16 @@ def run_bench(bin):
 					"stop",
 					"-noshell",
 					"-pa",
-					benchmark_path+"_hipe"]
+					benchmark_path+"_hipe/"]
 		else:
 			cmd_lst = ["./"+bin, "-s", benchmark_path + "/" + b + ".beam", benchmark_func_name, str(benchmarks[b])]
 		t_res = []
 		for i in range(repeat):
 			t1 = time.time()
+			#print " ".join(cmd_lst)
 			p = subprocess.Popen(cmd_lst, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 			out, err = p.communicate()
+			#print out
 			if err:
 				print err
 				return
@@ -136,7 +143,15 @@ if __name__ == '__main__':
 	if len(sys.argv) > 1:
 		bin = sys.argv[1]
 	else:
-		bin = 'targettest-c'
+		bin = ['pyrlang-normal',
+			'pyrlang-call-lock',
+			'pyrlang-match-trace',
+			'erl',
+			'hipe']
 
-	rewrite_and_compile()
-	run_bench(bin)
+	#rewrite_and_compile()
+	if isinstance(bin, list):
+		for b in bin:
+			run_bench(b)
+	else:
+		run_bench(bin)

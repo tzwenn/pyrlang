@@ -1,5 +1,5 @@
 -module(nqueens).
--export([test/1, test/0]).
+-export([test/1, test/0, run_benchmark/1]).
 
 nqueens(N) ->
 	_1_To = fun(N) ->
@@ -27,3 +27,7 @@ nqueens(N) ->
 test() -> test(8).
 
 test(N) -> nqueens(N).
+
+run_benchmark([Arg]) -> run_benchmark(list_to_integer(Arg));
+run_benchmark(0) -> true;
+run_benchmark(N) -> test(),run_benchmark(N-1).

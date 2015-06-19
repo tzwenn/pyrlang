@@ -13,6 +13,11 @@ from pyrlang.interpreter import constant
 from rpython.rlib import jit
 import time
 
+#class AbsFunc(BaseBIF):
+	#def invoke(self, args):
+		#a = args[0]
+		#return a.abs()
+
 class AddFunc(BaseBIF):
 	def invoke(self, args):
 		(a,b) = args
@@ -164,12 +169,37 @@ class ListAppendFunc_2(BaseFakeFunc):
 		lst_obj1 = process.x_reg.get(0)
 		lst_obj2 = process.x_reg.get(1)
 		lst1 = eterm_operators.get_list_contents(lst_obj1)
-		lst2 = eterm_operators.get_list_contents(lst_obj2)
+		#lst2 = eterm_operators.get_list_contents(lst_obj2)
+		#if isinstance(lst_obj1, W_StrListObject):
+			#return eterm_operators.build_strlist_object(lst1 + lst2)
+		#else:
+			#assert isinstance(lst_obj1, W_ListObject) or isinstance(lst_obj1, W_NilObject)
+			#return eterm_operators.build_list_object(lst1 + lst2)
+		right = lst_obj2
 		if isinstance(lst_obj1, W_StrListObject):
-			return eterm_operators.build_strlist_object(lst1 + lst2)
+			right = self._to_str_list(lst1, right)
+		elif isinstance(lst_obj1, W_ListObject):
+			right = self._to_list(lst1, right)
 		else:
-			assert isinstance(lst_obj1, W_ListObject) or isinstance(lst_obj1, W_NilObject)
-			return eterm_operators.build_list_object(lst1 + lst2)
+			assert isinstance(lst_obj1, W_NilObject)
+			right = lst_obj2
+		return right
+
+	#@jit.look_inside_iff(
+			#lambda self, l, curr: jit.loop_unrolling_heuristic(l, len(l), constant.UNROLLING_CUTOFF))
+	@jit.unroll_safe
+	def _to_str_list(self, l, curr):
+		for i in range(len(l)-1,-1,-1):
+			curr = W_StrListObject(l[i], curr)
+		return curr
+
+	@jit.unroll_safe
+	#@jit.look_inside_iff(
+			#lambda self, l, curr: jit.loop_unrolling_heuristic(l, len(l), constant.UNROLLING_CUTOFF))
+	def _to_list(self, l, curr):
+		for i in range(len(l)-1,-1,-1):
+			curr = W_ListObject(l[i], curr)
+		return curr
 
 class ListFilterFunc_2(BaseBIF):
 	@jit.unroll_safe
@@ -271,7 +301,9 @@ class TupleSizeFunc_1(BaseBIF):
 		return tuple_val.size_to_int_obj()
 
 class ModuleEntity(BaseModule):
-	_func_dict = { "+_2" : AddFunc,
+	_func_dict = { 
+				  #"abs_1" : AbsFunc,
+				  "+_2" : AddFunc,
 				  "atom_to_list_1" : AtomToListFunc_1,
 				  "and_2" : AndFunc_2,
 				  #"apply_2" : ApplyFunc_2,
@@ -302,6 +334,7 @@ class ModuleEntity(BaseModule):
 				  "++_2" : ListAppendFunc_2,
 				  "--_2" : ListFilterFunc_2,
 				  "or_2" : OrFunc_2,
+				  #"put_2" : PutFunc_2,
 				  "rem_2" : RemFunc_2,
 				  "self_0" : SelfFunc_0,
 				  "setelement_3" : SetElementFunc_3,

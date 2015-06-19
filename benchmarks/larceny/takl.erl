@@ -1,5 +1,5 @@
 -module(takl).
--export([test/0,test/3]).
+-export([test/0, test/3, run_benchmark/1]).
 
 listn(0) -> [];
 listn(N) -> [N|listn(N-1)].
@@ -20,3 +20,7 @@ test() ->
 
 test(L1, L2, L3) ->
 	mas(listn(L1),listn(L2),listn(L3)).
+
+run_benchmark([Arg]) -> run_benchmark(list_to_integer(Arg));
+run_benchmark(0) -> true;
+run_benchmark(N) -> test(),run_benchmark(N-1).

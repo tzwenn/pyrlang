@@ -1,5 +1,5 @@
 -module(cpstak).
--export([test/3,test/0]).
+-export([test/3, test/0, run_benchmark/1]).
 
 cpstak(X,Y,Z) ->
 	Tak = fun Tak(X,Y,Z,K) ->
@@ -22,3 +22,7 @@ cpstak(X,Y,Z) ->
 test(X,Y,Z) -> cpstak(X,Y,Z).
 
 test() -> test(18,12,6).
+
+run_benchmark([Arg]) -> run_benchmark(list_to_integer(Arg));
+run_benchmark(0) -> true;
+run_benchmark(N) -> test(),run_benchmark(N-1).
