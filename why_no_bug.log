@@ -1,0 +1,401 @@
+[2629ceca9b34e] {jit-backend-counts
+[2629cecaa68f9] jit-backend-counts}
+[2629ced60d3c8] {jit-log-opt-loop
+# Loop 0 (3 label 2) : loop with 158 ops
+[i0, i1, p2, p3, p4]
++134: p5 = getfield_gc(p3, descr=<FieldP pyrlang.interpreter.register.X_Register.inst_floats 16>)
++145: p7 = getarrayitem_gc(p5, 0, descr=<ArrayP 8>)
++149: p9 = getarrayitem_gc(p5, 1, descr=<ArrayP 8>)
++153: p11 = getarrayitem_gc(p5, 2, descr=<ArrayP 8>)
++157: p13 = getarrayitem_gc(p5, 3, descr=<ArrayP 8>)
++161: p15 = getarrayitem_gc(p5, 4, descr=<ArrayP 8>)
++165: p17 = getarrayitem_gc(p5, 5, descr=<ArrayP 8>)
++169: p19 = getarrayitem_gc(p5, 6, descr=<ArrayP 8>)
++173: p21 = getarrayitem_gc(p5, 7, descr=<ArrayP 8>)
++177: p23 = getarrayitem_gc(p5, 8, descr=<ArrayP 8>)
++181: p25 = getarrayitem_gc(p5, 9, descr=<ArrayP 8>)
++185: p27 = getarrayitem_gc(p5, 10, descr=<ArrayP 8>)
++189: p29 = getarrayitem_gc(p5, 11, descr=<ArrayP 8>)
++193: p31 = getarrayitem_gc(p5, 12, descr=<ArrayP 8>)
++204: p33 = getarrayitem_gc(p5, 13, descr=<ArrayP 8>)
++215: p35 = getarrayitem_gc(p5, 14, descr=<ArrayP 8>)
++229: p37 = getarrayitem_gc(p5, 15, descr=<ArrayP 8>)
++243: p38 = getfield_gc(p3, descr=<FieldP pyrlang.interpreter.register.X_Register.inst_regs 24>)
++261: p40 = getarrayitem_gc(p38, 0, descr=<ArrayP 8>)
++272: p42 = getarrayitem_gc(p38, 1, descr=<ArrayP 8>)
++283: p44 = getarrayitem_gc(p38, 2, descr=<ArrayP 8>)
++294: p46 = getarrayitem_gc(p38, 3, descr=<ArrayP 8>)
++305: p48 = getarrayitem_gc(p38, 4, descr=<ArrayP 8>)
++316: p50 = getarrayitem_gc(p38, 5, descr=<ArrayP 8>)
++327: p52 = getarrayitem_gc(p38, 6, descr=<ArrayP 8>)
++338: p54 = getarrayitem_gc(p38, 7, descr=<ArrayP 8>)
++349: p56 = getarrayitem_gc(p38, 8, descr=<ArrayP 8>)
++360: p58 = getarrayitem_gc(p38, 9, descr=<ArrayP 8>)
++371: p60 = getarrayitem_gc(p38, 10, descr=<ArrayP 8>)
++382: p62 = getarrayitem_gc(p38, 11, descr=<ArrayP 8>)
++386: p64 = getarrayitem_gc(p38, 12, descr=<ArrayP 8>)
++397: p66 = getarrayitem_gc(p38, 13, descr=<ArrayP 8>)
++408: p68 = getarrayitem_gc(p38, 14, descr=<ArrayP 8>)
++422: p70 = getarrayitem_gc(p38, 15, descr=<ArrayP 8>)
++436: label(i0, i1, p2, p3, p4, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p40, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, descr=TargetToken(4302397472))
+debug_merge_point(0, 0, '3 label 2')
++541: p71 = getfield_gc(p2, descr=<FieldP pyrlang.interpreter.interp.Process.inst_y_reg 80>)
+debug_merge_point(0, 0, '4 move 3.141593. x(0)')
++552: p72 = getfield_gc(p2, descr=<FieldP pyrlang.interpreter.interp.Process.inst_x_reg 72>)
++556: i73 = ptr_eq(p72, p3)
+guard_true(i73, descr=<Guard0x1007121d8>) [i1, i0, p3, p2, p72, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p40, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
+debug_merge_point(0, 0, '5 return ')
++569: i74 = getfield_gc(p71, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_addr_top 16>)
++573: i76 = int_eq(i74, -1)
+guard_false(i76, descr=<Guard0x100712a18>) [i1, i0, p71, p3, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++583: p77 = getfield_gc(p71, descr=<FieldP pyrlang.interpreter.register.Y_Register.inst_addrs 24>)
++587: i79 = int_lt(i74, 0)
+guard_false(i79, descr=<Guard0x1007129c0>) [i1, i0, i74, p71, p77, p3, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++597: p80 = getarrayitem_gc(p77, i74, descr=<ArrayP 8>)
++602: i82 = int_sub(i74, 1)
++606: p83 = getfield_gc_pure(p80, descr=<FieldP tuple2.item0 8>)
++610: i84 = getfield_gc_pure(p80, descr=<FieldS tuple2.item1 16>)
++614: setfield_gc(p71, i82, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_addr_top 16>)
++618: guard_value(i84, 18, descr=<Guard0x100712968>) [i1, i0, i84, p71, p3, p2, p83, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++628: guard_value(p83, ConstPtr(ptr86), descr=<Guard0x100712910>) [i1, i0, p71, p3, p2, p83, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
+debug_merge_point(0, 0, '18 line 3')
+debug_merge_point(0, 0, '19 gc_bif2 L0. 1. 0. y(0). x(0). x(0)')
++647: i87 = getfield_gc(p71, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_val_top 40>)
++651: p88 = getfield_gc(p71, descr=<FieldP pyrlang.interpreter.register.Y_Register.inst_vals 48>)
++655: p89 = getarrayitem_gc(p88, i87, descr=<ArrayP 8>)
++660: guard_class(p89, ConstClass(W_FloatObject), descr=<Guard0x1007128b8>) [i1, i0, p3, p2, p89, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++672: f91 = getfield_gc_pure(p89, descr=<FieldF pyrlang.interpreter.datatypes.number.W_FloatObject.inst_floatval 8>)
++677: f93 = float_add(f91, 3.141593)
+debug_merge_point(0, 0, '20 line 3')
+debug_merge_point(0, 0, '21 gc_bif2 L0. 1. 1. y(1). #1. x(1)')
++692: i95 = int_sub(i87, 1)
++696: p96 = getarrayitem_gc(p88, i95, descr=<ArrayP 8>)
++701: guard_class(p96, ConstClass(W_IntObject), descr=<Guard0x100712860>) [i1, i0, p3, p2, p96, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, f93]
++713: i98 = getfield_gc_pure(p96, descr=<FieldS pyrlang.interpreter.datatypes.number.W_IntObject.inst_intval 8>)
++717: i100 = int_sub_ovf(i98, 1)
+guard_no_overflow(descr=<Guard0x100712808>) [i1, i0, p3, p2, i100, p96, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, f93]
+debug_merge_point(0, 0, '22 call_last 2. L4. 2')
++727: i102 = int_sub(i87, 2)
+debug_merge_point(0, 0, '9 label 4')
+debug_merge_point(0, 0, '10 is_eq_exact L5. x(1). #0')
++731: setfield_gc(p71, i102, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_val_top 40>)
++735: i104 = int_eq(i100, 0)
+guard_false(i104, descr=<Guard0x1007127b0>) [i1, i0, p3, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, i100, f93]
+debug_merge_point(0, 0, '12 label 5')
+debug_merge_point(0, 0, '13 allocate 2. 2')
++745: i105 = getfield_gc(p71, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_val_size 32>)
++749: setfield_gc(p71, i87, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_val_top 40>)
++753: i106 = int_ge(i87, i105)
+guard_false(i106, descr=<Guard0x100712758>) [i1, i0, p3, p2, i87, i105, p71, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, i100, f93]
+debug_merge_point(0, 0, '14 move x(0). y(0)')
++762: i108 = int_lt(i87, 0)
+guard_false(i108, descr=<Guard0x100712700>) [i1, i0, p3, p2, i87, p88, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, i100, f93]
+p110 = new_with_vtable(ConstClass(W_FloatObject))
++865: setfield_gc(p110, f93, descr=<FieldF pyrlang.interpreter.datatypes.number.W_FloatObject.inst_floatval 8>)
++909: setarrayitem_gc(p88, i87, p110, descr=<ArrayP 8>)
+debug_merge_point(0, 0, '15 move x(1). y(1)')
++914: i112 = int_lt(i95, 0)
+guard_false(i112, descr=<Guard0x1007126a8>) [i1, i0, p3, p2, i95, p88, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p110, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, i100]
+p114 = new_with_vtable(ConstClass(W_IntObject))
++939: setfield_gc(p114, i100, descr=<FieldS pyrlang.interpreter.datatypes.number.W_IntObject.inst_intval 8>)
++989: setarrayitem_gc(p88, i95, p114, descr=<ArrayP 8>)
+debug_merge_point(0, 0, '16 line 3')
+debug_merge_point(0, 0, '17 call 0. L2')
++994: i115 = getfield_gc(p71, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_addr_size 8>)
++998: setfield_gc(p71, i74, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_addr_top 16>)
++1002: i116 = int_ge(i74, i115)
+guard_false(i116, descr=<Guard0x100712650>) [i1, i0, p3, p2, i115, p71, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p110, p114, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++1054: setarrayitem_gc(p77, i74, ConstPtr(ptr117), descr=<ArrayP 8>)
++1069: i119 = int_sub(i0, 1)
++1080: guard_false(i1, descr=<Guard0x1007125f8>) [i119, p3, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p110, p114, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++1096: i121 = int_le(i119, 0)
+guard_false(i121, descr=<Guard0x1007125a0>) [i119, p3, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p110, p114, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
+debug_merge_point(0, 0, '3 label 2')
++1106: p122 = same_as(p71)
++1109: label(i119, p2, p3, p71, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p110, p114, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, p77, i74, p122, i82, p88, i87, i95, i102, descr=TargetToken(4302397544))
+debug_merge_point(0, 0, '3 label 2')
+debug_merge_point(0, 0, '4 move 3.141593. x(0)')
+debug_merge_point(0, 0, '5 return ')
++1149: p123 = getarrayitem_gc(p77, i74, descr=<ArrayP 8>)
++1154: p124 = getfield_gc_pure(p123, descr=<FieldP tuple2.item0 8>)
++1158: i125 = getfield_gc_pure(p123, descr=<FieldS tuple2.item1 16>)
++1162: setfield_gc(p122, i82, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_addr_top 16>)
++1173: guard_value(i125, 18, descr=<Guard0x100712548>) [i119, i125, p122, p3, p2, p124, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p114, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++1183: guard_value(p124, ConstPtr(ptr86), descr=<Guard0x1007124f0>) [i119, p122, p3, p2, p124, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p114, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
+debug_merge_point(0, 0, '18 line 3')
+debug_merge_point(0, 0, '19 gc_bif2 L0. 1. 0. y(0). x(0). x(0)')
++1202: p126 = getarrayitem_gc(p88, i87, descr=<ArrayP 8>)
++1207: guard_class(p126, ConstClass(W_FloatObject), descr=<Guard0x100712498>) [i119, p3, p2, p126, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p114, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++1219: f127 = getfield_gc_pure(p126, descr=<FieldF pyrlang.interpreter.datatypes.number.W_FloatObject.inst_floatval 8>)
++1224: f129 = float_add(f127, 3.141593)
+debug_merge_point(0, 0, '20 line 3')
+debug_merge_point(0, 0, '21 gc_bif2 L0. 1. 1. y(1). #1. x(1)')
++1239: p130 = getarrayitem_gc(p88, i95, descr=<ArrayP 8>)
++1244: guard_class(p130, ConstClass(W_IntObject), descr=<Guard0x100712440>) [i119, p3, p2, p130, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p114, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, f129]
++1256: i131 = getfield_gc_pure(p130, descr=<FieldS pyrlang.interpreter.datatypes.number.W_IntObject.inst_intval 8>)
++1260: i132 = int_sub_ovf(i131, 1)
+guard_no_overflow(descr=<Guard0x1007123e8>) [i119, p3, p2, i132, p130, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p114, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, f129]
+debug_merge_point(0, 0, '22 call_last 2. L4. 2')
+debug_merge_point(0, 0, '9 label 4')
+debug_merge_point(0, 0, '10 is_eq_exact L5. x(1). #0')
++1270: setfield_gc(p122, i102, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_val_top 40>)
++1274: i133 = int_eq(i132, 0)
+guard_false(i133, descr=<Guard0x100712390>) [i119, p3, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, i132, f129]
+debug_merge_point(0, 0, '12 label 5')
+debug_merge_point(0, 0, '13 allocate 2. 2')
+debug_merge_point(0, 0, '14 move x(0). y(0)')
+p134 = new_with_vtable(ConstClass(W_FloatObject))
++1363: setfield_gc(p134, f129, descr=<FieldF pyrlang.interpreter.datatypes.number.W_FloatObject.inst_floatval 8>)
++1407: setarrayitem_gc(p88, i87, p134, descr=<ArrayP 8>)
+debug_merge_point(0, 0, '15 move x(1). y(1)')
+p135 = new_with_vtable(ConstClass(W_IntObject))
++1423: setfield_gc(p135, i132, descr=<FieldS pyrlang.interpreter.datatypes.number.W_IntObject.inst_intval 8>)
++1466: setarrayitem_gc(p88, i95, p135, descr=<ArrayP 8>)
+debug_merge_point(0, 0, '16 line 3')
+debug_merge_point(0, 0, '17 call 0. L2')
++1514: setarrayitem_gc(p77, i74, ConstPtr(ptr136), descr=<ArrayP 8>)
++1529: i137 = int_sub(i119, 1)
++1533: setfield_gc(p122, i74, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_addr_top 16>)
++1537: setfield_gc(p122, i87, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_val_top 40>)
++1541: i138 = int_le(i137, 0)
+guard_false(i138, descr=<Guard0x100712338>) [i137, p3, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p134, p135, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
+debug_merge_point(0, 0, '3 label 2')
++1551: jump(i137, p2, p3, p122, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p134, p135, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, p77, i74, p122, i82, p88, i87, i95, i102, descr=TargetToken(4302397544))
++1584: --end of the loop--
+[2629ced74963f] jit-log-opt-loop}
+[2629cedc7b62a] {jit-log-opt-loop
+# Loop 1 (18 line 3) : entry bridge with 101 ops
+[i0, i1, p2, p3, p4]
++134: p5 = getfield_gc(p3, descr=<FieldP pyrlang.interpreter.register.X_Register.inst_floats 16>)
++145: p7 = getarrayitem_gc(p5, 0, descr=<ArrayP 8>)
++149: p9 = getarrayitem_gc(p5, 1, descr=<ArrayP 8>)
++153: p11 = getarrayitem_gc(p5, 2, descr=<ArrayP 8>)
++157: p13 = getarrayitem_gc(p5, 3, descr=<ArrayP 8>)
++161: p15 = getarrayitem_gc(p5, 4, descr=<ArrayP 8>)
++165: p17 = getarrayitem_gc(p5, 5, descr=<ArrayP 8>)
++169: p19 = getarrayitem_gc(p5, 6, descr=<ArrayP 8>)
++173: p21 = getarrayitem_gc(p5, 7, descr=<ArrayP 8>)
++177: p23 = getarrayitem_gc(p5, 8, descr=<ArrayP 8>)
++181: p25 = getarrayitem_gc(p5, 9, descr=<ArrayP 8>)
++185: p27 = getarrayitem_gc(p5, 10, descr=<ArrayP 8>)
++189: p29 = getarrayitem_gc(p5, 11, descr=<ArrayP 8>)
++193: p31 = getarrayitem_gc(p5, 12, descr=<ArrayP 8>)
++204: p33 = getarrayitem_gc(p5, 13, descr=<ArrayP 8>)
++215: p35 = getarrayitem_gc(p5, 14, descr=<ArrayP 8>)
++229: p37 = getarrayitem_gc(p5, 15, descr=<ArrayP 8>)
++243: p38 = getfield_gc(p3, descr=<FieldP pyrlang.interpreter.register.X_Register.inst_regs 24>)
++261: p40 = getarrayitem_gc(p38, 0, descr=<ArrayP 8>)
++272: p42 = getarrayitem_gc(p38, 1, descr=<ArrayP 8>)
++283: p44 = getarrayitem_gc(p38, 2, descr=<ArrayP 8>)
++294: p46 = getarrayitem_gc(p38, 3, descr=<ArrayP 8>)
++305: p48 = getarrayitem_gc(p38, 4, descr=<ArrayP 8>)
++316: p50 = getarrayitem_gc(p38, 5, descr=<ArrayP 8>)
++327: p52 = getarrayitem_gc(p38, 6, descr=<ArrayP 8>)
++338: p54 = getarrayitem_gc(p38, 7, descr=<ArrayP 8>)
++349: p56 = getarrayitem_gc(p38, 8, descr=<ArrayP 8>)
++360: p58 = getarrayitem_gc(p38, 9, descr=<ArrayP 8>)
++371: p60 = getarrayitem_gc(p38, 10, descr=<ArrayP 8>)
++382: p62 = getarrayitem_gc(p38, 11, descr=<ArrayP 8>)
++386: p64 = getarrayitem_gc(p38, 12, descr=<ArrayP 8>)
++397: p66 = getarrayitem_gc(p38, 13, descr=<ArrayP 8>)
++408: p68 = getarrayitem_gc(p38, 14, descr=<ArrayP 8>)
++422: p70 = getarrayitem_gc(p38, 15, descr=<ArrayP 8>)
+debug_merge_point(0, 0, '18 line 3')
++436: p71 = getfield_gc(p2, descr=<FieldP pyrlang.interpreter.interp.Process.inst_y_reg 80>)
+debug_merge_point(0, 0, '19 gc_bif2 L0. 1. 0. y(0). x(0). x(0)')
++454: i72 = getfield_gc(p71, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_val_top 40>)
++465: p73 = getfield_gc(p71, descr=<FieldP pyrlang.interpreter.register.Y_Register.inst_vals 48>)
++476: p74 = getarrayitem_gc(p73, i72, descr=<ArrayP 8>)
++488: p75 = getfield_gc(p2, descr=<FieldP pyrlang.interpreter.interp.Process.inst_x_reg 72>)
++499: i76 = ptr_eq(p75, p3)
+guard_true(i76, descr=<Guard0x100712b78>) [i1, i0, p3, p2, p75, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p40, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, p74]
++512: guard_class(p74, ConstClass(W_FloatObject), descr=<Guard0x1007130a0>) [i1, i0, p3, p2, p40, p74, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, None]
++524: f79 = getfield_gc_pure(p74, descr=<FieldF pyrlang.interpreter.datatypes.number.W_FloatObject.inst_floatval 8>)
++529: guard_nonnull_class(p40, ConstClass(W_FloatObject), descr=<Guard0x100713048>) [i1, i0, p3, p2, p40, f79, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, None]
++548: f81 = getfield_gc_pure(p40, descr=<FieldF pyrlang.interpreter.datatypes.number.W_FloatObject.inst_floatval 8>)
++554: f82 = float_add(f79, f81)
+debug_merge_point(0, 0, '20 line 3')
+debug_merge_point(0, 0, '21 gc_bif2 L0. 1. 1. y(1). #1. x(1)')
++558: i84 = int_sub(i72, 1)
++562: p85 = getarrayitem_gc(p73, i84, descr=<ArrayP 8>)
++567: guard_class(p85, ConstClass(W_IntObject), descr=<Guard0x100712ff0>) [i1, i0, p3, p2, p85, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, f82, None]
++579: i87 = getfield_gc_pure(p85, descr=<FieldS pyrlang.interpreter.datatypes.number.W_IntObject.inst_intval 8>)
++583: i89 = int_sub_ovf(i87, 1)
+guard_no_overflow(descr=<Guard0x100712f98>) [i1, i0, p3, p2, i89, p85, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, f82, None]
+debug_merge_point(0, 0, '22 call_last 2. L4. 2')
++593: i91 = int_sub(i72, 2)
+debug_merge_point(0, 0, '9 label 4')
+debug_merge_point(0, 0, '10 is_eq_exact L5. x(1). #0')
++597: setfield_gc(p71, i91, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_val_top 40>)
++601: i93 = int_eq(i89, 0)
+guard_false(i93, descr=<Guard0x100712f40>) [i1, i0, p3, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, i89, f82, None]
+debug_merge_point(0, 0, '12 label 5')
+debug_merge_point(0, 0, '13 allocate 2. 2')
++611: i94 = getfield_gc(p71, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_val_size 32>)
++615: setfield_gc(p71, i72, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_val_top 40>)
++619: i95 = int_ge(i72, i94)
+guard_false(i95, descr=<Guard0x100712ee8>) [i1, i0, p3, p2, i72, i94, p71, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, i89, f82, None]
+debug_merge_point(0, 0, '14 move x(0). y(0)')
++628: i97 = int_lt(i72, 0)
+guard_false(i97, descr=<Guard0x100712e90>) [i1, i0, p3, p2, i72, p73, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, i89, f82, None]
+p99 = new_with_vtable(ConstClass(W_FloatObject))
++731: setfield_gc(p99, f82, descr=<FieldF pyrlang.interpreter.datatypes.number.W_FloatObject.inst_floatval 8>)
++775: setarrayitem_gc(p73, i72, p99, descr=<ArrayP 8>)
+debug_merge_point(0, 0, '15 move x(1). y(1)')
++780: i101 = int_lt(i84, 0)
+guard_false(i101, descr=<Guard0x100712e38>) [i1, i0, p3, p2, i84, p73, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p99, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, i89]
+p103 = new_with_vtable(ConstClass(W_IntObject))
++801: setfield_gc(p103, i89, descr=<FieldS pyrlang.interpreter.datatypes.number.W_IntObject.inst_intval 8>)
++851: setarrayitem_gc(p73, i84, p103, descr=<ArrayP 8>)
+debug_merge_point(0, 0, '16 line 3')
+debug_merge_point(0, 0, '17 call 0. L2')
++856: i104 = getfield_gc(p71, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_addr_top 16>)
++860: i106 = int_add(i104, 1)
++871: i107 = getfield_gc(p71, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_addr_size 8>)
++882: setfield_gc(p71, i106, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_addr_top 16>)
++886: i108 = int_ge(i106, i107)
+guard_false(i108, descr=<Guard0x100712de0>) [i1, i0, p3, p2, i107, p71, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p99, p103, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++895: p109 = getfield_gc(p71, descr=<FieldP pyrlang.interpreter.register.Y_Register.inst_addrs 24>)
++906: i111 = int_lt(i106, 0)
+guard_false(i111, descr=<Guard0x100712d88>) [i1, i0, p3, p2, i106, p109, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p99, p103, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++957: setarrayitem_gc(p109, i106, ConstPtr(ptr112), descr=<ArrayP 8>)
++972: i114 = int_sub(i0, 1)
++990: guard_false(i1, descr=<Guard0x100712d30>) [i114, p3, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p99, p103, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++1006: i116 = int_le(i114, 0)
+guard_false(i116, descr=<Guard0x100712cd8>) [i114, p3, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p99, p103, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
+debug_merge_point(0, 0, '3 label 2')
++1016: i118 = int_ge(i107, 1)
+guard_true(i118, descr=<Guard0x100712c80>) [i114, p71, p3, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p99, p103, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++1026: jump(i114, p2, p3, p71, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p99, p103, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, p109, i106, p71, i104, p73, i72, i84, i91, descr=TargetToken(4302397544))
++1520: --end of the loop--
+[2629cedd142b5] jit-log-opt-loop}
+[2629cee6da48f] {jit-log-opt-bridge
+# bridge out of Guard 0x100712338 with 4 ops
+[i0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30, p31, p32, p33, p34]
++59: p35 = force_token()
++91: setfield_gc(p1, p35, descr=<FieldP pyrlang.interpreter.register.X_Register.vable_token 8>)
++95: guard_not_forced_2(descr=<Guard0x100713570>) [p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30, p31, p32, p33, p34, p1]
++123: finish(ConstPtr(ptr36), descr=<DoneWithThisFrameDescrRef object at 0x100343aa8>)
++240: --end of the loop--
+[2629cee6ef156] jit-log-opt-bridge}
+[2629cf27289e1] {jit-log-opt-loop
+# Loop 2 (3 label 2) : entry bridge with 108 ops
+[i0, i1, p2, p3, p4]
++134: p5 = getfield_gc(p3, descr=<FieldP pyrlang.interpreter.register.X_Register.inst_floats 16>)
++145: p7 = getarrayitem_gc(p5, 0, descr=<ArrayP 8>)
++149: p9 = getarrayitem_gc(p5, 1, descr=<ArrayP 8>)
++153: p11 = getarrayitem_gc(p5, 2, descr=<ArrayP 8>)
++157: p13 = getarrayitem_gc(p5, 3, descr=<ArrayP 8>)
++161: p15 = getarrayitem_gc(p5, 4, descr=<ArrayP 8>)
++165: p17 = getarrayitem_gc(p5, 5, descr=<ArrayP 8>)
++169: p19 = getarrayitem_gc(p5, 6, descr=<ArrayP 8>)
++173: p21 = getarrayitem_gc(p5, 7, descr=<ArrayP 8>)
++177: p23 = getarrayitem_gc(p5, 8, descr=<ArrayP 8>)
++181: p25 = getarrayitem_gc(p5, 9, descr=<ArrayP 8>)
++185: p27 = getarrayitem_gc(p5, 10, descr=<ArrayP 8>)
++189: p29 = getarrayitem_gc(p5, 11, descr=<ArrayP 8>)
++193: p31 = getarrayitem_gc(p5, 12, descr=<ArrayP 8>)
++204: p33 = getarrayitem_gc(p5, 13, descr=<ArrayP 8>)
++215: p35 = getarrayitem_gc(p5, 14, descr=<ArrayP 8>)
++229: p37 = getarrayitem_gc(p5, 15, descr=<ArrayP 8>)
++243: p38 = getfield_gc(p3, descr=<FieldP pyrlang.interpreter.register.X_Register.inst_regs 24>)
++261: p40 = getarrayitem_gc(p38, 0, descr=<ArrayP 8>)
++272: p42 = getarrayitem_gc(p38, 1, descr=<ArrayP 8>)
++283: p44 = getarrayitem_gc(p38, 2, descr=<ArrayP 8>)
++294: p46 = getarrayitem_gc(p38, 3, descr=<ArrayP 8>)
++305: p48 = getarrayitem_gc(p38, 4, descr=<ArrayP 8>)
++316: p50 = getarrayitem_gc(p38, 5, descr=<ArrayP 8>)
++327: p52 = getarrayitem_gc(p38, 6, descr=<ArrayP 8>)
++338: p54 = getarrayitem_gc(p38, 7, descr=<ArrayP 8>)
++349: p56 = getarrayitem_gc(p38, 8, descr=<ArrayP 8>)
++360: p58 = getarrayitem_gc(p38, 9, descr=<ArrayP 8>)
++371: p60 = getarrayitem_gc(p38, 10, descr=<ArrayP 8>)
++382: p62 = getarrayitem_gc(p38, 11, descr=<ArrayP 8>)
++386: p64 = getarrayitem_gc(p38, 12, descr=<ArrayP 8>)
++397: p66 = getarrayitem_gc(p38, 13, descr=<ArrayP 8>)
++408: p68 = getarrayitem_gc(p38, 14, descr=<ArrayP 8>)
++422: p70 = getarrayitem_gc(p38, 15, descr=<ArrayP 8>)
+debug_merge_point(0, 0, '3 label 2')
++436: p71 = getfield_gc(p2, descr=<FieldP pyrlang.interpreter.interp.Process.inst_y_reg 80>)
+debug_merge_point(0, 0, '4 move 3.141593. x(0)')
++454: p72 = getfield_gc(p2, descr=<FieldP pyrlang.interpreter.interp.Process.inst_x_reg 72>)
++465: i73 = ptr_eq(p72, p3)
+guard_true(i73, descr=<Guard0x100713780>) [i1, i0, p3, p2, p72, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p40, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
+debug_merge_point(0, 0, '5 return ')
++478: i74 = getfield_gc(p71, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_addr_top 16>)
++482: i76 = int_eq(i74, -1)
+guard_false(i76, descr=<Guard0x100713d00>) [i1, i0, p71, p3, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++492: p77 = getfield_gc(p71, descr=<FieldP pyrlang.interpreter.register.Y_Register.inst_addrs 24>)
++496: i79 = int_lt(i74, 0)
+guard_false(i79, descr=<Guard0x100713ca8>) [i1, i0, i74, p71, p77, p3, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++506: p80 = getarrayitem_gc(p77, i74, descr=<ArrayP 8>)
++518: i82 = int_sub(i74, 1)
++529: p83 = getfield_gc_pure(p80, descr=<FieldP tuple2.item0 8>)
++540: i84 = getfield_gc_pure(p80, descr=<FieldS tuple2.item1 16>)
++551: setfield_gc(p71, i82, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_addr_top 16>)
++555: guard_value(i84, 18, descr=<Guard0x100713c50>) [i1, i0, i84, p71, p3, p2, p83, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++565: guard_value(p83, ConstPtr(ptr86), descr=<Guard0x100713bf8>) [i1, i0, p71, p3, p2, p83, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
+debug_merge_point(0, 0, '18 line 3')
+debug_merge_point(0, 0, '19 gc_bif2 L0. 1. 0. y(0). x(0). x(0)')
++584: i87 = getfield_gc(p71, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_val_top 40>)
++588: p88 = getfield_gc(p71, descr=<FieldP pyrlang.interpreter.register.Y_Register.inst_vals 48>)
++592: p89 = getarrayitem_gc(p88, i87, descr=<ArrayP 8>)
++597: guard_class(p89, ConstClass(W_FloatObject), descr=<Guard0x100713ba0>) [i1, i0, p3, p2, p89, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++609: f91 = getfield_gc_pure(p89, descr=<FieldF pyrlang.interpreter.datatypes.number.W_FloatObject.inst_floatval 8>)
++614: f93 = float_add(f91, 3.141593)
+debug_merge_point(0, 0, '20 line 3')
+debug_merge_point(0, 0, '21 gc_bif2 L0. 1. 1. y(1). #1. x(1)')
++629: i95 = int_sub(i87, 1)
++633: p96 = getarrayitem_gc(p88, i95, descr=<ArrayP 8>)
++645: guard_class(p96, ConstClass(W_IntObject), descr=<Guard0x100713b48>) [i1, i0, p3, p2, p96, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, f93]
++659: i98 = getfield_gc_pure(p96, descr=<FieldS pyrlang.interpreter.datatypes.number.W_IntObject.inst_intval 8>)
++671: i100 = int_sub_ovf(i98, 1)
+guard_no_overflow(descr=<Guard0x100713af0>) [i1, i0, p3, p2, i100, p96, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p42, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, f93]
+debug_merge_point(0, 0, '22 call_last 2. L4. 2')
++681: i102 = int_sub(i87, 2)
+debug_merge_point(0, 0, '9 label 4')
+debug_merge_point(0, 0, '10 is_eq_exact L5. x(1). #0')
++685: setfield_gc(p71, i102, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_val_top 40>)
++689: i104 = int_eq(i100, 0)
+guard_false(i104, descr=<Guard0x100713a98>) [i1, i0, p3, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, i100, f93]
+debug_merge_point(0, 0, '12 label 5')
+debug_merge_point(0, 0, '13 allocate 2. 2')
++699: i105 = getfield_gc(p71, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_val_size 32>)
++703: setfield_gc(p71, i87, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_val_top 40>)
++707: i106 = int_ge(i87, i105)
+guard_false(i106, descr=<Guard0x100713a40>) [i1, i0, p3, p2, i87, i105, p71, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, i100, f93]
+debug_merge_point(0, 0, '14 move x(0). y(0)')
++716: i108 = int_lt(i87, 0)
+guard_false(i108, descr=<Guard0x1007139e8>) [i1, i0, p3, p2, i87, p88, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, i100, f93]
+p110 = new_with_vtable(ConstClass(W_FloatObject))
++819: setfield_gc(p110, f93, descr=<FieldF pyrlang.interpreter.datatypes.number.W_FloatObject.inst_floatval 8>)
++877: setarrayitem_gc(p88, i87, p110, descr=<ArrayP 8>)
+debug_merge_point(0, 0, '15 move x(1). y(1)')
++882: i112 = int_lt(i95, 0)
+guard_false(i112, descr=<Guard0x100713990>) [i1, i0, p3, p2, i95, p88, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p110, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, i100]
+p114 = new_with_vtable(ConstClass(W_IntObject))
++910: setfield_gc(p114, i100, descr=<FieldS pyrlang.interpreter.datatypes.number.W_IntObject.inst_intval 8>)
++953: setarrayitem_gc(p88, i95, p114, descr=<ArrayP 8>)
+debug_merge_point(0, 0, '16 line 3')
+debug_merge_point(0, 0, '17 call 0. L2')
++958: i115 = getfield_gc(p71, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_addr_size 8>)
++962: setfield_gc(p71, i74, descr=<FieldS pyrlang.interpreter.register.Y_Register.inst_addr_top 16>)
++966: i116 = int_ge(i74, i115)
+guard_false(i116, descr=<Guard0x100713938>) [i1, i0, p3, p2, i115, p71, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p110, p114, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++1014: setarrayitem_gc(p77, i74, ConstPtr(ptr117), descr=<ArrayP 8>)
++1029: i119 = int_sub(i0, 1)
++1040: guard_false(i1, descr=<Guard0x1007138e0>) [i119, p3, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p110, p114, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
++1063: i121 = int_le(i119, 0)
+guard_false(i121, descr=<Guard0x100713888>) [i119, p3, p2, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p110, p114, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70]
+debug_merge_point(0, 0, '3 label 2')
++1073: jump(i119, p2, p3, p71, p7, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p110, p114, p44, p46, p48, p50, p52, p54, p56, p58, p60, p62, p64, p66, p68, p70, p77, i74, p71, i82, p88, i87, i95, i102, descr=TargetToken(4302397544))
++1568: --end of the loop--
+[2629cf27ee24e] jit-log-opt-loop}
+[2629cfb2dcb27] {jit-backend-counts
+entry 0:41
+TargetToken(4302397472):41
+TargetToken(4302397544):9993916
+entry 1:1581
+bridge 4302381880:4798
+entry 2:3379
+[2629cfb2ed32a] jit-backend-counts}

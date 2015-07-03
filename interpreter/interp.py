@@ -976,7 +976,7 @@ class Process:
 			self.x_reg.store_float(pos, val)
 		else:
 			assert isinstance(val, W_AbstractIntObject)
-			self.x_reg.store_float(pos, W_FloatObject(float(val.to_int())))
+			self.x_reg.store_float(pos, W_FloatObject(val.tofloat()))
 
 	# 98
 	def fadd(self, cp, label, reg1, reg2, dst_reg):

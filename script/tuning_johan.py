@@ -3,7 +3,7 @@ import subprocess
 import time
 import os
 
-repeat = 1
+repeat = 3
 
 benchmarks = {
 			"length" : 1,

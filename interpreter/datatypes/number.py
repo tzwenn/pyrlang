@@ -17,6 +17,9 @@ class W_IntObject(W_AbstractIntObject):
 	def toint(self):
 		return self.intval
 
+	def tofloat(self):
+		return float(self.intval)
+
 	def is_positive(self):
 		return self.intval > 0
 
@@ -34,8 +37,11 @@ class W_IntObject(W_AbstractIntObject):
 				b_i = rbigint.fromint(self.intval)
 				o_i = rbigint.fromint(other.intval)
 				return W_BigIntObject(b_i.add(o_i))
-		else:
+		elif isinstance(other, W_BigIntObject):
 			return self.to_bigint().add(other)
+		else:
+			assert isinstance(other, W_FloatObject)
+			return other.add(self)
 
 	# Never Overflow
 	def and_(self, other):
@@ -55,8 +61,11 @@ class W_IntObject(W_AbstractIntObject):
 				b_i = rbigint.fromint(self.intval)
 				o_i = rbigint.fromint(other.intval)
 				return W_BigIntObject(b_i.mul(o_i))
-		else:
+		elif isinstance(other, W_BigIntObject):
 			return self.to_bigint().mul(other)
+		else:
+			assert isinstance(other, W_FloatObject)
+			return other.mul(self)
 
 	def sub(self, other):
 		if isinstance(other, W_IntObject):
@@ -66,8 +75,11 @@ class W_IntObject(W_AbstractIntObject):
 				b_i = rbigint.fromint(self.intval)
 				o_i = rbigint.fromint(other.intval)
 				return W_BigIntObject(b_i.sub(o_i))
-		else:
+		elif isinstance(other, W_BigIntObject):
 			return self.to_bigint().sub(other)
+		else:
+			assert isinstance(other, W_FloatObject)
+			return W_FloatObject(self.tofloat()).sub(other)
 
 	def lshift(self, other):
 		assert isinstance(other, W_IntObject)
@@ -93,9 +105,11 @@ class W_IntObject(W_AbstractIntObject):
 	def div(self, other):
 		if isinstance(other, W_IntObject):
 			return W_IntObject(self.intval / other.intval)
-		else:
-			assert isinstance(other, W_BigIntObject)
+		elif isinstance(other, W_BigIntObject):
 			return W_IntObject(0)
+		else:
+			assert isinstance(other, W_FloatObject)
+			return W_FloatObject(self.tofloat()).div(other)
 
 	# Never overflow
 	def rem(self, other):
@@ -157,30 +171,33 @@ class W_FloatObject(W_Root):
 		assert(isinstance(floatval, float))
 		self.floatval = floatval
 
+	def _convert_to_float_val(self, other):
+		if isinstance(other, W_FloatObject):
+			return other.floatval
+		else:
+			assert isinstance(other, W_AbstractIntObject)
+			return other.tofloat()
+
 	def add(self, other):
-		if not isinstance(other, W_FloatObject):
-			raise Exception("wrong type")
-		return W_FloatObject(self.floatval + other.floatval)
+		add1 = self.floatval
+		add2 = self._convert_to_float_val(other)
+		res = add1 + add2
+		#if res < add1 or res < add2:
+			#print "overflow! add1:", add1, "add2:", add2, "res:", res
+		return W_FloatObject(res)
+		#return W_FloatObject(self.floatval + self._convert_to_float_val(other))
 
 	def sub(self, other):
-		if not isinstance(other, W_FloatObject):
-			raise Exception("wrong type")
-		return W_FloatObject(self.floatval - other.floatval)
+		return W_FloatObject(self.floatval - self._convert_to_float_val(other))
 
 	def mul(self, other):
-		if not isinstance(other, W_FloatObject):
-			raise Exception("wrong type")
-		return W_FloatObject(self.floatval * other.floatval)
+		return W_FloatObject(self.floatval - self._convert_to_float_val(other))
 
 	def div(self, other):
-		if not isinstance(other, W_FloatObject):
-			raise Exception("wrong type")
-		return W_FloatObject(self.floatval / other.floatval)
+		return W_FloatObject(self.floatval / self._convert_to_float_val(other))
 
 	def lt(self, other): 
-		if not isinstance(other, W_FloatObject):
-			raise Exception("wrong type")
-		return self.floatval < other.floatval
+		return self.floatval < self._convert_to_float_val(other)
 
 	def str(self):
 		return str(self.floatval)
@@ -220,6 +237,9 @@ class W_BigIntObject(W_AbstractIntObject):
 	def toint(self):
 		return self.bigintval.toint()
 
+	def tofloat(self):
+		return self.bigintval.tofloat()
+
 	def return_wrap(self, bigint):
 		try:
 			return W_IntObject(bigint.toint())
@@ -235,11 +255,13 @@ class W_BigIntObject(W_AbstractIntObject):
 	def add(self, other):
 		if isinstance(other, W_IntObject):
 			return self._add(other.to_bigint())
-		else:
+		elif isinstance(other, W_BigIntObject):
 			return self._add(other)
+		else:
+			assert isinstance(other, W_FloatObject)
+			return other.add(self)
 
 	def _add(self, other):
-		assert isinstance(other, W_BigIntObject)
 		return self.return_wrap(self.bigintval.add(other.bigintval))
 
 	def and_(self, other):
@@ -249,21 +271,25 @@ class W_BigIntObject(W_AbstractIntObject):
 	def sub(self, other):
 		if isinstance(other, W_IntObject):
 			return self._sub(other.to_bigint())
-		else:
+		elif isinstance(other, W_BigIntObject):
 			return self._sub(other)
+		else:
+			assert isinstance(other, W_FloatObject)
+			return W_FloatObject(self.tofloat()).sub(other)
 
 	def _sub(self, other):
-		assert isinstance(other, W_BigIntObject)
 		return self.return_wrap(self.bigintval.sub(other.bigintval))
 
 	def mul(self, other):
 		if isinstance(other, W_IntObject):
 			return self._mul(other.to_bigint())
-		else:
+		elif isinstance(other, W_BigIntObject):
 			return self._mul(other)
+		else:
+			assert isinstance(other, W_FloatObject)
+			return W_FloatObject(self.tofloat()).mul(other)
 
 	def _mul(self, other):
-		assert isinstance(other, W_BigIntObject)
 		if other.is_zero():
 			return W_IntObject(0)
 		else:
@@ -272,8 +298,11 @@ class W_BigIntObject(W_AbstractIntObject):
 	def div(self, other):
 		if isinstance(other, W_IntObject):
 			return self._div(other.to_bigint())
-		else:
+		elif isinstance(other, W_BigIntObject):
 			return self._div(other)
+		else:
+			assert isinstance(other, W_FloatObject)
+			return W_FloatObject(self.tofloat()).div(other)
 
 	def _div(self, other):
 		assert isinstance(other, W_BigIntObject)
