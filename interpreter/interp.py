@@ -34,6 +34,7 @@ driver = jit.JitDriver(greens = ['pc', 'call_pc', 'cp'],
 			#'call_jit_lock', 
 			'single', 's_self', 'x_reg', 'y_reg'],
 		virtualizables = ['x_reg'],
+		#virtualizables = ['y_reg'],
 		get_printable_location=printable_loc)
 
 class Process:
@@ -96,8 +97,8 @@ class Process:
 			instr_obj = cp.instrs[pc]
 			#call_pc = pc
 			pc = pc + 1
-			#if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
-				#should_enter = True
+			if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
+				should_enter = True
 
 			instr = instr_obj.opcode
 			depth = -1
@@ -111,11 +112,7 @@ class Process:
 				#is_two_state_match = call_pc == jump_pc
 				frame = (cp, pc)
 				pc = self.call(frame, arity, label)
-				reduction -= 1
-				if not single and reduction <= 0:
-					break
-				else:
-					should_enter = True
+				#else:
 					#if not call_jit_lock:
 						#should_enter = True
 						#if init_stack_depth == -1:
@@ -126,19 +123,11 @@ class Process:
 			elif instr == opcodes.CALL_LAST: # 5
 				(arity, label, n) = instr_obj.arg_values()
 				pc = self.call_last(cp, arity, label, n)
-				#reduction -= 1
-				#if not single and reduction <= 0:
-					#break
 
 			elif instr == opcodes.CALL_ONLY: # 6
 				(arity, label) = instr_obj.arg_values()
 				#call_pc = pc
 				pc = self.call_only(cp, arity, label)
-				reduction -= 1
-				if not single and reduction <= 0:
-					break
-				else:
-					should_enter = True
 				# for testing
 				#else:
 					#assert isinstance(instr_obj, LoopInstruction)
@@ -158,9 +147,6 @@ class Process:
 					#is_two_state_match = call_pc == jump_pc
 					frame = (cp, pc)
 					cp, pc = self.call_ext(frame, entry, real_arity)
-					reduction -= 1
-					if not single and reduction <=0:
-						break
 					should_enter = True
 				else:
 					assert tag == opcodes.TAG_LABEL
@@ -389,7 +375,6 @@ class Process:
 			elif instr == opcodes.CALL_EXT_ONLY: # 78
 				((_, real_arity), (tag, header_index)) = instr_obj.args
 				if tag == opcodes.TAG_LITERAL:
-					should_enter = True
 					entry = cp.import_header[header_index]
 					cp, pc = self.call_ext_only(cp, entry, real_arity)
 				else:
@@ -467,17 +452,21 @@ class Process:
 				pretty_print.print_value(self.create_call_stack_info(cp, pc))
 				raise Exception("Unimplemented opcode: %d"%(instr))
 			if should_enter:
-				driver.can_enter_jit(pc = pc,
-						call_pc = call_pc,
-						cp = cp,
-						reduction = reduction,
-						#init_stack_depth = init_stack_depth,
-						#call_jit_lock = call_jit_lock,
-						#should_enter = should_enter, 
-						single = single, 
-						s_self = self,
-						x_reg = x_reg,
-						y_reg = self.y_reg)
+				reduction -= 1
+				if not single and reduction <= 0:
+					break
+				else:
+					driver.can_enter_jit(pc = pc,
+							call_pc = call_pc,
+							cp = cp,
+							reduction = reduction,
+							#init_stack_depth = init_stack_depth,
+							#call_jit_lock = call_jit_lock,
+							#should_enter = should_enter, 
+							single = single, 
+							s_self = self,
+							x_reg = x_reg,
+							y_reg = self.y_reg)
 
 		return (constant.STATE_SWITH, pc, cp)
 
@@ -976,7 +965,7 @@ class Process:
 			self.x_reg.store_float(pos, val)
 		else:
 			assert isinstance(val, W_AbstractIntObject)
-			self.x_reg.store_float(pos, W_FloatObject(val.tofloat()))
+			self.x_reg.store_float(pos, W_FloatObject(float(val.to_int())))
 
 	# 98
 	def fadd(self, cp, label, reg1, reg2, dst_reg):
