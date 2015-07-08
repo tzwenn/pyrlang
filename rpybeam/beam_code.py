@@ -414,7 +414,7 @@ class CodeParser:
 							val = self._check_const_table(const_table, val)
 						elif tag == opcodes.TAG_ATOM and not val == 0:
 							val = global_atom_table.search_index(atoms[val-1])
-							lst_field[i] = ((tag, val), label)
+						lst_field[i] = ((tag, val), label)
 				elif tag == opcodes.TAGX_FLOATREG:
 					pc, val = self._parse_floatreg(pc)
 					args.append((tag, val))

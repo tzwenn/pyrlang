@@ -40,6 +40,10 @@ def get_int_val(v):
 	assert isinstance(v, W_AbstractIntObject)
 	return v.toint()
 
+def get_float_val(v):
+	assert isinstance(v, W_FloatObject)
+	return v.tofloat()
+
 def get_pid_contents(v):
 	assert isinstance(v, W_PidObject)
 	return (v.node_num, v.process_num, v.serial)

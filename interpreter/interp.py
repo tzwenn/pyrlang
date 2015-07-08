@@ -95,7 +95,6 @@ class Process:
 			#self.y_reg.print_content()
 			should_enter = False
 			instr_obj = cp.instrs[pc]
-			#call_pc = pc
 			pc = pc + 1
 			if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
 				should_enter = True
@@ -324,6 +323,13 @@ class Process:
 				sl = instr_obj.lst
 				call_pc = pc
 				pc = self.select_val(cp, reg, label, sl)
+
+			elif instr == opcodes.SELECT_TUPLE_ARITY: # 60
+				assert isinstance(instr_obj, ListInstruction)
+				(reg, (_, label)) = instr_obj.args
+				sl = instr_obj.lst
+				call_pc = pc
+				pc = self.select_tuple_arity(cp, reg, label, sl)
 
 			elif instr == opcodes.JUMP: # 61
 				(label,) = instr_obj.arg_values()
@@ -835,6 +841,17 @@ class Process:
 				return cp.label_to_addr(l)
 		return cp.label_to_addr(label)
 
+	# 60
+	@jit.unroll_safe
+	def select_tuple_arity(self, cp, val_reg, label, slist):
+		val = self.get_basic_value(cp, val_reg)
+		for i in range(0, len(slist)):
+			((tag, v), l) = slist[i]
+			assert tag == opcodes.TAG_LITERAL
+			if val.size() == v:
+				return cp.label_to_addr(l)
+		return cp.label_to_addr(label)
+
 	# 61
 	def jump(self, cp, label):
 		return cp.label_to_addr(label)
@@ -965,7 +982,7 @@ class Process:
 			self.x_reg.store_float(pos, val)
 		else:
 			assert isinstance(val, W_AbstractIntObject)
-			self.x_reg.store_float(pos, W_FloatObject(float(val.to_int())))
+			self.x_reg.store_float(pos, W_FloatObject(float(val.toint())))
 
 	# 98
 	def fadd(self, cp, label, reg1, reg2, dst_reg):

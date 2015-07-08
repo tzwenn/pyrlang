@@ -73,6 +73,12 @@ class DivFunc_2(BaseBIF):
 		(a,b) = args
 		return a.div(b)
 
+class DivFloatFunc_2(BaseBIF):
+	def invoke(self, args):
+		(a,b) = args
+		float_obj = a if isinstance(a, W_FloatObject) else W_FloatObject(a.tofloat())
+		return a.div(b)
+
 class SubFunc(BaseBIF):
 	def invoke(self, args):
 		(a,b) = args
@@ -83,6 +89,12 @@ class MulFunc(BaseBIF):
 	def invoke(self, args):
 		(a,b) = args
 		return a.mul(b)
+
+class NegFunc(BaseBIF):
+	def invoke(self, args):
+		a = args[0]
+		assert isinstance(a, W_AbstractNumberObject)
+		return a.neg()
 
 class EqualExtFunc_2(BaseBIF):
 	def invoke(self, args):
@@ -294,6 +306,11 @@ class TlFunc_1(BaseBIF):
 		assert isinstance(list_val, W_ListObject)
 		return list_val.tail()
 
+class TruncFunc_1(BaseBIF):
+	def invoke(self, args):
+		float_val = args[0]
+		return W_IntObject(int(eterm_operators.get_float_val(float_val)))
+
 class TupleSizeFunc_1(BaseBIF):
 	def invoke(self, args):
 		tuple_val = args[0]
@@ -312,7 +329,9 @@ class ModuleEntity(BaseModule):
 				  "bsl_2" : BslFunc_2,
 				  "bsr_2" : BsrFunc_2,
 				  "div_2" : DivFunc_2,
+				  "/_2" : DivFloatFunc_2,
 				  "-_2" : SubFunc,
+				  "-_1" : NegFunc,
 				  "*_2" : MulFunc,
 				  "=:=_2" : EqualExtFunc_2,
 				  "==_2" : EqualFunc_2,
@@ -340,6 +359,7 @@ class ModuleEntity(BaseModule):
 				  "setelement_3" : SetElementFunc_3,
 				  "spawn_3" : SpawnFunc_3,
 				  "tl_1" : TlFunc_1,
+				  "trunc_1" : TruncFunc_1,
 				  "tuple_size_1" : TupleSizeFunc_1}
 
 	def initFuncDict(self):

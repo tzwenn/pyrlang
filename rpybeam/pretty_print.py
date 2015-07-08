@@ -145,7 +145,7 @@ def rand_to_str(cp, rand):
 	elif tag == opcodes.TAG_LITERAL:
 		return str(val)
 	elif tag == opcodes.TAG_INTEGER:
-		return "#%d"%(val)
+		return "#%d"%(cp.const_table[val].toint())
 	elif tag == opcodes.TAG_ATOM:
 		return global_atom_table.get_str_at(val)
 	elif tag == opcodes.TAG_XREG:
