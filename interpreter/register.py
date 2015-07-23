@@ -9,7 +9,7 @@ class AbstractRegister:
 	def store(self, n, val):
 		pass
 
-max_x_reg_size = 16
+max_x_reg_size = 128 
 
 class X_Register(AbstractRegister):
 	_virtualizable_ = ['regs[*]', 'floats[*]']

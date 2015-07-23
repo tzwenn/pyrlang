@@ -1,5 +1,5 @@
 -module(mean_nnc).
--export([test/0, mean/1]).
+-export([test/0, mean/1, run_benchmark/1]).
 
 mean(N) ->
   sum(duplicate(N, math:pi()))/N.
@@ -20,3 +20,7 @@ loop(N,_) -> loop(N-1,mean(10000000)).
 
 test() ->
     loop(1,0).
+
+run_benchmark([Arg]) -> run_benchmark(list_to_integer(Arg));
+run_benchmark(0) -> true;
+run_benchmark(N) -> test(),run_benchmark(N-1).

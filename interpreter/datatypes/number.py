@@ -5,6 +5,9 @@ from rpython.rlib.rbigint import (
 		InvalidEndiannessError, InvalidSignednessError, rbigint)
 
 class W_AbstractNumberObject(W_Root):
+	def abs(self):
+		raise NotImplementedError
+
 	def tofloat(self):
 		raise NotImplementedError
 
@@ -35,8 +38,8 @@ class W_IntObject(W_AbstractIntObject):
 	def is_zero(self):
 		return self.intval == 0
 
-	#def abs(self):
-		#return W_IntObject(abs(self.intval))
+	def abs(self):
+		return W_IntObject(abs(self.intval))
 
 	def add(self, other): 
 		if isinstance(other, W_IntObject):
@@ -180,6 +183,9 @@ class W_FloatObject(W_AbstractNumberObject):
 		assert(isinstance(floatval, float))
 		self.floatval = floatval
 
+	def abs(self):
+		return W_FloatObject(abs(self.floatval))
+
 	def neg(self):
 		return W_FloatObject(-self.floatval)
 
@@ -232,8 +238,8 @@ class W_BigIntObject(W_AbstractIntObject):
 	def __init__(self, intval):
 		self.bigintval = intval
 
-	#def abs(self):
-		#return W_BigIntObject(self.bigintval.abs())
+	def abs(self):
+		return W_BigIntObject(self.bigintval.abs())
 
 	def str(self):
 		return self.bigintval.str()

@@ -13,10 +13,11 @@ from pyrlang.interpreter import constant
 from rpython.rlib import jit
 import time
 
-#class AbsFunc(BaseBIF):
-	#def invoke(self, args):
-		#a = args[0]
-		#return a.abs()
+class AbsFunc(BaseBIF):
+	def invoke(self, args):
+		a = args[0]
+		assert isinstance(a, W_AbstractNumberObject)
+		return a.abs()
 
 class AddFunc(BaseBIF):
 	def invoke(self, args):
@@ -319,7 +320,7 @@ class TupleSizeFunc_1(BaseBIF):
 
 class ModuleEntity(BaseModule):
 	_func_dict = { 
-				  #"abs_1" : AbsFunc,
+				  "abs_1" : AbsFunc,
 				  "+_2" : AddFunc,
 				  "atom_to_list_1" : AtomToListFunc_1,
 				  "and_2" : AndFunc_2,

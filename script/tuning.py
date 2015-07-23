@@ -144,10 +144,10 @@ if __name__ == '__main__':
 		bin = sys.argv[1]
 	else:
 		bin = ['pyrlang-normal',
-			'pyrlang-call-lock',
-			'pyrlang-match-trace',
-			'erl',
-			'hipe']
+			'pyrlang-match',
+			#'erl',
+			#'hipe'
+			]
 
 	#rewrite_and_compile()
 	if isinstance(bin, list):

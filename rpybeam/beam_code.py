@@ -48,7 +48,8 @@ class CodeParser:
 		# mod_dict: module atom index => index in import_mods
 		(self.func_list, self.func_dict, self.import_header, self.import_mods, self.mod_dict) = self.import_BIF_and_module()
 		(self.labelTable, self.instrs, self.const_table) = self.preprocess(beam)
-		#print "\n".join([opcodes.opnames[instr.opcode] + ":" + str(instr.__class__) for instr in self.instrs])
+		#print "\n".join([pretty_print.instr_str(self, instr) + ":  " + str(instr.__class__) for instr in self.instrs])
+		#exit()
 		#print [v.intval for v in self.const_table]
 
 	def header_atom_preprocess(self, beam):
@@ -388,6 +389,7 @@ class CodeParser:
 		instrs = []
 		const_table = []
 		atoms = beam.getAtomTable()
+		#current_label = 0
 		while (pc < len(self.code)):
 			pc, instr = self.parseInstr(pc)
 			arity = opcodes.arity[instr]
@@ -429,16 +431,54 @@ class CodeParser:
 			if instr in opcodes.loop_instrs:
 				instrs.append(LoopInstruction(instr, args[:]))
 			elif lst_field:
-				if instr in opcodes.possible_pattern_matches:
-					instrs.append(PatternMatchingListInstruction(instr, args[:], lst_field))
-				else:
-					instrs.append(ListInstruction(instr, args[:], lst_field))
+			#if lst_field:
+				instrs.append(ListInstruction(instr, args[:], lst_field))
+				#if instr in opcodes.possible_pattern_matches and (not self.check_error_label(current_label, args)):
+					#instrs.append(PatternMatchingListInstruction(instr, args[:], lst_field))
+				#else:
+					#instrs.append(ListInstruction(instr, args[:], lst_field))
 			else:
-				if instr in opcodes.possible_pattern_matches:
-					instrs.append(PatternMatchingInstruction(instr, args[:]))
-				else:
-					instrs.append(Instruction(instr, args[:]))
-		return instrs[:], [W_IntObject(v) for v in const_table]
+				instrs.append(Instruction(instr, args[:]))
+				#if instr in opcodes.possible_pattern_matches and (not self.check_error_label(current_label, args)):
+					#instrs.append(PatternMatchingInstruction(instr, args[:]))
+				#else:
+					#if instr == opcodes.LABEL:
+						#current_label = args[0][1]
+					#instrs.append(Instruction(instr, args[:]))
+		return self.mark_pattern_instrs(instrs), [W_IntObject(v) for v in const_table]
+
+	def check_error_label(self, next_label, args):
+		for arg in args:
+			(tag, val) = arg
+			if tag == opcodes.TAG_LABEL and val < next_label:
+				return True
+		return False
+
+	def mark_pattern_instrs(self, instrs):
+		need_mark = False
+		import sys
+		next_label = sys.maxint
+		for i in range(len(instrs)-1, -1, -1):
+			instr_obj = instrs[i]
+			if instr_obj.opcode == opcodes.K_RETURN:
+				need_mark = True
+			elif instr_obj.opcode == opcodes.LABEL:
+				next_label = instr_obj.arg_values()[0]
+				#need_mark = False
+			#elif instr_obj.opcode in opcodes.loop_instrs:
+				#need_mark = False
+			elif need_mark:
+				if instr_obj.opcode in opcodes.possible_pattern_matches:
+					if not self.check_error_label(next_label, instr_obj.args):
+						need_mark = False
+						if isinstance(instr_obj, ListInstruction):
+							instrs[i] = PatternMatchingListInstruction(instr_obj.opcode,
+									instr_obj.args[:], instr_obj.lst[:])
+						else:
+							instrs[i] = PatternMatchingInstruction(instr_obj.opcode,
+									instr_obj.args[:])
+		return instrs[:]
+
 
 	def _check_const_table(self, const_table, val):
 		in_const_table = False

@@ -98,6 +98,9 @@ class Process:
 			pc = pc + 1
 			if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
 				should_enter = True
+			if isinstance(instr_obj, LoopInstruction):
+				should_enter = True
+				call_pc = 0
 
 			instr = instr_obj.opcode
 			depth = -1
@@ -111,13 +114,6 @@ class Process:
 				#is_two_state_match = call_pc == jump_pc
 				frame = (cp, pc)
 				pc = self.call(frame, arity, label)
-				#else:
-					#if not call_jit_lock:
-						#should_enter = True
-						#if init_stack_depth == -1:
-							#init_stack_depth = self.y_reg.depth()-1
-					# for testing
-					#should_enter = True
 
 			elif instr == opcodes.CALL_LAST: # 5
 				(arity, label, n) = instr_obj.arg_values()
@@ -127,14 +123,6 @@ class Process:
 				(arity, label) = instr_obj.arg_values()
 				#call_pc = pc
 				pc = self.call_only(cp, arity, label)
-				# for testing
-				#else:
-					#assert isinstance(instr_obj, LoopInstruction)
-					#old_depth = instr_obj.depth
-					#if self.y_reg.depth() == old_depth:
-						#should_enter = True
-					#else:
-						#instr_obj.depth = self.y_reg.depth()
 
 			elif instr == opcodes.CALL_EXT: # 7
 				args = instr_obj.args
@@ -146,7 +134,6 @@ class Process:
 					#is_two_state_match = call_pc == jump_pc
 					frame = (cp, pc)
 					cp, pc = self.call_ext(frame, entry, real_arity)
-					should_enter = True
 				else:
 					assert tag == opcodes.TAG_LABEL
 					self.y_reg.push((cp, pc))
@@ -424,9 +411,17 @@ class Process:
 				((_,label), reg1, reg2, dst_reg) = instr_obj.args
 				self.fdiv(cp, label, reg1, reg2, dst_reg)
 
+			elif instr == opcodes.FNEGATE: # 102
+				((_,label), reg1, dst_reg) = instr_obj.args
+				self.fnegate(cp, label, reg1, dst_reg)
+
 			elif instr == opcodes.MAKE_FUN2: # 103
 				(index,) = instr_obj.arg_values()
 				self.make_fun2(cp, index)
+
+			#elif instr == opcodes.BS_INIT2: # 109
+				#((_,label), src_reg, (_, word), (_, regs), (_, flags), dst_reg) = instr_obj.args
+				#self.bs_init2(cp, label, src_reg, word, regs, flags, dst_reg)
 
 			elif instr == opcodes.IS_FUNCTION2: # 115
 				((_, label), a1, a2) = instr_obj.args
@@ -1012,6 +1007,12 @@ class Process:
 		assert isinstance(val1, W_FloatObject)
 		self.store_basereg(dst_reg, val1.div(val2))
 
+	# 102
+	def fnegate(self, cp, label, reg1, dst_reg):
+		val1 = self.get_basic_value(cp, reg1)
+		assert isinstance(val1, W_FloatObject)
+		self.store_basereg(dst_reg, val1.neg())
+
 	# 103
 	@jit.unroll_safe
 	def make_fun2(self, cp, index):
@@ -1023,6 +1024,11 @@ class Process:
 			fvs.append(self.x_reg.get(i))
 		closure_obj = W_ClosureObject(cp, addr, fun_entry.arity, fvs)
 		self.store_basereg((opcodes.TAG_XREG, 0), closure_obj)
+
+	#def bs_init2(self, cp, label, src_reg, word, regs, flags, dst_reg):
+		## TODO: add flags support, add fail label support
+		#size = self.get_basic_value(cp, src_reg)
+		#self.store_basereg(dst_reg, W_BinaryObject(size))
 
 	# 115
 	def is_function2(self, pc, cp, label, a1, a2):
