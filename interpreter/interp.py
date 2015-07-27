@@ -24,11 +24,11 @@ from pyrlang.lib.base import BaseBIF, BaseBIF0, BaseFakeFunc
 from rpython.rlib import jit
 from rpython.rlib.jit import hint
 
-def printable_loc(pc, _call_pc, cp):
+def printable_loc(pc, cp):
 	instr = cp.instrs[pc]
 	return "%d %s"%(pc, pretty_print.instr_str(cp, instr))
 
-driver = jit.JitDriver(greens = ['pc', 'call_pc', 'cp'],
+driver = jit.JitDriver(greens = ['pc', 'cp'],
 		reds = ['reduction', 
 			#'init_stack_depth', 
 			#'call_jit_lock', 
@@ -70,7 +70,6 @@ class Process:
 		#################################################
 
 		#jump_pc = pc
-		call_pc = pc
 		#init_stack_depth = -1
 		#call_jit_lock = False
 
@@ -79,7 +78,6 @@ class Process:
 
 		while(True):
 			driver.jit_merge_point(pc = pc,
-					call_pc = call_pc,
 					cp = cp,
 					#jump_pc = jump_pc,
 					reduction = reduction,
@@ -94,7 +92,6 @@ class Process:
 			#self.y_reg.print_content()
 			should_enter = False
 			instr_obj = cp.instrs[pc]
-			#call_pc = pc
 			pc = pc + 1
 			#if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
 				#should_enter = True
@@ -107,8 +104,6 @@ class Process:
 
 			elif instr == opcodes.CALL: # 4
 				(arity, label) = instr_obj.arg_values()
-				call_pc = pc - 1
-				#is_two_state_match = call_pc == jump_pc
 				frame = (cp, pc)
 				pc = self.call(frame, arity, label)
 				reduction -= 1
@@ -132,7 +127,6 @@ class Process:
 
 			elif instr == opcodes.CALL_ONLY: # 6
 				(arity, label) = instr_obj.arg_values()
-				#call_pc = pc
 				pc = self.call_only(cp, arity, label)
 				reduction -= 1
 				if not single and reduction <= 0:
@@ -154,8 +148,6 @@ class Process:
 				(tag, header_index) = args[1]
 				if (tag == opcodes.TAG_LITERAL):
 					entry = cp.import_header[header_index]
-					call_pc = pc
-					#is_two_state_match = call_pc == jump_pc
 					frame = (cp, pc)
 					cp, pc = self.call_ext(frame, entry, real_arity)
 					reduction -= 1
@@ -251,7 +243,6 @@ class Process:
 				if self.y_reg.is_empty():
 					return (constant.STATE_TERMINATE, pc, cp)
 				else:
-					call_pc = pc-1
 					(cp, pc) = self.k_return(cp)
 					# try to trace RETURN instruction, too
 					should_enter = True
@@ -336,7 +327,6 @@ class Process:
 				assert isinstance(instr_obj, ListInstruction)
 				(reg, (_, label)) = instr_obj.args
 				sl = instr_obj.lst
-				call_pc = pc
 				pc = self.select_val(cp, reg, label, sl)
 
 			elif instr == opcodes.JUMP: # 61
@@ -468,7 +458,6 @@ class Process:
 				raise Exception("Unimplemented opcode: %d"%(instr))
 			if should_enter:
 				driver.can_enter_jit(pc = pc,
-						call_pc = call_pc,
 						cp = cp,
 						reduction = reduction,
 						#init_stack_depth = init_stack_depth,
