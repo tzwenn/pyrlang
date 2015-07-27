@@ -24,11 +24,11 @@ from pyrlang.lib.base import BaseBIF, BaseBIF0, BaseFakeFunc
 from rpython.rlib import jit
 from rpython.rlib.jit import hint
 
-def printable_loc(pc, _call_pc, cp):
+def printable_loc(pc, cp):
 	instr = cp.instrs[pc]
 	return "%d %s"%(pc, pretty_print.instr_str(cp, instr))
 
-driver = jit.JitDriver(greens = ['pc', 'call_pc', 'cp'],
+driver = jit.JitDriver(greens = ['pc', 'cp'],
 		reds = ['reduction', 
 			#'init_stack_depth', 
 			#'call_jit_lock', 
@@ -70,37 +70,22 @@ class Process:
 		#self.counter_n = 0 # use it for experiment counting, DON'T forget to discard it !!!
 		#################################################
 
-		#jump_pc = pc
-		call_pc = pc
-		#init_stack_depth = -1
-		#call_jit_lock = False
-
 		#for n in cp.lit_table:
 			#pretty_print.print_value(n)
 
 		while(True):
 			driver.jit_merge_point(pc = pc,
-					call_pc = call_pc,
 					cp = cp,
-					#jump_pc = jump_pc,
 					reduction = reduction,
-					#init_stack_depth = init_stack_depth,
-					#call_jit_lock = call_jit_lock,
 					single = single, 
 					s_self = self,
 					x_reg = x_reg,
 					y_reg = self.y_reg)
-			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, call_pc, cp) + " reduction: " + str(reduction)
-			#self.x_reg.print_content()
-			#self.y_reg.print_content()
 			should_enter = False
 			instr_obj = cp.instrs[pc]
 			pc = pc + 1
-			if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
-				should_enter = True
-			if isinstance(instr_obj, LoopInstruction):
-				should_enter = True
-				call_pc = 0
+			#if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
+				#should_enter = True
 
 			instr = instr_obj.opcode
 			depth = -1
@@ -110,10 +95,9 @@ class Process:
 
 			elif instr == opcodes.CALL: # 4
 				(arity, label) = instr_obj.arg_values()
-				call_pc = pc - 1
-				#is_two_state_match = call_pc == jump_pc
 				frame = (cp, pc)
 				pc = self.call(frame, arity, label)
+				should_enter = True
 
 			elif instr == opcodes.CALL_LAST: # 5
 				(arity, label, n) = instr_obj.arg_values()
@@ -121,8 +105,16 @@ class Process:
 
 			elif instr == opcodes.CALL_ONLY: # 6
 				(arity, label) = instr_obj.arg_values()
-				#call_pc = pc
 				pc = self.call_only(cp, arity, label)
+				should_enter = True
+				# for testing
+				#else:
+					#assert isinstance(instr_obj, LoopInstruction)
+					#old_depth = instr_obj.depth
+					#if self.y_reg.depth() == old_depth:
+						#should_enter = True
+					#else:
+						#instr_obj.depth = self.y_reg.depth()
 
 			elif instr == opcodes.CALL_EXT: # 7
 				args = instr_obj.args
@@ -130,10 +122,9 @@ class Process:
 				(tag, header_index) = args[1]
 				if (tag == opcodes.TAG_LITERAL):
 					entry = cp.import_header[header_index]
-					call_pc = pc
-					#is_two_state_match = call_pc == jump_pc
 					frame = (cp, pc)
 					cp, pc = self.call_ext(frame, entry, real_arity)
+					should_enter = True
 				else:
 					assert tag == opcodes.TAG_LABEL
 					self.y_reg.push((cp, pc))
@@ -153,6 +144,7 @@ class Process:
 				if (tag == opcodes.TAG_LITERAL):
 					entry = cp.import_header[header_index]
 					cp, pc = self.call_ext_last(cp, pc, entry, real_arity, dealloc)
+					should_enter = True
 				else:
 					assert tag == opcodes.TAG_LABEL
 					cp, pc = self._call_ext_bif(pc, cp, header_index)
@@ -223,7 +215,6 @@ class Process:
 				if self.y_reg.is_empty():
 					return (constant.STATE_TERMINATE, pc, cp)
 				else:
-					call_pc = pc-1
 					(cp, pc) = self.k_return(cp)
 					# try to trace RETURN instruction, too
 					should_enter = True
@@ -308,14 +299,12 @@ class Process:
 				assert isinstance(instr_obj, ListInstruction)
 				(reg, (_, label)) = instr_obj.args
 				sl = instr_obj.lst
-				call_pc = pc
 				pc = self.select_val(cp, reg, label, sl)
 
 			elif instr == opcodes.SELECT_TUPLE_ARITY: # 60
 				assert isinstance(instr_obj, ListInstruction)
 				(reg, (_, label)) = instr_obj.args
 				sl = instr_obj.lst
-				call_pc = pc
 				pc = self.select_tuple_arity(cp, reg, label, sl)
 
 			elif instr == opcodes.JUMP: # 61
@@ -364,12 +353,14 @@ class Process:
 			elif instr == opcodes.CALL_FUN: # 75
 				(arity,) = instr_obj.arg_values()
 				(cp, pc) = self.call_fun(pc, cp, arity)
+				should_enter = True
 
 			elif instr == opcodes.CALL_EXT_ONLY: # 78
 				((_, real_arity), (tag, header_index)) = instr_obj.args
 				if tag == opcodes.TAG_LITERAL:
 					entry = cp.import_header[header_index]
 					cp, pc = self.call_ext_only(cp, entry, real_arity)
+					should_enter = True
 				else:
 					assert tag == opcodes.TAG_LABEL
 					cp, pc = self._call_ext_bif(pc, cp, header_index)
@@ -458,7 +449,6 @@ class Process:
 					break
 				else:
 					driver.can_enter_jit(pc = pc,
-							call_pc = call_pc,
 							cp = cp,
 							reduction = reduction,
 							#init_stack_depth = init_stack_depth,
@@ -1028,7 +1018,8 @@ class Process:
 	#def bs_init2(self, cp, label, src_reg, word, regs, flags, dst_reg):
 		## TODO: add flags support, add fail label support
 		#size = self.get_basic_value(cp, src_reg)
-		#self.store_basereg(dst_reg, W_BinaryObject(size))
+		#assert isinstance(size, W_AbstractIntObject)
+		#self.store_basereg(dst_reg, W_BinaryObject(size.toint()))
 
 	# 115
 	def is_function2(self, pc, cp, label, a1, a2):

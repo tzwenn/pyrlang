@@ -117,10 +117,14 @@ def run_bench(bin):
 		else:
 			cmd_lst = ["./"+bin, "-s", benchmark_path + "/" + b + ".beam", benchmark_func_name, str(benchmarks[b])]
 		t_res = []
+		my_env = os.environ.copy()
 		for i in range(repeat):
 			t1 = time.time()
 			#print " ".join(cmd_lst)
-			p = subprocess.Popen(cmd_lst, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			my_env["PYPYLOG"] = "jit-summary:lancery_sum/"+bin+"_"+b+".sum"
+			p = subprocess.Popen(cmd_lst, 
+					env=my_env,
+					stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 			out, err = p.communicate()
 			#print out
 			if err:
@@ -130,12 +134,12 @@ def run_bench(bin):
 			t_res.append(t2-t1)
 		print "benchmark %s: executing time %f"%(b, float(sum(t_res)) / repeat)
 		res[b] = float(sum(t_res) / repeat)
-	sorted_keys = res.keys()
-	sorted_keys.sort()
-	f = open("benchmark_result/" + bin + ".txt", "w+")
-	for k in sorted_keys:
-		f.write(k + " " + str(res[k]) + "\n")
-	f.close()
+	#sorted_keys = res.keys()
+	#sorted_keys.sort()
+	#f = open("benchmark_result/" + bin + ".txt", "w+")
+	#for k in sorted_keys:
+		#f.write(k + " " + str(res[k]) + "\n")
+	#f.close()
 	print "done"
 
 if __name__ == '__main__':

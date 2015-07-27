@@ -169,7 +169,11 @@ possible_pattern_matches = (
 		SELECT_VAL,
 		SELECT_TUPLE_ARITY)
 
-loop_instrs = (CALL_ONLY,CALL_EXT_ONLY)
+loop_instrs = (
+		CALL_ONLY,
+		CALL_EXT_ONLY,
+		CALL_LAST,
+		CALL_EXT_LAST)
 
 """ Opcode arity """
 arity = [

@@ -35,7 +35,6 @@ class W_ListObject(W_Root):
 	def clone(self):
 		return W_ListObject(self.left.clone(), self.right.clone())
 
-	@jit.unroll_safe
 	def length(self):
 		l = 1
 		tail = self
