@@ -4,6 +4,7 @@ from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrL
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
 from pyrlang.interpreter.datatypes.pid import W_PidObject
+#from pyrlang.interpreter.datatypes.binary import W_BinaryObject
 from pyrlang.interpreter.atom_table import global_atom_table
 from pyrlang.rpybeam.instruction import ListInstruction
 from pyrlang.rpybeam import opcodes
@@ -83,6 +84,8 @@ def value_str(v):
 			return list_str(v)
 	elif isinstance(v, W_ListObject):
 		return list_str(v)
+	#elif isinstance(v, W_BinaryObject):
+		#return "<<%s>>"%(",".join([str(ord(c)) for c in v.tostr()]))
 
 def list_str(v):
 	assert isinstance(v, W_ListObject)
@@ -145,7 +148,7 @@ def rand_to_str(cp, rand):
 	elif tag == opcodes.TAG_LITERAL:
 		return str(val)
 	elif tag == opcodes.TAG_INTEGER:
-		return "#%d"%(val)
+		return "#%d"%(cp.const_table[val].toint())
 	elif tag == opcodes.TAG_ATOM:
 		return global_atom_table.get_str_at(val)
 	elif tag == opcodes.TAG_XREG:

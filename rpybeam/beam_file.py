@@ -8,6 +8,7 @@ from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrL
 from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject 
 from pyrlang.interpreter.datatypes.closure import W_ClosureObject
+#from pyrlang.interpreter.datatypes.binary import W_BinaryObject
 from pyrlang.interpreter.atom_table import global_atom_table
 from pyrlang.utils import eterm_operators
 #from beam_code import BeamInstr
@@ -297,6 +298,8 @@ class LitTChunk(Chunk):
 			t.value = eterm_operators.build_list_object([val.value for val in t.vals])
 			assert(ord(stream.read(1)[0]) == 0x6a) # list should end with nil
 			return t
+		#elif tag == 109: # binary
+			#return BinaryTerm(stream)
 
 	def asArray(self):
 		return [v.value for v in self.term_list]
@@ -361,3 +364,12 @@ class SmallTupleTerm(Term):
 	def parse(self, stream):
 		self.vals = []
 		self.length = self.readUCInt(stream)
+
+#class BinaryTerm(Term):
+	#def parse(self, stream):
+		#self.size = self.readInt4(stream)
+		#self.bin_value = self.readAny(stream, self.size)
+
+	#def _to_value(self):
+		#return W_BinaryObject(self.bin_value, self.size)
+

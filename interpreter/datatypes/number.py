@@ -4,9 +4,18 @@ from rpython.rlib import jit
 from rpython.rlib.rbigint import (
 		InvalidEndiannessError, InvalidSignednessError, rbigint)
 
-class W_AbstractIntObject(W_Root):
-	def to_int(self):
-		return -999
+class W_AbstractNumberObject(W_Root):
+	def abs(self):
+		raise NotImplementedError
+
+	def tofloat(self):
+		raise NotImplementedError
+
+	def neg(self):
+		raise NotImplementedError
+
+class W_AbstractIntObject(W_AbstractNumberObject):
+	pass
 
 class W_IntObject(W_AbstractIntObject):
 	_immutable_fields_ = ['intval']
@@ -17,6 +26,9 @@ class W_IntObject(W_AbstractIntObject):
 	def toint(self):
 		return self.intval
 
+	def neg(self):
+		return W_IntObject(-self.intval)
+
 	def tofloat(self):
 		return float(self.intval)
 
@@ -26,8 +38,8 @@ class W_IntObject(W_AbstractIntObject):
 	def is_zero(self):
 		return self.intval == 0
 
-	#def abs(self):
-		#return W_IntObject(abs(self.intval))
+	def abs(self):
+		return W_IntObject(abs(self.intval))
 
 	def add(self, other): 
 		if isinstance(other, W_IntObject):
@@ -165,45 +177,43 @@ class W_IntObject(W_AbstractIntObject):
 		else:
 			return False
 
-class W_FloatObject(W_Root):
+class W_FloatObject(W_AbstractNumberObject):
 	_immutable_fields_ = ['floatval']
 	def __init__(self, floatval):
 		assert(isinstance(floatval, float))
 		self.floatval = floatval
 
-	def _convert_to_float_val(self, other):
-		if isinstance(other, W_FloatObject):
-			return other.floatval
-		else:
-			assert isinstance(other, W_AbstractIntObject)
-			return other.tofloat()
+	def abs(self):
+		return W_FloatObject(abs(self.floatval))
+
+	def neg(self):
+		return W_FloatObject(-self.floatval)
+
+	def tofloat(self):
+		return self.floatval
 
 	def add(self, other):
 		add1 = self.floatval
-		add2 = self._convert_to_float_val(other)
-		res = add1 + add2
+		res = add1 + other.tofloat()
 		#if res < add1 or res < add2:
 			#print "overflow! add1:", add1, "add2:", add2, "res:", res
 		return W_FloatObject(res)
 		#return W_FloatObject(self.floatval + self._convert_to_float_val(other))
 
 	def sub(self, other):
-		return W_FloatObject(self.floatval - self._convert_to_float_val(other))
+		return W_FloatObject(self.floatval - other.tofloat())
 
 	def mul(self, other):
-		return W_FloatObject(self.floatval - self._convert_to_float_val(other))
+		return W_FloatObject(self.floatval * other.tofloat())
 
 	def div(self, other):
-		return W_FloatObject(self.floatval / self._convert_to_float_val(other))
+		return W_FloatObject(self.floatval / other.tofloat())
 
 	def lt(self, other): 
-		return self.floatval < self._convert_to_float_val(other)
+		return self.floatval < other.tofloat()
 
 	def str(self):
 		return str(self.floatval)
-
-	def getval(self):
-		return self.floatval
 
 	def clone(self):
 		return W_FloatObject(self.floatval)
@@ -228,14 +238,17 @@ class W_BigIntObject(W_AbstractIntObject):
 	def __init__(self, intval):
 		self.bigintval = intval
 
-	#def abs(self):
-		#return W_BigIntObject(self.bigintval.abs())
+	def abs(self):
+		return W_BigIntObject(self.bigintval.abs())
 
 	def str(self):
 		return self.bigintval.str()
 
 	def toint(self):
 		return self.bigintval.toint()
+
+	def neg(self):
+		return W_BigIntObject(self.bigintval.neg())
 
 	def tofloat(self):
 		return self.bigintval.tofloat()
