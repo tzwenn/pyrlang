@@ -24,11 +24,11 @@ from pyrlang.lib.base import BaseBIF, BaseBIF0, BaseFakeFunc
 from rpython.rlib import jit
 from rpython.rlib.jit import hint
 
-def printable_loc(pc, cp):
+def printable_loc(pc, _call_pc, cp):
 	instr = cp.instrs[pc]
 	return "%d %s"%(pc, pretty_print.instr_str(cp, instr))
 
-driver = jit.JitDriver(greens = ['pc', 'cp'],
+driver = jit.JitDriver(greens = ['pc', 'call_pc', 'cp'],
 		reds = ['reduction', 
 			#'init_stack_depth', 
 			#'call_jit_lock', 
@@ -70,6 +70,7 @@ class Process:
 		#################################################
 
 		#jump_pc = pc
+		call_pc = pc
 		#init_stack_depth = -1
 		#call_jit_lock = False
 
@@ -78,6 +79,7 @@ class Process:
 
 		while(True):
 			driver.jit_merge_point(pc = pc,
+					call_pc = call_pc,
 					cp = cp,
 					#jump_pc = jump_pc,
 					reduction = reduction,
@@ -88,13 +90,16 @@ class Process:
 					x_reg = x_reg,
 					y_reg = self.y_reg)
 			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, call_pc, cp) + " reduction: " + str(reduction)
+			#print "x regs:" + pretty_print.value_str(self.x_reg.get(0))
 			#self.x_reg.print_content()
+			#print "@@@@@@@@"
 			#self.y_reg.print_content()
 			should_enter = False
 			instr_obj = cp.instrs[pc]
+			#call_pc = pc
 			pc = pc + 1
-			#if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
-				#should_enter = True
+			if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
+				should_enter = True
 
 			instr = instr_obj.opcode
 			depth = -1
@@ -104,13 +109,14 @@ class Process:
 
 			elif instr == opcodes.CALL: # 4
 				(arity, label) = instr_obj.arg_values()
+				call_pc = pc - 1
+				#is_two_state_match = call_pc == jump_pc
 				frame = (cp, pc)
 				pc = self.call(frame, arity, label)
 				reduction -= 1
 				if not single and reduction <= 0:
 					break
-				else:
-					should_enter = True
+				#else:
 					#if not call_jit_lock:
 						#should_enter = True
 						#if init_stack_depth == -1:
@@ -127,12 +133,11 @@ class Process:
 
 			elif instr == opcodes.CALL_ONLY: # 6
 				(arity, label) = instr_obj.arg_values()
+				#call_pc = pc
 				pc = self.call_only(cp, arity, label)
 				reduction -= 1
 				if not single and reduction <= 0:
 					break
-				else:
-					should_enter = True
 				# for testing
 				#else:
 					#assert isinstance(instr_obj, LoopInstruction)
@@ -148,6 +153,8 @@ class Process:
 				(tag, header_index) = args[1]
 				if (tag == opcodes.TAG_LITERAL):
 					entry = cp.import_header[header_index]
+					call_pc = pc
+					#is_two_state_match = call_pc == jump_pc
 					frame = (cp, pc)
 					cp, pc = self.call_ext(frame, entry, real_arity)
 					reduction -= 1
@@ -243,6 +250,7 @@ class Process:
 				if self.y_reg.is_empty():
 					return (constant.STATE_TERMINATE, pc, cp)
 				else:
+					call_pc = pc-1
 					(cp, pc) = self.k_return(cp)
 					# try to trace RETURN instruction, too
 					should_enter = True
@@ -260,6 +268,7 @@ class Process:
 				self.remove_message()
 
 			elif instr == opcodes.LOOP_REC: # 23
+				#print "current message queue: [%s]"%",".join([pretty_print.value_str(e) for e in self.mail_box.dump()])
 				args = instr_obj.args
 				label = args[0][1]
 				dst_reg = args[1]
@@ -272,6 +281,8 @@ class Process:
 			elif instr == opcodes.WAIT: # 25
 				(label,) = instr_obj.arg_values()
 				pc = self.wait(cp, label)
+				#if not self.mail_box.is_empty():
+					#self.go_to_next_message()
 				return (constant.STATE_HANG_UP, pc, cp)
 
 			elif instr == opcodes.IS_LT: # 39
@@ -327,6 +338,7 @@ class Process:
 				assert isinstance(instr_obj, ListInstruction)
 				(reg, (_, label)) = instr_obj.args
 				sl = instr_obj.lst
+				call_pc = pc
 				pc = self.select_val(cp, reg, label, sl)
 
 			elif instr == opcodes.JUMP: # 61
@@ -379,7 +391,6 @@ class Process:
 			elif instr == opcodes.CALL_EXT_ONLY: # 78
 				((_, real_arity), (tag, header_index)) = instr_obj.args
 				if tag == opcodes.TAG_LITERAL:
-					should_enter = True
 					entry = cp.import_header[header_index]
 					cp, pc = self.call_ext_only(cp, entry, real_arity)
 				else:
@@ -458,6 +469,7 @@ class Process:
 				raise Exception("Unimplemented opcode: %d"%(instr))
 			if should_enter:
 				driver.can_enter_jit(pc = pc,
+						call_pc = call_pc,
 						cp = cp,
 						reduction = reduction,
 						#init_stack_depth = init_stack_depth,
@@ -471,6 +483,7 @@ class Process:
 		return (constant.STATE_SWITH, pc, cp)
 
 	def _send_by_pid(self, pid, msg):
+		#print pretty_print.value_str(self.pid) + " begins to "
 		self.scheduler.send_by_pid(pid, msg)
 
 	def go_to_next_message(self):
@@ -729,6 +742,7 @@ class Process:
 
 	# 25
 	def wait(self, cp, label):
+		#self.go_to_next_message()
 		self.reset_message_to_head()
 		return self.jump(cp, label)
 
@@ -965,7 +979,7 @@ class Process:
 			self.x_reg.store_float(pos, val)
 		else:
 			assert isinstance(val, W_AbstractIntObject)
-			self.x_reg.store_float(pos, W_FloatObject(val.tofloat()))
+			self.x_reg.store_float(pos, W_FloatObject(float(val.toint())))
 
 	# 98
 	def fadd(self, cp, label, reg1, reg2, dst_reg):

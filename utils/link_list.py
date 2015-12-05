@@ -73,3 +73,15 @@ class LinkList:
 			node.set_next(Node(val, None))
 		else:
 			self.node = Node(val, None)
+
+	def is_empty(self):
+		return True if not self.node else False
+
+	def dump(self):
+		curr = self.node
+		res = []
+		while curr:
+			res.append(curr.get_val())
+			curr = curr.get_next()
+		else:
+			return res

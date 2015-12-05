@@ -32,35 +32,96 @@ class Deque:
 	def empty(self):
 		return len(self.list1) == 0 and len(self.list2) == 0
 
-class MessageDeque(LinkList):
-	def __init__(self, init_list = []):
-		LinkList.__init__(self, init_list)
-		self.pre_node = None
-		self.current_position = 0
+	def is_empty(self):
+		return self.empty()
+
+	def dump(self):
+		res = []
+		for i in range(self.length()):
+			res.append(self.element(i))
+		return res
+
+class MessageDeque:
+	def __init__(self, init_list=[]):
+		self.lst = init_list[:]
+		self.current_position = len(init_list) - 1
 
 	def get_current(self):
-		if self.pre_node:
-			if self.pre_node.get_next():
-				return self.pre_node.get_next().get_val()
-			else:
-				self.reset_to_head()
-				return None
+		if self.current_position == -1:
+			return None
 		else:
-			if self.node:
-				return self.node.get_val()
-			else:
-				return None
+			return self.lst[self.current_position]
+
+	def is_empty(self):
+		return False if self.lst else True
 
 	def next(self):
-		self.current_position += 1
-		if self.pre_node:
-			self.pre_node = self.pre_node.get_next()
-		else:
-			self.pre_node = self.node
+		if not self.is_empty():
+			self.current_position += 1
+			if self.current_position >= len(self.lst):
+				# we don't expect a circled 'next'!!!
+				self.current_position = -1
 
 	def remove_current(self):
-		self.delete(self.current_position)
+		del self.lst[self.current_position]
+		self.current_position -= 1
+		self.next()
 
 	def reset_to_head(self):
-		self.current_position = 0
-		self.pre_node = None
+		if not self.is_empty():
+			self.current_position = 0
+
+	def append(self, val):
+		self.lst.append(val)
+		if self.current_position == -1:
+			self.current_position = 0
+
+	def dump(self):
+		if not self.is_empty():
+			return self.lst[self.current_position:] + self.lst[:self.current_position]
+		else:
+			return []
+
+#class MessageDeque(LinkList):
+	#def __init__(self, init_list = []):
+		#LinkList.__init__(self, init_list)
+		#self.pre_node = None
+		#self.current_position = 0
+
+	#def get_current(self):
+		#if self.pre_node:
+			#if self.pre_node.get_next():
+				#return self.pre_node.get_next().get_val()
+			#else:
+				#self.reset_to_head()
+				#return None
+		#else:
+			#if self.node:
+				#return self.node.get_val()
+			#else:
+				#return None
+
+	#def next(self):
+		#self.current_position += 1
+		#if self.pre_node:
+			#self.pre_node = self.pre_node.get_next()
+		#else:
+			#self.pre_node = self.node
+
+	#def remove_current(self):
+		#if self.pre_node:
+			#if self.pre_node.get_next():
+				#target_node = self.pre_node.get_next()
+				#if target_node.get_next():
+					#self.pre_node.set_next(target_node.get_next())
+				#else:
+					#self.pre_node = None
+			#else:
+				#self.pre_node = None
+		#self.delete(self.current_position)
+		#if not self.pre_node:
+			#self.current_position = 0
+
+	#def reset_to_head(self):
+		#self.current_position = 0
+		#self.pre_node = None

@@ -11,6 +11,9 @@ class W_AbstractNumberObject(W_Root):
 	def tofloat(self):
 		raise NotImplementedError
 
+	def toint(self):
+		raise NotImplementedError
+
 	def neg(self):
 		raise NotImplementedError
 

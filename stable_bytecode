@@ -1,0 +1,575 @@
+# Module: stable
+#
+# Atoms: 
+#	stable
+#	man
+#	cruise
+#	erlang
+#	self
+#	proposal
+#	mariage
+#	reject
+#	woman
+#	engaged
+#	improve_mate
+#	false
+#	true
+#	preferable
+#	order
+#	length
+#	rem
+#	+
+#	-
+#	next_random
+#	*
+#	nth
+#	remove_nth
+#	wait_until_stable
+#	ok
+#	mariages
+#	broadcast
+#	create_men
+#	spawn
+#	create_women
+#	loop
+#	test
+#	module_info
+#	get_module_info
+#
+# Exports:
+#	module_info/1 L75
+#	module_info/0 L73
+#	test/0 L71
+#	woman/2 L12
+#	man/2 L2
+#
+# Imports:
+#	erlang:self/0
+#	erlang:length/1
+#	erlang:rem/2
+#	erlang:+/2
+#	erlang:-/2
+#	erlang:*/2
+#	erlang:spawn/3
+#	erlang:get_module_info/1
+#	erlang:get_module_info/2
+#
+# Attributes:
+#	vsn:	[292744353798517955420129445120750478682L]
+#
+# CompileInfo:
+#	source:	'/Users/huangruochen/src/python/pyrlang/benchmarks/erllvm/stable.erl'
+#	version:	'6.0.1'
+#	options:	[]
+#	time:	(2015, 11, 12, 6, 0, 58)
+
+L1:
+ 	#line 1
+	#function stable:man/2
+L2:
+	allocate 2, 2
+	move x(1), y(0)
+	move x(0), y(1)
+ 	#line 2
+L3:
+	loop_rec L4, x(0)
+	remove_message 
+	move x(0), x(1)
+	move y(0), x(0)
+ 	#line 3
+	call 2, L32
+	move y(0), x(1)
+	move x(0), x(2)
+	move y(1), x(0)
+	call_last 3, L6, 2
+L4:
+	wait L3
+L5:
+ 	#line 4
+	#function stable:cruise/3
+L6:
+	is_nonempty_list L5, x(2)
+	allocate_heap_zero 3, 3, 3
+	get_list x(2), x(3), y(0)
+	bif0 0, x(2)
+	move x(1), y(2)
+	move x(0), y(1)
+	put_tuple 2, x(1)
+	put proposal
+	put x(2)
+	move x(3), x(0)
+ 	#line 5
+	send 
+ 	#line 6
+L7:
+	loop_rec L10, x(0)
+	is_tuple L8, x(0)
+	test_arity L9, x(0), 2
+	get_tuple_element x(0), 0, x(1)
+	get_tuple_element x(0), 1, x(2)
+	is_eq_exact L9, x(1), mariage
+	remove_message 
+	test_heap 3, 3
+	bif0 0, x(0)
+	put_tuple 2, x(1)
+	put x(0)
+	put x(2)
+	move y(1), x(0)
+ 	#line 7
+	send 
+	deallocate 3
+	return 
+L8:
+	is_eq_exact L9, x(0), reject
+	remove_message 
+	move y(2), x(1)
+	move y(0), x(2)
+	move y(1), x(0)
+	call_last 3, L6, 3
+L9:
+	loop_rec_end L7
+L10:
+	wait L7
+L11:
+ 	#line 8
+	#function stable:woman/2
+L12:
+	allocate 3, 2
+	init y(0)
+	move x(1), y(1)
+	move x(0), y(2)
+ 	#line 9
+L13:
+	loop_rec L17, x(0)
+	remove_message 
+	move x(0), y(0)
+ 	#line 10
+L14:
+	loop_rec L16, x(0)
+	is_tuple L15, x(0)
+	test_arity L15, x(0), 2
+	get_tuple_element x(0), 0, x(1)
+	get_tuple_element x(0), 1, x(2)
+	is_eq_exact L15, x(1), proposal
+	remove_message 
+	test_heap 3, 3
+	bif0 0, x(0)
+	put_tuple 2, x(1)
+	put engaged
+	put x(0)
+	move y(2), x(0)
+	move x(2), y(2)
+ 	#line 11
+	send 
+	move y(0), x(1)
+	trim 1, 2
+	move y(0), x(0)
+ 	#line 12
+	call 2, L32
+	move y(1), x(1)
+	move x(0), x(2)
+	move y(0), x(0)
+	call_last 3, L19, 2
+L15:
+	loop_rec_end L14
+L16:
+	wait L14
+L17:
+	wait L13
+L18:
+ 	#line 13
+	#function stable:improve_mate/3
+L19:
+	allocate 4, 3
+	init y(0)
+	move x(2), y(1)
+	move x(1), y(2)
+	move x(0), y(3)
+ 	#line 14
+L20:
+	loop_rec L25, x(0)
+	is_tuple L23, x(0)
+	test_arity L24, x(0), 2
+	get_tuple_element x(0), 0, x(1)
+	get_tuple_element x(0), 1, x(2)
+	is_eq_exact L24, x(1), proposal
+	remove_message 
+	move y(2), x(1)
+	move x(2), x(0)
+	move y(1), x(2)
+	move x(0), y(0)
+ 	#line 15
+	call 3, L28
+	is_atom L26, x(0)
+	select_val x(0), L26, [
+		(false, L21),
+		(true, L22)
+	]
+L21:
+	move reject, x(1)
+	move y(0), x(0)
+	trim 1, 3
+ 	#line 16
+	send 
+	move y(1), x(1)
+	move y(0), x(2)
+	move y(2), x(0)
+	call_last 3, L19, 3
+L22:
+	move reject, x(1)
+	move y(2), x(0)
+	init y(2)
+ 	#line 17
+	send 
+	move y(0), x(1)
+	move y(1), x(2)
+	move y(3), x(0)
+	call_last 3, L19, 4
+L23:
+	is_eq_exact L24, x(0), stable
+	remove_message 
+	test_heap 3, 0
+	put_tuple 2, x(1)
+	put mariage
+	put y(3)
+	move y(2), x(0)
+ 	#line 18
+	send 
+	deallocate 4
+	return 
+L24:
+	loop_rec_end L20
+L25:
+	wait L20
+L26:
+ 	#line 15
+	case_end x(0)
+L27:
+ 	#line 19
+	#function stable:preferable/3
+L28:
+	is_nonempty_list L27, x(2)
+	get_list x(2), x(3), x(4)
+	is_eq_exact L29, x(3), x(0)
+	move true, x(0)
+	return 
+L29:
+	is_eq_exact L30, x(3), x(1)
+	move false, x(0)
+	return 
+L30:
+	move x(4), x(2)
+	call_only 3, L28
+L31:
+ 	#line 20
+	#function stable:order/2
+L32:
+	allocate 1, 2
+	move x(1), y(0)
+ 	#line 20
+	call 1, L37
+ 	#line 20
+	gc_bif1 L0, 1, 1, y(0), x(2)
+	move y(0), x(1)
+	call_last 3, L34, 1
+L33:
+ 	#line 21
+	#function stable:order/3
+L34:
+	is_eq_exact L35, x(2), #0
+	move nil, x(0)
+	return 
+L35:
+	allocate_zero 4, 3
+ 	#line 22
+	gc_bif2 L0, 3, 2, x(0), x(2), x(3)
+ 	#line 22
+	gc_bif2 L0, 4, 3, x(3), #1, x(3)
+	move x(0), y(0)
+	move x(3), x(0)
+	move x(0), y(1)
+	move x(1), y(2)
+	move x(2), y(3)
+ 	#line 23
+	call 2, L39
+	move x(0), x(1)
+	move y(0), x(0)
+	move x(1), y(0)
+ 	#line 23
+	call 1, L37
+	move x(0), x(2)
+	move y(2), x(1)
+	move y(1), x(0)
+	move x(2), y(2)
+	init y(1)
+ 	#line 23
+	call 2, L42
+ 	#line 23
+	gc_bif2 L0, 1, 4, y(3), #1, x(2)
+	move x(0), x(1)
+	move y(2), x(0)
+	init y(2)
+	init y(3)
+ 	#line 23
+	call 3, L34
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 4
+	return 
+L36:
+ 	#line 24
+	#function stable:next_random/1
+L37:
+ 	#line 24
+	gc_bif2 L0, 1, 5, x(0), #1713, x(0)
+ 	#line 24
+	gc_bif2 L0, 1, 3, x(0), #9363, x(0)
+ 	#line 24
+	gc_bif2 L0, 1, 2, x(0), #10067, x(0)
+	return 
+L38:
+ 	#line 25
+	#function stable:nth/2
+L39:
+	is_eq_exact L40, x(0), #1
+	is_nonempty_list L38, x(1)
+	get_list x(1), x(0), x(3)
+	return 
+L40:
+	is_nonempty_list L38, x(1)
+	get_list x(1), x(2), x(3)
+ 	#line 26
+	gc_bif2 L0, 4, 4, x(0), #1, x(0)
+	move x(3), x(1)
+	call_only 2, L39
+L41:
+ 	#line 27
+	#function stable:remove_nth/2
+L42:
+	is_eq_exact L43, x(0), #1
+	is_nonempty_list L41, x(1)
+	get_list x(1), x(2), x(0)
+	return 
+L43:
+	is_nonempty_list L41, x(1)
+	allocate_zero 1, 2
+	get_list x(1), x(2), x(3)
+ 	#line 28
+	gc_bif2 L0, 4, 4, x(0), #1, x(0)
+	move x(3), x(1)
+	move x(2), y(0)
+ 	#line 28
+	call 2, L42
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L44:
+ 	#line 29
+	#function stable:wait_until_stable/1
+L45:
+	is_nonempty_list L49, x(0)
+	allocate 2, 1
+	get_list x(0), y(1), y(0)
+ 	#line 30
+L46:
+	loop_rec L48, x(0)
+	is_tuple L47, x(0)
+	test_arity L47, x(0), 2
+	get_tuple_element x(0), 0, x(1)
+	get_tuple_element x(0), 1, x(2)
+	is_eq_exact L47, x(1), engaged
+	is_eq_exact L47, x(2), y(1)
+	remove_message 
+	move y(0), x(0)
+	call_last 1, L45, 2
+L47:
+	loop_rec_end L46
+L48:
+	wait L46
+L49:
+	is_nil L44, x(0)
+	move ok, x(0)
+	return 
+L50:
+ 	#line 31
+	#function stable:mariages/1
+L51:
+	is_nonempty_list L55, x(0)
+	allocate 2, 1
+	get_list x(0), y(1), y(0)
+ 	#line 32
+L52:
+	loop_rec L54, x(0)
+	is_tuple L53, x(0)
+	test_arity L53, x(0), 2
+	get_tuple_element x(0), 0, x(1)
+	get_tuple_element x(0), 1, x(2)
+	is_eq_exact L53, x(1), y(1)
+	remove_message 
+	move y(0), x(0)
+	move x(2), y(1)
+	trim 1, 1
+ 	#line 33
+	call 1, L51
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L53:
+	loop_rec_end L52
+L54:
+	wait L52
+L55:
+	is_nil L50, x(0)
+	return 
+L56:
+ 	#line 34
+	#function stable:broadcast/2
+L57:
+	is_nonempty_list L58, x(0)
+	allocate 2, 2
+	get_list x(0), x(0), y(1)
+	move x(1), y(0)
+ 	#line 35
+	send 
+	move y(0), x(1)
+	move y(1), x(0)
+	call_last 2, L57, 2
+L58:
+	is_nil L56, x(0)
+	move ok, x(0)
+	return 
+L59:
+ 	#line 36
+	#function stable:create_men/2
+L60:
+	is_eq_exact L61, x(1), #0
+	move nil, x(0)
+	return 
+L61:
+	allocate_heap 2, 4, 2
+	move x(1), y(1)
+	move x(0), y(0)
+	put_list y(1), nil, x(0)
+	put_list y(0), x(0), x(2)
+	move man, x(1)
+	move stable, x(0)
+ 	#line 37
+	call_ext erlang:spawn/3 3
+ 	#line 37
+	gc_bif2 L0, 1, 4, y(1), #1, x(1)
+	move x(0), y(1)
+	move y(0), x(0)
+	trim 1, 1
+ 	#line 37
+	call 2, L60
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L62:
+ 	#line 38
+	#function stable:create_women/2
+L63:
+	is_eq_exact L64, x(1), #0
+	move nil, x(0)
+	return 
+L64:
+	allocate_heap 2, 4, 2
+	move x(1), y(1)
+	move x(0), y(0)
+	put_list y(1), nil, x(0)
+	put_list y(0), x(0), x(2)
+	move woman, x(1)
+	move stable, x(0)
+ 	#line 39
+	call_ext erlang:spawn/3 3
+ 	#line 39
+	gc_bif2 L0, 1, 4, y(1), #1, x(1)
+	move x(0), y(1)
+	move y(0), x(0)
+	trim 1, 1
+ 	#line 39
+	call 2, L63
+	test_heap 2, 1
+	put_list y(0), x(0), x(0)
+	deallocate 1
+	return 
+L65:
+ 	#line 40
+	#function stable:stable/1
+L66:
+	allocate_zero 2, 1
+	bif0 0, x(2)
+	move x(0), x(1)
+	move x(2), x(0)
+	move x(0), y(0)
+	move x(1), y(1)
+ 	#line 41
+	call 2, L60 # create_men(God, N)
+	move x(0), x(2)
+	move y(1), x(1)
+	move y(0), x(0)
+	move x(2), y(1)
+	init y(0)
+ 	#line 42 
+	call 2, L63 # create_women(God, N)
+	move y(1), x(1)
+	move x(0), y(0)
+ 	#line 43
+	call 2, L57 # broadcast(Women,Men)
+	move y(0), x(1)
+	move y(1), x(0)
+ 	#line 44
+	call 2, L57 # broadcast(Men,Women)
+	move y(0), x(0)
+ 	#line 45
+	call 1, L45 # wait_until_stable(Women)
+	move stable, x(1)
+	move y(0), x(0)
+	trim 1, 1
+ 	#line 46
+	call 2, L57 # broadcast(Women,stable)
+	move y(0), x(0)
+	call_last 1, L51, 1 # mariages(Men)
+L67:
+ 	#line 47
+	#function stable:loop/2
+L68:
+	is_eq_exact L69, x(0), #0
+	move x(1), x(0)
+	return 
+L69:
+	allocate_zero 1, 1
+ 	#line 48
+	gc_bif2 L0, 1, 4, x(0), #1, y(0)
+	move #10, x(0)
+ 	#line 48
+	call 1, L66
+	move x(0), x(1)
+	move y(0), x(0)
+	call_last 2, L68, 1
+L70:
+ 	#line 49
+	#function stable:test/0
+L71:
+	move #0, x(1)
+	move #12000, x(0)
+	call_only 2, L68
+L72:
+ 	#line 0
+	#function stable:module_info/0
+L73:
+	move stable, x(0)
+ 	#line 0
+	call_ext_only erlang:get_module_info/1 1
+L74:
+ 	#line 0
+	#function stable:module_info/1
+L75:
+	move x(0), x(1)
+	move stable, x(0)
+ 	#line 0
+	call_ext_only erlang:get_module_info/2 2
+	int_code_end 

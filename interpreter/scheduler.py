@@ -25,6 +25,8 @@ class Scheduler:
 	def schedule(self):
 		low_skip_times = 0
 		while True:
+			#print "active:"+str([pretty_print.value_str(e[0].pid) for e in self.normal_queue.dump()]) 
+			#print "inactive:"+str([pretty_print.value_str(e) for e in self.inactive_processes.keys()])
 			while not self.max_queue.empty():
 				self._handle_one_process_from_queue(self.max_queue)
 			while not self.high_queue.empty():
@@ -62,7 +64,7 @@ class Scheduler:
 		if pid in self.process_pool:
 			process = self.process_pool[pid]
 			process.append_message(msg)
-			#print "send msg %s to process %s"%(pretty_print.value_str(msg), pretty_print.value_str(pid))
+			#print "send msg %s to process %s"%(pretty_print.value_str(msg), pretty_print.value_str(pid)) + " message queue:" + str([pretty_print.value_str(e) for e in process.mail_box.dump()])
 			if pid in self.inactive_processes:
 				self.push_to_priority_queue(self.inactive_processes[pid],
 						process.priority)
@@ -76,9 +78,14 @@ class Scheduler:
 	def _handle_one_process(self, queue, pcp):
 		(process, cp, pc) = pcp
 		(state, pc, cp) = process.execute(cp, pc, self.is_single_run, self.reduction)
+		#print "process " + pretty_print.value_str(process.pid) + " terminate by state %d"%(state)
 		if state == constant.STATE_SWITH:
 			queue.append((process, cp, pc))
 		elif state == constant.STATE_TERMINATE:
 			del self.process_pool[process.pid]
 		elif state == constant.STATE_HANG_UP:
-			self.inactive_processes[process.pid] = (process, cp, pc)
+			if process.mail_box.is_empty():
+				self.inactive_processes[process.pid] = (process, cp, pc)
+			else:
+				#print [pretty_print.value_str(e) for e in process.mail_box.dump()]
+				self.push_to_priority_queue(pcp, process.priority)

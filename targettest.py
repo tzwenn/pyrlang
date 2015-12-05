@@ -66,7 +66,7 @@ from pyrlang.utils.app import App
 
 def main(argv):
 	app = App(argv)
-	return app.launch()
+	app.launch()
 	return 0
 
 def target(driver, args):

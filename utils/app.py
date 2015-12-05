@@ -43,26 +43,21 @@ class App:
 		else:
 			init_args = [W_IntObject(int(arg)) for arg in self.entry_args]
 		main_process.init_entry_arguments(init_args)
+		f.close()
 
 		#try:
 
 		if is_single_run:
 			main_process.execute(cp, func_addr, is_single_run, default_reduction_counter)
 			print "================ Result ================="
-			pretty_print.print_value(main_process.x_reg.get(0))
-			#print main_process.counter_n
+			res = main_process.x_reg.get(0)
+			pretty_print.print_value(res)
+			return res
 		else:
 			scheduler.push_to_priority_queue((main_process, cp, func_addr),
 					main_process.priority)
 			scheduler.schedule()
 			print "================ Result ================="
-			pretty_print.print_value(main_process.x_reg.get(0))
-
-		f.close()
-		return 0 
-
-		#except:
-			#pass
-		#finally:
-			#f.close()
-			#return 0
+			res = main_process.x_reg.get(0)
+			pretty_print.print_value(res)
+			return res
