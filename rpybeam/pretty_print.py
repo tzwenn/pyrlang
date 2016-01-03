@@ -84,6 +84,8 @@ def value_str(v):
 			return list_str(v)
 	elif isinstance(v, W_ListObject):
 		return list_str(v)
+	else:
+		return "None"
 	#elif isinstance(v, W_BinaryObject):
 		#return "<<%s>>"%(",".join([str(ord(c)) for c in v.tostr()]))
 

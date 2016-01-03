@@ -1,7 +1,7 @@
 % file: "stable.erl"
 
 -module(stable).
--export([test/0,test/1,man/2,woman/2]).
+-export([test/0,test/1,man/2,woman/2,stable/1]).
 
 man(God,Id) ->
   receive

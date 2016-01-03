@@ -131,7 +131,8 @@ class CodeParser:
 			entry = header[i]
 			if global_atom_table.get_str_at(entry[0]) == func_name and arity == entry[1]:
 				return i
-		return -1
+		else:
+			raise Exception("Cannot found public function %s/%d"%(func_name, arity))
 
 	def label_to_addr(self, label):
 		#print "jump to label: %d"%(label)

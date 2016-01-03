@@ -32,12 +32,11 @@ class App:
 		b = BeamRoot(f)
 		pid_provider = PidProvider()
 		scheduler = Scheduler(pid_provider, is_single_run, default_reduction_counter)
-		main_process = Process(pid_provider.create_pid(), scheduler, constant.PRIORITY_NORMAL)
-		scheduler.process_pool[main_process.pid] = main_process
+		main_pid = pid_provider.create_pid()
 		cp = CodeParser(b, file_name)
-		#from pyrlang.interpreter.atom_table import global_atom_table
-		#print global_atom_table._str_table
 		func_addr = cp.get_func_addr_by_name(self.arg_pairs["entry"], len(self.entry_args))
+		main_process = Process(main_pid, scheduler, cp, func_addr, constant.PRIORITY_NORMAL)
+		main_pid.set_process(main_process)
 		if parse_as_string:
 			init_args = [eterm_operators.build_list_object([eterm_operators.build_strlist_object_from_string(arg) for arg in self.entry_args])]
 		else:
@@ -48,14 +47,13 @@ class App:
 		#try:
 
 		if is_single_run:
-			main_process.execute(cp, func_addr, is_single_run, default_reduction_counter)
+			main_process.execute(is_single_run, default_reduction_counter)
 			print "================ Result ================="
 			res = main_process.x_reg.get(0)
 			pretty_print.print_value(res)
 			return res
 		else:
-			scheduler.push_to_priority_queue((main_process, cp, func_addr),
-					main_process.priority)
+			scheduler.push_to_priority_queue(main_process, main_process.priority)
 			scheduler.schedule()
 			print "================ Result ================="
 			res = main_process.x_reg.get(0)

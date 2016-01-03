@@ -8,6 +8,7 @@ class W_PidObject(W_Root):
 		self.node_num = node_num
 		self.process_num = process_num
 		self.serial = serial
+		self.process = None # The process field **might** be None if process is terminated soon after being created
 
 	def is_equal(self, other):
 		if isinstance(other, W_PidObject):
@@ -17,3 +18,9 @@ class W_PidObject(W_Root):
 
 	def clone(self):
 		return W_PidObject(self.node_num, self.process_num, self.serial)
+
+	def set_process(self, p):
+		self.process = p
+
+	def get_process(self):
+		return self.process

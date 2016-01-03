@@ -32,13 +32,16 @@ driver = jit.JitDriver(greens = ['pc', 'call_pc', 'cp'],
 		reds = ['reduction', 
 			#'init_stack_depth', 
 			#'call_jit_lock', 
-			'single', 's_self', 'x_reg', 'y_reg'],
+			'single', 's_self', 'x_reg', 'y_reg', 'msg_cache'],
 		virtualizables = ['x_reg'],
 		get_printable_location=printable_loc)
 
 class Process:
 	_immutable_fields_ = ['pid']
-	def __init__(self, pid, scheduler, priority = constant.PRIORITY_NORMAL):
+	def __init__(self, pid, scheduler, cp, pc, priority = constant.PRIORITY_NORMAL):
+		self.is_active = True
+		self.code_parser = cp
+		self.program_counter = pc
 		self.x_reg = X_Register()
 		self.y_reg = Y_Register()
 
@@ -57,8 +60,9 @@ class Process:
 			self.x_reg.store(i, arg_lst[i])
 
 	@jit.unroll_safe
-	def execute(self, cp, func_addr, single, reduction):
-		pc = func_addr
+	def execute(self, single, reduction, msg_cache=None):
+		pc = self.program_counter
+		cp = self.code_parser
 		x_reg = self.x_reg
 		#print "execute in reduction %d"%(reduction)
 		reduction = hint(reduction, promote=True)
@@ -88,7 +92,8 @@ class Process:
 					single = single, 
 					s_self = self,
 					x_reg = x_reg,
-					y_reg = self.y_reg)
+					y_reg = self.y_reg,
+					msg_cache = msg_cache)
 			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, call_pc, cp) + " reduction: " + str(reduction)
 			#print "x regs:" + pretty_print.value_str(self.x_reg.get(0))
 			#self.x_reg.print_content()
@@ -127,9 +132,6 @@ class Process:
 			elif instr == opcodes.CALL_LAST: # 5
 				(arity, label, n) = instr_obj.arg_values()
 				pc = self.call_last(cp, arity, label, n)
-				#reduction -= 1
-				#if not single and reduction <= 0:
-					#break
 
 			elif instr == opcodes.CALL_ONLY: # 6
 				(arity, label) = instr_obj.arg_values()
@@ -168,7 +170,8 @@ class Process:
 					# calling a bif means the dispatch loop 
 					# need a extra k_return semantics 
 					if self.y_reg.is_empty():
-						return (constant.STATE_TERMINATE, pc, cp)
+						self.program_counter = pc
+						return constant.STATE_TERMINATE
 					else:
 						(cp, pc) = self.k_return(cp)
 
@@ -187,7 +190,8 @@ class Process:
 					# calling a bif means the dispatch loop 
 					# need a extra k_return semantics 
 					if self.y_reg.is_empty():
-						return (constant.STATE_TERMINATE, pc, cp)
+						self.program_counter = pc
+						return constant.STATE_TERMINATE
 					else:
 						(cp, pc) = self.k_return(cp)
 
@@ -248,7 +252,8 @@ class Process:
 
 			elif instr == opcodes.K_RETURN: # 19
 				if self.y_reg.is_empty():
-					return (constant.STATE_TERMINATE, pc, cp)
+					self.program_counter = pc
+					return constant.STATE_TERMINATE
 				else:
 					call_pc = pc-1
 					(cp, pc) = self.k_return(cp)
@@ -265,25 +270,33 @@ class Process:
 				self.send()
 
 			elif instr == opcodes.REMOVE_MESSAGE: # 21
-				self.remove_message()
+				if msg_cache:
+					msg_cache = None
+				else:
+					self.remove_message()
 
 			elif instr == opcodes.LOOP_REC: # 23
 				#print "current message queue: [%s]"%",".join([pretty_print.value_str(e) for e in self.mail_box.dump()])
 				args = instr_obj.args
 				label = args[0][1]
 				dst_reg = args[1]
-				pc = self.loop_rec(pc, cp, label, dst_reg)
+				pc = self.loop_rec(pc, cp, label, dst_reg, msg_cache)
 
 			elif instr == opcodes.LOOP_REC_END: # 24
 				(label,) = instr_obj.arg_values()
+				if msg_cache:
+					self.append_message(msg_cache)
+					msg_cache = None
 				pc = self.loop_rec_end(cp, label)
 
 			elif instr == opcodes.WAIT: # 25
 				(label,) = instr_obj.arg_values()
+				if msg_cache:
+					self.append_message(msg_cache)
+					msg_cache = None
 				pc = self.wait(cp, label)
-				#if not self.mail_box.is_empty():
-					#self.go_to_next_message()
-				return (constant.STATE_HANG_UP, pc, cp)
+				self.program_counter = pc
+				return constant.STATE_HANG_UP
 
 			elif instr == opcodes.IS_LT: # 39
 				((_, label), term1, term2) = instr_obj.args
@@ -399,7 +412,8 @@ class Process:
 					# calling a bif means the dispatch loop 
 					# need a extra k_return semantics 
 					if self.y_reg.is_empty():
-						return (constant.STATE_TERMINATE, pc, cp)
+						self.program_counter = pc
+						return constant.STATE_TERMINATE
 					else:
 						(cp, pc) = self.k_return(cp)
 
@@ -478,9 +492,11 @@ class Process:
 						single = single, 
 						s_self = self,
 						x_reg = x_reg,
-						y_reg = self.y_reg)
+						y_reg = self.y_reg,
+						msg_cache = msg_cache)
 
-		return (constant.STATE_SWITH, pc, cp)
+		self.program_counter = pc
+		return constant.STATE_SWITH
 
 	def _send_by_pid(self, pid, msg):
 		#print pretty_print.value_str(self.pid) + " begins to "
@@ -628,10 +644,11 @@ class Process:
 
 	def _spawn(self, cp, pc, args, priority):
 		pid = self.scheduler.create_pid()
-		sub_process = Process(pid, self.scheduler, priority)
+		sub_process = Process(pid, self.scheduler, cp, pc, priority)
+		pid.set_process(sub_process)
 		sub_process.init_entry_arguments(args)
-		self.scheduler.push_to_priority_queue((sub_process, cp, pc), priority)
-		self.scheduler.process_pool[pid] = sub_process
+		self.scheduler.push_to_priority_queue(sub_process, priority)
+		#self.scheduler.process_pool.add(pid)
 		return pid
 
 ########################################################################
@@ -727,8 +744,11 @@ class Process:
 		self.remove_current_message()
 		
 	# 23
-	def loop_rec(self, pc, cp, label, dst_reg):
-		val = self.current_message()
+	def loop_rec(self, pc, cp, label, dst_reg, msg_cache):
+		if msg_cache:
+			val = msg_cache
+		else:
+			val = self.current_message()
 		if val:
 			self.store_basereg(dst_reg, val)
 			return pc

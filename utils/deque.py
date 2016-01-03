@@ -1,4 +1,5 @@
 from link_list import LinkList
+from rpybeam import pretty_print
 # we use this class just because RPython 
 # not supporting colloctions.deque
 class Deque:
@@ -7,7 +8,17 @@ class Deque:
 		self.list2 = []
 
 	def append(self, x):
+		# NOTE: for check, should be commented out during compilation
+		#if self._exist(x):
+			#raise Exception("duplicated append in %s!"%(pretty_print.value_str(x.pid)))
+		# end 
 		self.list2.append(x)
+
+	def _exist(self, x):
+		for e in self.dump():
+			if x is e:
+				return True
+		return False
 
 	def pop(self):
 		if len(self.list1) == 0:
