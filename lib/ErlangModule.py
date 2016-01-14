@@ -5,6 +5,7 @@ from pyrlang.interpreter.datatypes.tuple import W_TupleObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject, W_BoolAtomObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
+from pyrlang.interpreter.datatypes.closure import W_ClosureObject
 from pyrlang.interpreter.atom_table import global_atom_table
 from pyrlang.interpreter import constant
 from pyrlang.rpybeam import pretty_print
@@ -276,6 +277,12 @@ class SetElementFunc_3(BaseFakeFunc):
 		assert isinstance(t_obj, W_TupleObject)
 		return t_obj.setelement(eterm_operators.get_int_val(i_obj) - 1, v)
 
+class SpawnFunc_1(BaseFakeFunc):
+	def invoke(self, cp, pc, process):
+		cls = process.x_reg.get(0)
+		assert isinstance(cls, W_ClosureObject)
+		return process._spawn(cls.cp, cls.pc, [], constant.PRIORITY_NORMAL)
+
 class SpawnFunc_3(BaseFakeFunc):
 	def _invoke(self, module_name, func_name, args, cp, process):
 		mod_cp = cp.get_module_cp_by_name(module_name)
@@ -358,6 +365,7 @@ class ModuleEntity(BaseModule):
 				  "rem_2" : RemFunc_2,
 				  "self_0" : SelfFunc_0,
 				  "setelement_3" : SetElementFunc_3,
+				  "spawn_1" : SpawnFunc_1,
 				  "spawn_3" : SpawnFunc_3,
 				  "tl_1" : TlFunc_1,
 				  "trunc_1" : TruncFunc_1,

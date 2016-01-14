@@ -22,7 +22,7 @@ class Scheduler:
 	def schedule(self):
 		low_skip_times = 0
 		while True:
-			#print "active:"+str([pretty_print.value_str(e.pid) for e in self.normal_queue.dump()]) 
+			print "active:"+str([pretty_print.value_str(e.pid) for e in self.normal_queue.dump()]) 
 			while not self.max_queue.empty():
 				self._handle_one_process_from_queue(self.max_queue)
 			while not self.high_queue.empty():
@@ -75,12 +75,12 @@ class Scheduler:
 				process.is_active = True
 				if process.mail_box.is_empty():
 					# we shouldn't push target target process to the queue in this situation, because we execute it immediately (just like pop it from the queue)
-					#print "send meg %s DIRECTLY to process %s"%(pretty_print.value_str(msg), pretty_print.value_str(pid))
+					print "send meg %s DIRECTLY to process %s"%(pretty_print.value_str(msg), pretty_print.value_str(pid))
 					self._handle_one_process(self.get_queue_by_priority(process.priority), process, msg)
 					return
 				else:
 					self.push_to_priority_queue(process, process.priority)
-			#print "send msg %s to process %s"%(pretty_print.value_str(msg), pretty_print.value_str(pid)) + " message queue:" + str([pretty_print.value_str(e) for e in process.mail_box.dump()])
+			print "send msg %s to process %s"%(pretty_print.value_str(msg), pretty_print.value_str(pid)) + " message queue:" + str([pretty_print.value_str(e) for e in process.mail_box.dump()])
 			process.append_message(msg)
 
 	def _handle_one_process_from_queue(self, queue):
