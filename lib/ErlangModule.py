@@ -281,7 +281,7 @@ class SpawnFunc_1(BaseFakeFunc):
 	def invoke(self, cp, pc, process):
 		cls = process.x_reg.get(0)
 		assert isinstance(cls, W_ClosureObject)
-		return process._spawn(cls.cp, cls.pc, [], constant.PRIORITY_NORMAL)
+		return process._spawn(cls.cp, cls.pc, cls.fv_lst, constant.PRIORITY_NORMAL)
 
 class SpawnFunc_3(BaseFakeFunc):
 	def _invoke(self, module_name, func_name, args, cp, process):

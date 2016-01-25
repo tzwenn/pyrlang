@@ -1,4 +1,5 @@
 from __future__ import print_function
+import sys
 import os
 
 def num(s):
@@ -40,6 +41,8 @@ def sort_iterator(d, f):
 		f(k, d[k])
 
 if __name__ == '__main__':
+	path = sys.argv[1]
+	bin = sys.argv[2]
 	f = lambda k, v: print(k + "\t" + "\t".join([str(v) for v in v]))
-	res1 = walker("lancery_sum", "pyrlang-match")
+	res1 = walker(path, bin)
 	sort_iterator(res1, f)

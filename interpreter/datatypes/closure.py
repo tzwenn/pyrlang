@@ -5,7 +5,7 @@ class W_ClosureObject(W_Root):
 		self.cp = cp
 		self.pc = pc
 		self.arity = arity
-		self.fv_lst = fv_lst
+		self.fv_lst = fv_lst # list of W_Object
 
 	def free_variables(self):
 		return self.fv_lst

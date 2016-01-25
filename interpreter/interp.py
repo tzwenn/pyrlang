@@ -94,7 +94,7 @@ class Process:
 					x_reg = x_reg,
 					y_reg = self.y_reg,
 					msg_cache = msg_cache)
-			print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, call_pc, cp) + " reduction: " + str(reduction)
+			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, call_pc, cp) + " reduction: " + str(reduction)
 			#print "x regs:" + pretty_print.value_str(self.x_reg.get(0))
 			#self.x_reg.print_content()
 			#print "@@@@@@@@"
