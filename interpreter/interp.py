@@ -24,10 +24,54 @@ from pyrlang.lib.base import BaseBIF, BaseBIF0, BaseFakeFunc
 from rpython.rlib import jit
 from rpython.rlib.jit import hint
 
-def printable_loc(pc, _call_pc, cp):
+def printable_loc(pc, cp):
 	instr = cp.instrs[pc]
 	return "%d %s"%(pc, pretty_print.instr_str(cp, instr))
 
+def printable_loc_pmt(pc, _call_pc, cp):
+	instr = cp.instrs[pc]
+	return "%d %s"%(pc, pretty_print.instr_str(cp, instr))
+
+if constant.PATTERN_MATCHING_TRACING:
+	driver = jit.JitDriver(greens = ['pc', 'call_pc', 'cp'],
+			reds = ['reduction', 
+				'single', 's_self', 'x_reg', 'y_reg', 'msg_cache'],
+			virtualizables = ['x_reg'],
+			get_printable_location=printable_loc_pmt)
+else:
+	driver = jit.JitDriver(greens = ['pc', 'cp'],
+			reds = ['reduction', 'single', 's_self', 'x_reg', 'y_reg', 'msg_cache'],
+			virtualizables = ['x_reg'],
+			get_printable_location=printable_loc)
+
+class Process:
+	_immutable_fields_ = ['pid']
+	def __init__(self, pid, scheduler, cp, pc, priority = constant.PRIORITY_NORMAL):
+		self.is_active = True
+		self.code_parser = cp
+		self.program_counter = pc
+		self.x_reg = X_Register()
+		self.y_reg = Y_Register()
+
+		self.pid = pid
+		self.scheduler = scheduler
+		self.priority = priority
+		self.mail_box = MessageDeque()
+		self.cont_stack = ContinuationStack()
+
+	def init_entry_arguments(self, arg_lst):
+		for i in range(0, len(arg_lst)):
+			self.x_reg.store(i, arg_lst[i])
+
+	@jit.unroll_safe
+	def execute(self, single, reduction, msg_cache=None):
+		pc = self.program_counter
+		cp = self.code_parser
+		x_reg = self.x_reg
+		#print "execute in reduction %d"%(reduction)
+		reduction = hint(reduction, promote=True)
+		single = hint(single, promote=True)
+		self = hint(self, promote=True)
 if constant.PATTERN_MATCHING_TRACING:
 	driver = jit.JitDriver(greens = ['pc', 'call_pc', 'cp'],
 			reds = ['reduction', 
