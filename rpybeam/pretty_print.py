@@ -1,7 +1,7 @@
 from beam_file import *
 from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObject, W_FloatObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
-from pyrlang.interpreter.datatypes.tuple import W_TupleObject
+from pyrlang.interpreter.datatypes.tuple import W_TupleObject, W_AbstractTupleObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
 from pyrlang.interpreter.datatypes.pid import W_PidObject
 #from pyrlang.interpreter.datatypes.binary import W_BinaryObject
@@ -54,7 +54,7 @@ def value_str(v):
 		return "[]"
 	elif isinstance(v, W_AtomObject):
 		return v.get_str()
-	elif isinstance(v, W_TupleObject):
+	elif isinstance(v, W_AbstractTupleObject):
 		vals = get_tuple_vals(v)
 		return "{%s}"%(", ".join([value_str(t) for t in vals]))
 	elif isinstance(v, W_PidObject):

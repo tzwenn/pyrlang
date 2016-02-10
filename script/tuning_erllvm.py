@@ -6,7 +6,7 @@ import os
 repeat = 1
 
 benchmarks = {
-		"barnes" : 40,
+			"barnes" : 40,
 			"length" : 8,
 			"length_c" : 8,
 			"length_u" : 8,
@@ -16,6 +16,9 @@ benchmarks = {
 			"nucleic" : 96,
 			"pseudoknot" : 4,
 			"qsort" : 6,
+			"ring" : 2,
+			"smith" : 2,
+			"stable" : 2,
 			"sum" : 14,
 			"zip" : 2,
 			"zip3" : 2,

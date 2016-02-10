@@ -12,7 +12,7 @@ from pyrlang.interpreter.datatypes.root import W_Root
 from pyrlang.interpreter.datatypes.pid import W_PidObject
 from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObject, W_FloatObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
-from pyrlang.interpreter.datatypes.tuple import W_TupleObject
+from pyrlang.interpreter.datatypes.tuple import W_TupleObject, W_AbstractTupleObject, specialised_tuples
 from pyrlang.interpreter.datatypes.inner import W_AddrObject 
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
 from pyrlang.interpreter.datatypes.closure import W_ClosureObject
@@ -28,13 +28,17 @@ def printable_loc(pc, _call_pc, cp):
 	instr = cp.instrs[pc]
 	return "%d %s"%(pc, pretty_print.instr_str(cp, instr))
 
-driver = jit.JitDriver(greens = ['pc', 'call_pc', 'cp'],
-		reds = ['reduction', 
-			#'init_stack_depth', 
-			#'call_jit_lock', 
-			'single', 's_self', 'x_reg', 'y_reg', 'msg_cache'],
-		virtualizables = ['x_reg'],
-		get_printable_location=printable_loc)
+if constant.PATTERN_MATCHING_TRACING:
+	driver = jit.JitDriver(greens = ['pc', 'call_pc', 'cp'],
+			reds = ['reduction', 
+				'single', 's_self', 'x_reg', 'y_reg', 'msg_cache'],
+			virtualizables = ['x_reg'],
+			get_printable_location=printable_loc)
+else:
+	driver = jit.JitDriver(greens = ['pc', 'cp'],
+			reds = ['reduction', 'single', 's_self', 'x_reg', 'y_reg', 'msg_cache'],
+			virtualizables = ['x_reg'],
+			get_printable_location=printable_loc)
 
 class Process:
 	_immutable_fields_ = ['pid']
@@ -44,10 +48,6 @@ class Process:
 		self.program_counter = pc
 		self.x_reg = X_Register()
 		self.y_reg = Y_Register()
-
-		self.tuple_dst = constant.INVALID_REG
-		self.tuple_arity = 0
-		self.tuple_data = []
 
 		self.pid = pid
 		self.scheduler = scheduler
@@ -73,27 +73,32 @@ class Process:
 		#self.counter_n = 0 # use it for experiment counting, DON'T forget to discard it !!!
 		#################################################
 
-		#jump_pc = pc
-		call_pc = pc
-		#init_stack_depth = -1
-		#call_jit_lock = False
+		if constant.PATTERN_MATCHING_TRACING:
+			call_pc = pc
 
 		#for n in cp.lit_table:
 			#pretty_print.print_value(n)
 
 		while(True):
-			driver.jit_merge_point(pc = pc,
-					call_pc = call_pc,
-					cp = cp,
-					#jump_pc = jump_pc,
-					reduction = reduction,
-					#init_stack_depth = init_stack_depth,
-					#call_jit_lock = call_jit_lock,
-					single = single, 
-					s_self = self,
-					x_reg = x_reg,
-					y_reg = self.y_reg,
-					msg_cache = msg_cache)
+			if constant.PATTERN_MATCHING_TRACING:
+				driver.jit_merge_point(pc = pc,
+						call_pc = call_pc,
+						cp = cp,
+						reduction = reduction,
+						single = single, 
+						s_self = self,
+						x_reg = x_reg,
+						y_reg = self.y_reg,
+						msg_cache = msg_cache)
+			else:
+				driver.jit_merge_point(pc = pc,
+						cp = cp,
+						reduction = reduction,
+						single = single, 
+						s_self = self,
+						x_reg = x_reg,
+						y_reg = self.y_reg,
+						msg_cache = msg_cache)
 			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, call_pc, cp) + " reduction: " + str(reduction)
 			#print "x regs:" + pretty_print.value_str(self.x_reg.get(0))
 			#self.x_reg.print_content()
@@ -101,10 +106,13 @@ class Process:
 			#self.y_reg.print_content()
 			should_enter = False
 			instr_obj = cp.instrs[pc]
-			#call_pc = pc
 			pc = pc + 1
-			if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
-				should_enter = True
+			if constant.PATTERN_MATCHING_TRACING:
+				if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
+					should_enter = True
+			else:
+				if isinstance(instr_obj, LoopInstruction):
+					should_enter = True
 
 			instr = instr_obj.opcode
 			depth = -1
@@ -114,20 +122,13 @@ class Process:
 
 			elif instr == opcodes.CALL: # 4
 				(arity, label) = instr_obj.arg_values()
-				call_pc = pc - 1
-				#is_two_state_match = call_pc == jump_pc
+				if constant.PATTERN_MATCHING_TRACING:
+					call_pc = pc - 1
 				frame = (cp, pc)
 				pc = self.call(frame, arity, label)
 				reduction -= 1
 				if not single and reduction <= 0:
 					break
-				#else:
-					#if not call_jit_lock:
-						#should_enter = True
-						#if init_stack_depth == -1:
-							#init_stack_depth = self.y_reg.depth()-1
-					# for testing
-					#should_enter = True
 
 			elif instr == opcodes.CALL_LAST: # 5
 				(arity, label, n) = instr_obj.arg_values()
@@ -135,19 +136,10 @@ class Process:
 
 			elif instr == opcodes.CALL_ONLY: # 6
 				(arity, label) = instr_obj.arg_values()
-				#call_pc = pc
 				pc = self.call_only(cp, arity, label)
 				reduction -= 1
 				if not single and reduction <= 0:
 					break
-				# for testing
-				#else:
-					#assert isinstance(instr_obj, LoopInstruction)
-					#old_depth = instr_obj.depth
-					#if self.y_reg.depth() == old_depth:
-						#should_enter = True
-					#else:
-						#instr_obj.depth = self.y_reg.depth()
 
 			elif instr == opcodes.CALL_EXT: # 7
 				args = instr_obj.args
@@ -155,14 +147,13 @@ class Process:
 				(tag, header_index) = args[1]
 				if (tag == opcodes.TAG_LITERAL):
 					entry = cp.import_header[header_index]
-					call_pc = pc
-					#is_two_state_match = call_pc == jump_pc
+					if constant.PATTERN_MATCHING_TRACING:
+						call_pc = pc
 					frame = (cp, pc)
 					cp, pc = self.call_ext(frame, entry, real_arity)
 					reduction -= 1
 					if not single and reduction <=0:
 						break
-					should_enter = True
 				else:
 					assert tag == opcodes.TAG_LABEL
 					self.y_reg.push((cp, pc))
@@ -255,7 +246,8 @@ class Process:
 					self.program_counter = pc
 					return constant.STATE_TERMINATE
 				else:
-					call_pc = pc-1
+					if constant.PATTERN_MATCHING_TRACING:
+						call_pc = pc-1
 					(cp, pc) = self.k_return(cp)
 					# try to trace RETURN instruction, too
 					should_enter = True
@@ -351,7 +343,8 @@ class Process:
 				assert isinstance(instr_obj, ListInstruction)
 				(reg, (_, label)) = instr_obj.args
 				sl = instr_obj.lst
-				call_pc = pc
+				if constant.PATTERN_MATCHING_TRACING:
+					call_pc = pc
 				pc = self.select_val(cp, reg, label, sl)
 
 			elif instr == opcodes.JUMP: # 61
@@ -383,12 +376,15 @@ class Process:
 				self.put_list(cp, head_reg, tail_reg, dst_reg)
 
 			elif instr == opcodes.PUT_TUPLE: # 70
-				((_, arity), dst_reg) = instr_obj.args
-				self.put_tuple(arity, dst_reg)
+				dst_reg = instr_obj.args[0]
+				es = instr_obj.args[1:]
+				#((_, arity), dst_reg) = instr_obj.args
+				self.put_tuple(cp, dst_reg, es)
 
 			elif instr == opcodes.PUT: # 71
-				src = instr_obj.args[0]
-				self.put(cp, src)
+				raise Exception("We have already optimized PUT instructions out, it should not occur in dispatch loop")
+				#src = instr_obj.args[0]
+				#self.put(cp, src)
 
 			elif instr == opcodes.BADMATCH: # 72
 				(label,) = instr_obj.arg_values()
@@ -482,18 +478,26 @@ class Process:
 				pretty_print.print_value(self.create_call_stack_info(cp, pc))
 				raise Exception("Unimplemented opcode: %d"%(instr))
 			if should_enter:
-				driver.can_enter_jit(pc = pc,
-						call_pc = call_pc,
-						cp = cp,
-						reduction = reduction,
-						#init_stack_depth = init_stack_depth,
-						#call_jit_lock = call_jit_lock,
-						#should_enter = should_enter, 
-						single = single, 
-						s_self = self,
-						x_reg = x_reg,
-						y_reg = self.y_reg,
-						msg_cache = msg_cache)
+				if constant.PATTERN_MATCHING_TRACING:
+					driver.can_enter_jit(pc = pc,
+							call_pc = call_pc,
+							cp = cp,
+							reduction = reduction,
+							single = single, 
+							s_self = self,
+							x_reg = x_reg,
+							y_reg = self.y_reg,
+							msg_cache = msg_cache)
+				else:
+					driver.can_enter_jit(pc = pc,
+							cp = cp,
+							reduction = reduction,
+							single = single, 
+							s_self = self,
+							x_reg = x_reg,
+							y_reg = self.y_reg,
+							msg_cache = msg_cache)
+					
 
 		self.program_counter = pc
 		return constant.STATE_SWITH
@@ -847,12 +851,12 @@ class Process:
 
 	# 57
 	def is_tuple(self, pc, cp, label, test_v):
-		return self.not_jump(pc, cp, label, test_v, W_TupleObject)
+		return self.not_jump(pc, cp, label, test_v, W_AbstractTupleObject)
 
 	# 58
 	def test_arity(self, pc, cp, label, src_reg, size):
 		val = self.get_basic_value(cp, src_reg)
-		if isinstance(val, W_TupleObject) and val.size() == size:
+		if isinstance(val, W_AbstractTupleObject) and val.size() == size:
 			return pc
 		else:
 			return self.jump(cp, label)
@@ -909,7 +913,7 @@ class Process:
 	# 66
 	def get_tuple_element(self, cp, src_reg, index, dst_reg):
 		val = self.get_basic_value(cp, src_reg)
-		assert isinstance(val, W_TupleObject)
+		assert isinstance(val, W_AbstractTupleObject)
 		e = val.element(index)
 		self.store_basereg(dst_reg, e)
 
@@ -927,28 +931,59 @@ class Process:
 		self.store_basereg(dst_reg, res)
 
 	# 70
-	def put_tuple(self, arity, dst_reg):
-		if arity == 0:
-			self.store_basereg(dst_reg, W_TupleObject([]))
+	@jit.unroll_safe
+	def put_tuple(self, cp, dst_reg, es):
+		if len(es) < constant.TUPLE_S_SIZE:
+			tuple_obj = specialised_tuples[len(es)]([self.get_basic_value(cp, e) for e in es])
+			#print "create speical tuple: " + tuple_obj.__class__
+		#if len(es) == 2:
+			#tuple_obj = W_2TupleObject(self.get_basic_value(cp, es[0]), self.get_basic_value(cp, es[1]))
+		#elif len(es) == 3:
+			#tuple_obj = W_3TupleObject(self.get_basic_value(cp, es[0]), self.get_basic_value(cp, es[1]))
 		else:
-			self.tuple_dst = dst_reg
-			self.tuple_arity = arity
-			self.tuple_data = []
+			tuple_obj = W_TupleObject([self.get_basic_value(cp, e) for e in es])
+		self.store_basereg(dst_reg, tuple_obj)
+		#print "create tuple", str([pretty_print.value_str(v) for v in tuple_obj.vals])
+		#if arity == 0:
+			#self.store_basereg(dst_reg, W_TupleObject([]))
+		#elif arity == 2:
+			#self.tuple_obj = W_2TupleObject(None, None)
+			#self.tuple_arity = arity
+			#self.tuple_dst = dst_reg
+		#else:
+			#self.tuple_dst = dst_reg
+			#self.tuple_arity = arity
+			#self.tuple_data = []
 
 	# 71
-	def put(self, cp, src):
-		val = self.get_basic_value(cp, src)
-		self.tuple_data.append(val)
-		if self.tuple_arity == 1:
-			dst_reg = self.tuple_dst
-			self.store_basereg(dst_reg, W_TupleObject(self.tuple_data))
+	#def put(self, cp, src):
+		#val = self.get_basic_value(cp, src)
+		#if self.tuple_obj:
+			#if self.tuple_arity == 2:
+				#self.tuple_obj.fst = val
+				#self.tuple_arity = 1
+				#return 
+			#elif self.tuple_arity == 1:
+				#self.tuple_obj.snd = val
+				#self.store_basereg(self.tuple_dst, self.tuple_obj)
+				#self.tuple_obj = None
+				#self.tuple_arity = 0
+				#self.tuple_dst = constant.INVALID_REG
+				#return
+			#else:
+				#raise IndexError
 
-			# reset the tuple data area to default value
-			self.tuple_dst = constant.INVALID_REG
-			self.tuple_arity = 0
-			self.tuple_data = []
-		else:
-			self.tuple_arity -= 1
+		#self.tuple_data.append(val)
+		#if self.tuple_arity == 1:
+			#dst_reg = self.tuple_dst
+			#self.store_basereg(dst_reg, W_TupleObject(self.tuple_data))
+
+			## reset the tuple data area to default value
+			#self.tuple_dst = constant.INVALID_REG
+			#self.tuple_arity = 0
+			#self.tuple_data = []
+		#else:
+			#self.tuple_arity -= 1
 
 	# 72
 	def badmatch(self, pc, cp, label):

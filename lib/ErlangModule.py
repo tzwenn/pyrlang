@@ -1,7 +1,7 @@
 from pyrlang.lib.base import BaseModule, BaseBIF, BaseBIF0, BaseFakeFunc, WrapEtermBoolean
 from pyrlang.interpreter import fail_class
 from pyrlang.interpreter.datatypes.number import *
-from pyrlang.interpreter.datatypes.tuple import W_TupleObject
+from pyrlang.interpreter.datatypes.tuple import W_TupleObject, W_AbstractTupleObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject, W_BoolAtomObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
@@ -137,7 +137,7 @@ class ElementFunc_2(BaseBIF):
 	def invoke(self, args):
 		(index, tuple_val) = args
 		#print index.intval, tuple_val.vals
-		assert isinstance(tuple_val, W_TupleObject)
+		assert isinstance(tuple_val, W_AbstractTupleObject)
 		return tuple_val.element_from_int_obj(index)
 
 class GetModuleInfoFunc_1(BaseBIF):
@@ -274,7 +274,7 @@ class SetElementFunc_3(BaseFakeFunc):
 		i_obj = process.x_reg.get(0)
 		t_obj = process.x_reg.get(1)
 		v = process.x_reg.get(2)
-		assert isinstance(t_obj, W_TupleObject)
+		assert isinstance(t_obj, W_AbstractTupleObject)
 		return t_obj.setelement(eterm_operators.get_int_val(i_obj) - 1, v)
 
 class SpawnFunc_1(BaseFakeFunc):
@@ -322,7 +322,7 @@ class TruncFunc_1(BaseBIF):
 class TupleSizeFunc_1(BaseBIF):
 	def invoke(self, args):
 		tuple_val = args[0]
-		assert isinstance(tuple_val, W_TupleObject)
+		assert isinstance(tuple_val, W_AbstractTupleObject)
 		return tuple_val.size_to_int_obj()
 
 class ModuleEntity(BaseModule):

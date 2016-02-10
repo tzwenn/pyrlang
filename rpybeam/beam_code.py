@@ -291,7 +291,8 @@ class CodeParser:
 		#for instr in instrs:
 			#print instr.__class__, opcodes.opnames[instr.opcode]
 		labelTable = []
-		for i in range(len(instrs)):
+		i = 0
+		while i < len(instrs):
 			instr_obj = instrs[i]
 			#print "preprocess: " + opcodes.opnames[instr_obj.opcode]
 			if instr_obj.opcode in [opcodes.CALL_EXT, 
@@ -311,6 +312,19 @@ class CodeParser:
 					self.total_lines = num
 			elif instr_obj.opcode == opcodes.LABEL:
 				labelTable.append(i)
+			# put_tuple arity dst; put e1; put e2; ... => put_tuple dst [e1, e2, ...]
+			elif instr_obj.opcode == opcodes.PUT_TUPLE:
+				tuple_args = []
+				size = instr_obj.args[0][1]
+				for j in range(size):
+					idx = i+1
+					put_instr = instrs[idx]
+					assert put_instr.opcode == opcodes.PUT
+					tmp_arg = put_instr.args[0]
+					tuple_args.append(tmp_arg)
+					del instrs[idx]
+				instrs[i] = Instruction(opcodes.PUT_TUPLE, [instr_obj.args[1]] + tuple_args[:])
+			i += 1
 		return labelTable[:], instrs[:], const_table[:]
 
 	# try to find the function definition of code at pc
@@ -461,6 +475,7 @@ class CodeParser:
 		next_label = sys.maxint
 		for i in range(len(instrs)-1, -1, -1):
 			instr_obj = instrs[i]
+			# always mark conditional instructions before a RETURN instruction
 			if instr_obj.opcode == opcodes.K_RETURN:
 				need_mark = True
 			elif instr_obj.opcode == opcodes.LABEL:

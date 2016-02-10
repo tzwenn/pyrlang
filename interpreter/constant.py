@@ -29,3 +29,9 @@ INVALID_REG = (0,0)
 
 # used for jit.loop_unrolling_heuristic hint
 UNROLLING_CUTOFF = 5
+
+# size limitation for speical size tuple
+TUPLE_S_SIZE = 5
+
+# put it into False can compile the naive JIT policy
+PATTERN_MATCHING_TRACING = True

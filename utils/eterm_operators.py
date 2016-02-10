@@ -1,6 +1,6 @@
 from pyrlang.interpreter.datatypes.number import W_AbstractIntObject, W_IntObject, W_BigIntObject, W_FloatObject
 from pyrlang.interpreter.datatypes.list import W_ListObject, W_NilObject, W_StrListObject
-from pyrlang.interpreter.datatypes.tuple import W_TupleObject
+from pyrlang.interpreter.datatypes.tuple import W_AbstractTupleObject
 from pyrlang.interpreter.datatypes.atom import W_AtomObject
 from pyrlang.interpreter.datatypes.pid import W_PidObject
 from pyrlang.interpreter.datatypes.inner import W_AddrObject
@@ -8,8 +8,8 @@ from pyrlang.interpreter.datatypes.closure import W_ClosureObject
 from rpython.rlib import jit
 
 def get_tuple_vals(v):
-	assert isinstance(v, W_TupleObject)
-	return v.vals
+	assert isinstance(v, W_AbstractTupleObject)
+	return v.elements()
 
 @jit.unroll_safe
 def get_list_contents(v):
