@@ -117,13 +117,13 @@ def run_bench(bin):
 					"-pa",
 					benchmark_path+"_hipe/"]
 		else:
-			cmd_lst = ["./"+bin, "-s", benchmark_path + "/" + b + ".beam", benchmark_func_name, str(benchmarks[b])]
+			cmd_lst = ["./"+bin, benchmark_path + "/" + b + ".beam", benchmark_func_name, str(benchmarks[b])]
 		t_res = []
 		my_env = os.environ.copy()
 		for i in range(repeat):
 			t1 = time.time()
-			#print " ".join(cmd_lst)
-			my_env["PYPYLOG"] = "jit-summary:erllvm_sum/"+bin+"_"+b+".sum"
+			print " ".join(cmd_lst)
+			#my_env["PYPYLOG"] = "jit-summary:erllvm_sum/"+bin+"_"+b+".sum"
 			p = subprocess.Popen(cmd_lst, env=my_env, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 			out, err = p.communicate()
 			#print out
@@ -147,10 +147,10 @@ if __name__ == '__main__':
 	if len(sys.argv) > 1:
 		bin = sys.argv[1]
 	else:
-		bin = ['pyrlang-normal',
-			'pyrlang-match',
-			#'erl',
-			#'hipe',
+		bin = ['pyrlang',
+			'pyrlang-naive',
+			'erl',
+			'hipe',
 			]
 
 	#rewrite_and_compile()

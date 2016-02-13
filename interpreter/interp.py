@@ -72,46 +72,6 @@ class Process:
 		reduction = hint(reduction, promote=True)
 		single = hint(single, promote=True)
 		self = hint(self, promote=True)
-if constant.PATTERN_MATCHING_TRACING:
-	driver = jit.JitDriver(greens = ['pc', 'call_pc', 'cp'],
-			reds = ['reduction', 
-				'single', 's_self', 'x_reg', 'y_reg', 'msg_cache'],
-			virtualizables = ['x_reg'],
-			get_printable_location=printable_loc)
-else:
-	driver = jit.JitDriver(greens = ['pc', 'cp'],
-			reds = ['reduction', 'single', 's_self', 'x_reg', 'y_reg', 'msg_cache'],
-			virtualizables = ['x_reg'],
-			get_printable_location=printable_loc)
-
-class Process:
-	_immutable_fields_ = ['pid']
-	def __init__(self, pid, scheduler, cp, pc, priority = constant.PRIORITY_NORMAL):
-		self.is_active = True
-		self.code_parser = cp
-		self.program_counter = pc
-		self.x_reg = X_Register()
-		self.y_reg = Y_Register()
-
-		self.pid = pid
-		self.scheduler = scheduler
-		self.priority = priority
-		self.mail_box = MessageDeque()
-		self.cont_stack = ContinuationStack()
-
-	def init_entry_arguments(self, arg_lst):
-		for i in range(0, len(arg_lst)):
-			self.x_reg.store(i, arg_lst[i])
-
-	@jit.unroll_safe
-	def execute(self, single, reduction, msg_cache=None):
-		pc = self.program_counter
-		cp = self.code_parser
-		x_reg = self.x_reg
-		#print "execute in reduction %d"%(reduction)
-		reduction = hint(reduction, promote=True)
-		single = hint(single, promote=True)
-		self = hint(self, promote=True)
 
 		#################################################
 		#self.counter_n = 0 # use it for experiment counting, DON'T forget to discard it !!!
@@ -144,6 +104,7 @@ class Process:
 						y_reg = self.y_reg,
 						msg_cache = msg_cache)
 			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, call_pc, cp) + " reduction: " + str(reduction)
+			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, cp) + " reduction: " + str(reduction)
 			#print "x regs:" + pretty_print.value_str(self.x_reg.get(0))
 			#self.x_reg.print_content()
 			#print "@@@@@@@@"
@@ -390,6 +351,14 @@ class Process:
 				if constant.PATTERN_MATCHING_TRACING:
 					call_pc = pc
 				pc = self.select_val(cp, reg, label, sl)
+
+			elif instr == opcodes.SELECT_TUPLE_ARITY: # 60
+				assert isinstance(instr_obj, ListInstruction)
+				(reg, (_, label)) = instr_obj.args
+				sl = instr_obj.lst
+				if constant.PATTERN_MATCHING_TRACING:
+					call_pc = pc
+				pc = self.select_tuple_arity(cp, reg, label, sl)
 
 			elif instr == opcodes.JUMP: # 61
 				(label,) = instr_obj.arg_values()
@@ -917,6 +886,17 @@ class Process:
 				return cp.label_to_addr(l)
 		return cp.label_to_addr(label)
 
+	# 60
+	@jit.unroll_safe
+	def select_tuple_arity(self, cp, val_reg, label, slist):
+		val = self.get_basic_value(cp, val_reg)
+		assert isinstance(val, W_AbstractTupleObject)
+		for i in range(0, len(slist)):
+			((tag,s), l) = slist[i]
+			if s == val.size():
+				return cp.label_to_addr(l)
+		return cp.label_to_addr(label)
+
 	# 61
 	def jump(self, cp, label):
 		return cp.label_to_addr(label)
@@ -977,14 +957,15 @@ class Process:
 	# 70
 	@jit.unroll_safe
 	def put_tuple(self, cp, dst_reg, es):
-		if len(es) < constant.TUPLE_S_SIZE:
+		if len(es) < constant.TUPLE_S_SIZE+1:
 			tuple_obj = specialised_tuples[len(es)]([self.get_basic_value(cp, e) for e in es])
-			#print "create speical tuple: " + tuple_obj.__class__
+			#print "create speical tuple: " + str(tuple_obj.__class__)
 		#if len(es) == 2:
 			#tuple_obj = W_2TupleObject(self.get_basic_value(cp, es[0]), self.get_basic_value(cp, es[1]))
 		#elif len(es) == 3:
 			#tuple_obj = W_3TupleObject(self.get_basic_value(cp, es[0]), self.get_basic_value(cp, es[1]))
 		else:
+			#print "create general tuple with size: ",len(es)
 			tuple_obj = W_TupleObject([self.get_basic_value(cp, e) for e in es])
 		self.store_basereg(dst_reg, tuple_obj)
 		#print "create tuple", str([pretty_print.value_str(v) for v in tuple_obj.vals])

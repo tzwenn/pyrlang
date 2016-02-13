@@ -121,7 +121,7 @@ def run_bench(bin):
 		for i in range(repeat):
 			t1 = time.time()
 			#print " ".join(cmd_lst)
-			my_env["PYPYLOG"] = "jit-summary:lancery_sum/"+bin+"_"+b+".sum"
+			#my_env["PYPYLOG"] = "jit-summary:lancery_sum/"+bin+"_"+b+".sum"
 			p = subprocess.Popen(cmd_lst, 
 					env=my_env,
 					stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -147,10 +147,10 @@ if __name__ == '__main__':
 	if len(sys.argv) > 1:
 		bin = sys.argv[1]
 	else:
-		bin = ['pyrlang-normal',
-			'pyrlang-match',
-			#'erl',
-			#'hipe'
+		bin = ['pyrlang',
+			'pyrlang-naive',
+			'erl',
+			'hipe'
 			]
 
 	#rewrite_and_compile()
