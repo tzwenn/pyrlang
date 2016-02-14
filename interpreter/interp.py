@@ -513,6 +513,7 @@ class Process:
 					
 
 		self.program_counter = pc
+		self.code_parser = cp
 		return constant.STATE_SWITH
 
 	def _send_by_pid(self, pid, msg):
