@@ -457,6 +457,10 @@ class Process:
 				((_,label), reg1, reg2, dst_reg) = instr_obj.args
 				self.fdiv(cp, label, reg1, reg2, dst_reg)
 
+			elif instr == opcodes.FNEGATE: # 102
+				((_,label), reg1, dst_reg) = instr_obj.args
+				self.fnegate(cp, label, reg1, dst_reg)
+
 			elif instr == opcodes.MAKE_FUN2: # 103
 				(index,) = instr_obj.arg_values()
 				self.make_fun2(cp, index)
@@ -1089,6 +1093,12 @@ class Process:
 		val2 = self.get_basic_value(cp, reg2)
 		assert isinstance(val1, W_FloatObject)
 		self.store_basereg(dst_reg, val1.div(val2))
+
+	# 102
+	def fnegate(self, cp, label, reg1, dst_reg):
+		val1 = self.get_basic_value(cp, reg1)
+		assert isinstance(val1, W_FloatObject)
+		self.store_basereg(dst_reg, val1.neg())
 
 	# 103
 	@jit.unroll_safe
