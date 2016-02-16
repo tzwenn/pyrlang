@@ -481,8 +481,8 @@ class CodeParser:
 			elif instr_obj.opcode == opcodes.LABEL:
 				next_label = instr_obj.arg_values()[0]
 				#need_mark = False
-			#elif instr_obj.opcode in opcodes.loop_instrs:
-				#need_mark = False
+			elif instr_obj.opcode in opcodes.loop_instrs:
+				need_mark = False
 			elif need_mark:
 				if instr_obj.opcode in opcodes.possible_pattern_matches:
 					if not self.check_error_label(next_label, instr_obj.args):
