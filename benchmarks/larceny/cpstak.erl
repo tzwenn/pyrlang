@@ -1,23 +1,23 @@
 -module(cpstak).
 -export([test/3, test/0, run_benchmark/1]).
 
-cpstak(X,Y,Z) ->
-	Tak = fun Tak(X,Y,Z,K) ->
+cpstak(X,Y,Z) -> 
+	Tak = fun (F,X,Y,Z,K) ->
 			case Y < X of
-				true -> Tak(X-1,Y,Z,
+				true -> F(X-1,Y,Z,
 							fun(V1) ->
-									Tak(Y-1,Z,X,
+									F(Y-1,Z,X,
 										fun(V2) ->
-												Tak(Z-1,X,Y,
+												F(Z-1,X,Y,
 													fun(V3) ->
-															Tak(V1,V2,V3,K)
+															F(V1,V2,V3,K)
 													end)
 										end)
 							end);
 				false -> K(Z)
 			end
 			end,
-	Tak(X,Y,Z, fun(A) -> A end).
+	Tak(Tak,X,Y,Z, fun(A) -> A end).
 
 test(X,Y,Z) -> cpstak(X,Y,Z).
 
