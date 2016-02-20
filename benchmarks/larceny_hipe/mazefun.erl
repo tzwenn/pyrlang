@@ -1,5 +1,5 @@
 -module(mazefun).
--export([test/2,test/0]).
+-export([test/2, test/0, run_benchmark/1]).
 
 -define(INITIAL_RANDOM, 0).
 
@@ -7,19 +7,19 @@ even(X) when X >= 0 -> (X band 1) == 0.
 odd(X) when X > 0 -> not even(X).
 
 foldr(F, Base, Lst) ->
-	FoldrAux = fun FoldrAux([]) -> Base;
-				   FoldrAux([H|T]) -> F(H, FoldrAux(T)) end,
-	FoldrAux(Lst).
+	FoldrAux = fun (_,[]) -> Base;
+				   (Self,[H|T]) -> F(H, Self(Self,T)) end,
+	FoldrAux(FoldrAux,Lst).
 
 foldl(F, Base, Lst) ->
-	FoldlAux = fun FoldlAux(Base, []) -> Base;
-			       FoldlAux(Base, [H|T]) -> FoldlAux(F(Base, H), T) end,
-	FoldlAux(Base, Lst).
+	FoldlAux = fun (_, Base, []) -> Base;
+			       (Self,Base, [H|T]) -> Self(Self,F(Base, H), T) end,
+	FoldlAux(FoldlAux, Base, Lst).
 
 for(Lo, Hi, F) ->
-	ForAux = fun ForAux(Lo) when Lo < Hi -> [F(Lo)|ForAux(Lo+1)];
-				 ForAux(_) -> [] end,
-	ForAux(Lo).
+	ForAux = fun (Self,Lo) when Lo < Hi -> [F(Lo)|Self(Self,Lo+1)];
+				 (_,_) -> [] end,
+	ForAux(ForAux,Lo).
 
 concat(Lists) ->
 	foldr(fun(L1,L2) -> L1 ++ L2 end,[],Lists).
@@ -156,3 +156,7 @@ test() ->
 
 test(N,M) ->
 	make_maze(N,M).
+
+run_benchmark([Arg]) -> run_benchmark(list_to_integer(Arg));
+run_benchmark(0) -> true;
+run_benchmark(N) -> test(),run_benchmark(N-1).
