@@ -4,13 +4,13 @@
 cpstak(X,Y,Z) -> 
 	Tak = fun (F,X,Y,Z,K) ->
 			case Y < X of
-				true -> F(X-1,Y,Z,
+				true -> F(F,X-1,Y,Z,
 							fun(V1) ->
-									F(Y-1,Z,X,
+									F(F,Y-1,Z,X,
 										fun(V2) ->
-												F(Z-1,X,Y,
+												F(F,Z-1,X,Y,
 													fun(V3) ->
-															F(V1,V2,V3,K)
+															F(F,V1,V2,V3,K)
 													end)
 										end)
 							end);
