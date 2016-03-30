@@ -112,7 +112,7 @@ class Process:
 			should_enter = False
 			instr_obj = cp.instrs[pc]
 			pc = pc + 1
-			if not constant.PYRLANG_TRACING_MODE == constant.PATTERN_MATCHING_TRACING:
+			if constant.PYRLANG_TRACING_MODE == constant.PATTERN_MATCHING_TRACING:
 				if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
 					should_enter = True
 			else:
@@ -348,16 +348,16 @@ class Process:
 				assert isinstance(instr_obj, ListInstruction)
 				(reg, (_, label)) = instr_obj.args
 				sl = instr_obj.lst
-				if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
-					call_pc = pc
+				#if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
+					#call_pc = pc
 				pc = self.select_val(cp, reg, label, sl)
 
 			elif instr == opcodes.SELECT_TUPLE_ARITY: # 60
 				assert isinstance(instr_obj, ListInstruction)
 				(reg, (_, label)) = instr_obj.args
 				sl = instr_obj.lst
-				if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
-					call_pc = pc
+				#if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
+					#call_pc = pc
 				pc = self.select_tuple_arity(cp, reg, label, sl)
 
 			elif instr == opcodes.JUMP: # 61
