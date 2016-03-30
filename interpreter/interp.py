@@ -32,7 +32,7 @@ def printable_loc_pmt(pc, _call_pc, cp):
 	instr = cp.instrs[pc]
 	return "%d %s"%(pc, pretty_print.instr_str(cp, instr))
 
-if constant.PATTERN_MATCHING_TRACING:
+if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
 	driver = jit.JitDriver(greens = ['pc', 'call_pc', 'cp'],
 			reds = ['reduction', 
 				'single', 's_self', 'x_reg', 'y_reg', 'msg_cache'],
@@ -77,14 +77,14 @@ class Process:
 		#self.counter_n = 0 # use it for experiment counting, DON'T forget to discard it !!!
 		#################################################
 
-		if constant.PATTERN_MATCHING_TRACING:
+		if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
 			call_pc = pc
 
 		#for n in cp.lit_table:
 			#pretty_print.print_value(n)
 
 		while(True):
-			if constant.PATTERN_MATCHING_TRACING:
+			if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
 				driver.jit_merge_point(pc = pc,
 						call_pc = call_pc,
 						cp = cp,
@@ -103,7 +103,7 @@ class Process:
 						x_reg = x_reg,
 						y_reg = self.y_reg,
 						msg_cache = msg_cache)
-			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, call_pc, cp) + " reduction: " + str(reduction)
+			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc_pmt(pc, call_pc, cp) + " reduction: " + str(reduction)
 			#print pretty_print.value_str(self.pid) + ": [" + cp.file_name + "]" + printable_loc(pc, cp) + " reduction: " + str(reduction)
 			#print "x regs:" + pretty_print.value_str(self.x_reg.get(0))
 			#self.x_reg.print_content()
@@ -112,7 +112,7 @@ class Process:
 			should_enter = False
 			instr_obj = cp.instrs[pc]
 			pc = pc + 1
-			if constant.PATTERN_MATCHING_TRACING:
+			if not constant.PYRLANG_TRACING_MODE == constant.PATTERN_MATCHING_TRACING:
 				if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
 					should_enter = True
 			else:
@@ -127,7 +127,7 @@ class Process:
 
 			elif instr == opcodes.CALL: # 4
 				(arity, label) = instr_obj.arg_values()
-				if constant.PATTERN_MATCHING_TRACING:
+				if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
 					call_pc = pc - 1
 				frame = (cp, pc)
 				pc = self.call(frame, arity, label)
@@ -152,7 +152,7 @@ class Process:
 				(tag, header_index) = args[1]
 				if (tag == opcodes.TAG_LITERAL):
 					entry = cp.import_header[header_index]
-					if constant.PATTERN_MATCHING_TRACING:
+					if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
 						call_pc = pc
 					frame = (cp, pc)
 					cp, pc = self.call_ext(frame, entry, real_arity)
@@ -251,7 +251,7 @@ class Process:
 					self.program_counter = pc
 					return constant.STATE_TERMINATE
 				else:
-					if constant.PATTERN_MATCHING_TRACING:
+					if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING: 
 						call_pc = pc-1
 					(cp, pc) = self.k_return(cp)
 					# try to trace RETURN instruction, too
@@ -348,7 +348,7 @@ class Process:
 				assert isinstance(instr_obj, ListInstruction)
 				(reg, (_, label)) = instr_obj.args
 				sl = instr_obj.lst
-				if constant.PATTERN_MATCHING_TRACING:
+				if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
 					call_pc = pc
 				pc = self.select_val(cp, reg, label, sl)
 
@@ -356,7 +356,7 @@ class Process:
 				assert isinstance(instr_obj, ListInstruction)
 				(reg, (_, label)) = instr_obj.args
 				sl = instr_obj.lst
-				if constant.PATTERN_MATCHING_TRACING:
+				if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
 					call_pc = pc
 				pc = self.select_tuple_arity(cp, reg, label, sl)
 
@@ -495,7 +495,7 @@ class Process:
 				pretty_print.print_value(self.create_call_stack_info(cp, pc))
 				raise Exception("Unimplemented opcode: %d"%(instr))
 			if should_enter:
-				if constant.PATTERN_MATCHING_TRACING:
+				if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
 					driver.can_enter_jit(pc = pc,
 							call_pc = call_pc,
 							cp = cp,
@@ -930,6 +930,7 @@ class Process:
 		
 	# 64
 	def move(self, cp, source, dst_reg):
+		#print "move target:" + str(self.get_basic_value(cp, source).__class__),pretty_print.value_str(self.get_basic_value(cp, source))
 		self.store_basereg(dst_reg, self.get_basic_value(cp, source))
 
 	# 65
@@ -1104,6 +1105,8 @@ class Process:
 	@jit.unroll_safe
 	def make_fun2(self, cp, index):
 		fun_entry = cp.fun_table[index]
+		#print [cp.label_to_addr(e.label_index) for e in cp.fun_table]
+		#exit()
 		label = fun_entry.label_index
 		addr = cp.label_to_addr(label)
 		fvs = []

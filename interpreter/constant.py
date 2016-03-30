@@ -33,5 +33,9 @@ UNROLLING_CUTOFF = 5
 # size limitation for speical size tuple
 TUPLE_S_SIZE = 5
 
-# put it into False can compile the naive JIT policy
-PATTERN_MATCHING_TRACING = True
+# tracing mode
+NAIVE_TRACING = 0 # only trace loop instructions
+TWO_STATE_TRACING = 1 # from Pycket, tracing loop instructions, distributing them with call_pc
+PATTERN_MATCHING_TRACING = 2 # tracing condition branch instructions, distributing them with call_pc
+
+PYRLANG_TRACING_MODE = TWO_STATE_TRACING # change it before RPython transformation
