@@ -35,3 +35,4 @@ TUPLE_S_SIZE = 5
 
 # put it into False can compile the naive JIT policy
 PATTERN_MATCHING_TRACING = True
+#PATTERN_MATCHING_TRACING = False

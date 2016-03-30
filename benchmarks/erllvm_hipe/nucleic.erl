@@ -18,7 +18,7 @@
 %%    "???" published in the "Journal of Functional Programming".
 
 -module(nucleic).
--export([test/0]).
+-export([test/0, run_benchmark/1]).
 
 -compile({no_auto_import,[max/2]}).
 
@@ -3303,3 +3303,7 @@ p_apply(wc_dumas, A1, A2, A3, A4) -> wc_dumas(A1, A2, A3, A4);
 p_apply(helix3_, A1, A2, A3, A4) -> helix3_(A1, A2, A3, A4);
 p_apply(stacked5_, A1, A2, A3, A4) -> stacked5_(A1, A2, A3, A4).
 
+
+run_benchmark([Arg]) -> run_benchmark(list_to_integer(Arg));
+run_benchmark(0) -> true;
+run_benchmark(N) -> test(),run_benchmark(N-1).

@@ -1,5 +1,5 @@
 -module(deriv).
--export([test/0,test/1]).
+-export([test/0, test/1, run_benchmark/1]).
 
 my_plus_dderiv(A) ->
 	['+'|lists:map(fun(X) -> dderiv(X) end, tl(A))].
@@ -36,3 +36,7 @@ test(A) -> dderiv(A).
 
 test() ->
 	test(['+', ['*', '3', x, x], ['*', a, x, x], ['*', b, x], '5']).
+
+run_benchmark([Arg]) -> run_benchmark(list_to_integer(Arg));
+run_benchmark(0) -> true;
+run_benchmark(N) -> test(),run_benchmark(N-1).

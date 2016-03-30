@@ -3,26 +3,26 @@ import subprocess
 import time
 import os
 
-repeat = 1
+repeat = 3
 
 benchmarks = {
-			"barnes" : 40,
-			"length" : 8,
-			"length_c" : 8,
-			"length_u" : 8,
-			"mean" : 18,
-			"mean_nnc" :18,
-			"nrev" : 4,
-			"nucleic" : 96,
-			"pseudoknot" : 4,
-			"qsort" : 6,
+                        "barnes" : 5,
+                        "length" : 2,
+                        "length_c" : 3,
+                        "length_u" : 3,
+                        "mean" : 9,
+                        "mean_nnc" :9,
+                        "nrev" : 1,
+                        "nucleic" : 96,
+			"pseudoknot" : 1,
+			"qsort" : 2,
 			"ring" : 2,
 			"smith" : 2,
 			"stable" : 2,
-			"sum" : 14,
-			"zip" : 2,
-			"zip3" : 2,
-			"zip_nnc" : 4,
+			"sum" : 3,
+			"zip" : 1,
+			"zip3" : 1,
+			"zip_nnc" : 1,
 			}
 
 benchmark_path = 'benchmarks/erllvm'
@@ -89,7 +89,7 @@ def run_bench(bin):
 	res = {}
 	for b in sorted_keys:
 		if bin == 'erl':
-			cmd_lst = ["/opt/local/bin/erl",
+			cmd_lst = ["/usr/bin/erl",
 					"-run",
 					b,
 					benchmark_func_name,
@@ -103,7 +103,7 @@ def run_bench(bin):
 					"-pa",
 					benchmark_path]
 		elif bin == "hipe":
-			cmd_lst = ["/opt/local/bin/erl",
+			cmd_lst = ["/usr/bin/erl",
 					"-run",
 					b,
 					benchmark_func_name,
@@ -134,12 +134,12 @@ def run_bench(bin):
 			t_res.append(t2-t1)
 		print "benchmark %s: executing time %f"%(b, float(sum(t_res)) / repeat)
 		res[b] = float(sum(t_res) / repeat)
-	#sorted_keys = res.keys()
-	#sorted_keys.sort()
-	#f = open("benchmark_erllvm_result/" + bin + ".txt", "w+")
-	#for k in sorted_keys:
-		#f.write(k + " " + str(res[k]) + "\n")
-	#f.close()
+        sorted_keys = res.keys()
+        sorted_keys.sort()
+        f = open("benchmark_erllvm_result/" + bin + ".txt", "w+")
+        for k in sorted_keys:
+                f.write(k + " " + str(res[k]) + "\n")
+        f.close()
 	print "done"
 
 if __name__ == '__main__':
@@ -147,10 +147,12 @@ if __name__ == '__main__':
 	if len(sys.argv) > 1:
 		bin = sys.argv[1]
 	else:
-		bin = ['pyrlang',
-			'pyrlang-naive',
-			'erl',
-			'hipe',
+		bin = [
+                        'pyrlang',
+			#'pyrlang-less',
+                        'pyrlang-naive',
+                        'erl',
+                        'hipe',
 			]
 
 	#rewrite_and_compile()

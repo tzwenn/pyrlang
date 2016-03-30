@@ -1,5 +1,5 @@
 -module(primes).
--export([test/0,test/1]).
+-export([test/0, test/1, run_benchmark/1]).
 
 interval_list(M, N) when M > N -> [];
 interval_list(M, N) ->
@@ -24,3 +24,7 @@ test() ->
 
 test(N) ->
 	primes(N).
+
+run_benchmark([Arg]) -> run_benchmark(list_to_integer(Arg));
+run_benchmark(0) -> true;
+run_benchmark(N) -> test(),run_benchmark(N-1).

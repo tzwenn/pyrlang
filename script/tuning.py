@@ -3,24 +3,24 @@ import subprocess
 import time
 import os
 
-repeat = 1
+repeat = 3
 
 benchmarks = {
 			"ack" :     110,
-			"cpstak" :  500,
-			"deriv" :   30000000,
-			"diviter" : 8000000,
-			"fib" :     50,
-			"fibfp" :   50,
+			"cpstak" :  400,
+			"deriv" :   15000000,
+			"diviter" : 4000000,
+			"fib" :     20,
+			"fibfp" :   18,
 			"fpsum" :   2500,
-			"mazefun" : 10000,
-			"nqueens" : 5000,
+			"mazefun" : 5000,
+			"nqueens" : 2500,
 			"pi" :      50,
-			"primes" :  1000000,
+			"primes" :  500000,
 			"string" :  3,
 			"sumLoop" : 50,
-			"tak" :     20000,
-			"takl" :    5000
+			"tak" :     10000,
+			"takl" :    2500
 			}
 
 benchmark_path = 'benchmarks/larceny'
@@ -87,7 +87,7 @@ def run_bench(bin):
 	res = {}
 	for b in sorted_keys:
 		if bin == 'erl':
-			cmd_lst = ["/opt/local/bin/erl",
+			cmd_lst = ["/usr/bin/erl",
 					"-run",
 					b,
 					benchmark_func_name,
@@ -101,7 +101,7 @@ def run_bench(bin):
 					"-pa",
 					benchmark_path]
 		elif bin == "hipe":
-			cmd_lst = ["/opt/local/bin/erl",
+			cmd_lst = ["/usr/bin/erl",
 					"-run",
 					b,
 					benchmark_func_name,
@@ -120,7 +120,7 @@ def run_bench(bin):
 		my_env = os.environ.copy()
 		for i in range(repeat):
 			t1 = time.time()
-			#print " ".join(cmd_lst)
+                        print " ".join(cmd_lst)
 			#my_env["PYPYLOG"] = "jit-summary:lancery_sum/"+bin+"_"+b+".sum"
 			p = subprocess.Popen(cmd_lst, 
 					env=my_env,
@@ -134,12 +134,12 @@ def run_bench(bin):
 			t_res.append(t2-t1)
 		print "benchmark %s: executing time %f"%(b, float(sum(t_res)) / repeat)
 		res[b] = float(sum(t_res) / repeat)
-	#sorted_keys = res.keys()
-	#sorted_keys.sort()
-	#f = open("benchmark_result/" + bin + ".txt", "w+")
-	#for k in sorted_keys:
-		#f.write(k + " " + str(res[k]) + "\n")
-	#f.close()
+        sorted_keys = res.keys()
+        sorted_keys.sort()
+        f = open("benchmark_result/" + bin + ".txt", "w+")
+        for k in sorted_keys:
+                f.write(k + " " + str(res[k]) + "\n")
+        f.close()
 	print "done"
 
 if __name__ == '__main__':
@@ -147,13 +147,16 @@ if __name__ == '__main__':
 	if len(sys.argv) > 1:
 		bin = sys.argv[1]
 	else:
-		bin = ['pyrlang',
-			'pyrlang-naive',
-			'erl',
-			'hipe'
+		bin = [
+                        'pyrlang',
+                        #'pyrlang-less',
+                        'pyrlang-naive',
+                        'erl',
+                        'hipe'
 			]
 
-	#rewrite_and_compile()
+        #rewrite_and_compile()
+        #exit()
 	if isinstance(bin, list):
 		for b in bin:
 			run_bench(b)

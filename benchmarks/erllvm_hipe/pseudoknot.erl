@@ -5,7 +5,7 @@
 %% formed. (Native code compilation has no such problems.)
 
 -module(pseudoknot).
--export([test/0]).
+-export([test/0, run_benchmark/1]).
 
 append([H|T], Z) ->
   [H|append(T, Z)];
@@ -3302,3 +3302,7 @@ loop(N,_) -> loop(N-1,most_distant_atom(pseudoknot())).
 
 test() ->
     loop(100,0).
+
+run_benchmark([Arg]) -> run_benchmark(list_to_integer(Arg));
+run_benchmark(0) -> true;
+run_benchmark(N) -> test(),run_benchmark(N-1).
