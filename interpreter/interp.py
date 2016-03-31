@@ -128,12 +128,10 @@ class Process:
 			elif instr == opcodes.CALL: # 4
 				(arity, label) = instr_obj.arg_values()
 				if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
-					call_pc = pc - 1
+					call_pc = pc 
 				frame = (cp, pc)
 				pc = self.call(frame, arity, label)
-				reduction -= 1
-				if not single and reduction <= 0:
-					break
+                                reduction -= 1
 
 			elif instr == opcodes.CALL_LAST: # 5
 				(arity, label, n) = instr_obj.arg_values()
@@ -142,9 +140,7 @@ class Process:
 			elif instr == opcodes.CALL_ONLY: # 6
 				(arity, label) = instr_obj.arg_values()
 				pc = self.call_only(cp, arity, label)
-				reduction -= 1
-				if not single and reduction <= 0:
-					break
+                                reduction -= 1
 
 			elif instr == opcodes.CALL_EXT: # 7
 				args = instr_obj.args
@@ -156,9 +152,7 @@ class Process:
 						call_pc = pc
 					frame = (cp, pc)
 					cp, pc = self.call_ext(frame, entry, real_arity)
-					reduction -= 1
-					if not single and reduction <=0:
-						break
+                                        reduction -= 1
 				else:
 					assert tag == opcodes.TAG_LABEL
 					self.y_reg.push((cp, pc))
@@ -252,7 +246,7 @@ class Process:
 					return constant.STATE_TERMINATE
 				else:
 					if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING: 
-						call_pc = pc-1
+						call_pc = pc
 					(cp, pc) = self.k_return(cp)
 					# try to trace RETURN instruction, too
 					should_enter = True
@@ -481,9 +475,6 @@ class Process:
 				((_,fail), (_,alive), (_,bif_index), rand1, rand2, dst_reg) = instr_obj.args
 				pc = self.gc_bif2(cp, pc, fail, alive, 
 						cp.import_header[bif_index][1], rand1, rand2, dst_reg)
-				#reduction -= 1
-				#if not single and reduction <= 0:
-					#break
 
 			elif instr == opcodes.TRIM: # 136
 				(n, remaining) = instr_obj.arg_values()
@@ -495,6 +486,9 @@ class Process:
 				pretty_print.print_value(self.create_call_stack_info(cp, pc))
 				raise Exception("Unimplemented opcode: %d"%(instr))
 			if should_enter:
+				if not single:
+                                    if not reduction:
+					break
 				if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
 					driver.can_enter_jit(pc = pc,
 							call_pc = call_pc,

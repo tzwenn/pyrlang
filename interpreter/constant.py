@@ -38,4 +38,4 @@ NAIVE_TRACING = 0 # only trace loop instructions
 TWO_STATE_TRACING = 1 # from Pycket, tracing loop instructions, distributing them with call_pc
 PATTERN_MATCHING_TRACING = 2 # tracing condition branch instructions, distributing them with call_pc
 
-PYRLANG_TRACING_MODE = TWO_STATE_TRACING # change it before RPython transformation
+PYRLANG_TRACING_MODE = PATTERN_MATCHING_TRACING # change it before RPython transformation
