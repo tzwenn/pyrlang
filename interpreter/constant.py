@@ -37,5 +37,6 @@ TUPLE_S_SIZE = 5
 NAIVE_TRACING = 0 # only trace loop instructions
 TWO_STATE_TRACING = 1 # from Pycket, tracing loop instructions, distributing them with call_pc
 PATTERN_MATCHING_TRACING = 2 # tracing condition branch instructions, distributing them with call_pc
+SINGLE_PMT = 3 # tracing condition branch instructions only
 
 PYRLANG_TRACING_MODE = PATTERN_MATCHING_TRACING # change it before RPython transformation

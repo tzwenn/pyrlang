@@ -32,7 +32,7 @@ def printable_loc_pmt(pc, _call_pc, cp):
 	instr = cp.instrs[pc]
 	return "%d %s"%(pc, pretty_print.instr_str(cp, instr))
 
-if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
+if constant.PYRLANG_TRACING_MODE in (constant.TWO_STATE_TRACING, constant.PATTERN_MATCHING_TRACING):
 	driver = jit.JitDriver(greens = ['pc', 'call_pc', 'cp'],
 			reds = ['reduction', 
 				'single', 's_self', 'x_reg', 'y_reg', 'msg_cache'],
@@ -77,14 +77,14 @@ class Process:
 		#self.counter_n = 0 # use it for experiment counting, DON'T forget to discard it !!!
 		#################################################
 
-		if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
+		if constant.PYRLANG_TRACING_MODE in (constant.TWO_STATE_TRACING, constant.PATTERN_MATCHING_TRACING):
 			call_pc = pc
 
 		#for n in cp.lit_table:
 			#pretty_print.print_value(n)
 
 		while(True):
-			if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
+			if constant.PYRLANG_TRACING_MODE in (constant.TWO_STATE_TRACING, constant.PATTERN_MATCHING_TRACING):
 				driver.jit_merge_point(pc = pc,
 						call_pc = call_pc,
 						cp = cp,
@@ -112,7 +112,7 @@ class Process:
 			should_enter = False
 			instr_obj = cp.instrs[pc]
 			pc = pc + 1
-			if constant.PYRLANG_TRACING_MODE == constant.PATTERN_MATCHING_TRACING:
+			if constant.PYRLANG_TRACING_MODE in (constant.PATTERN_MATCHING_TRACING, constant.SINGLE_PMT):
 				if isinstance(instr_obj, PatternMatchingListInstruction) or isinstance(instr_obj, PatternMatchingInstruction):
 					should_enter = True
 			else:
@@ -127,7 +127,7 @@ class Process:
 
 			elif instr == opcodes.CALL: # 4
 				(arity, label) = instr_obj.arg_values()
-				if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
+				if constant.PYRLANG_TRACING_MODE in (constant.TWO_STATE_TRACING, constant.PATTERN_MATCHING_TRACING):
 					call_pc = pc 
 				frame = (cp, pc)
 				pc = self.call(frame, arity, label)
@@ -148,7 +148,7 @@ class Process:
 				(tag, header_index) = args[1]
 				if (tag == opcodes.TAG_LITERAL):
 					entry = cp.import_header[header_index]
-					if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
+					if constant.PYRLANG_TRACING_MODE in (constant.TWO_STATE_TRACING, constant.PATTERN_MATCHING_TRACING):
 						call_pc = pc
 					frame = (cp, pc)
 					cp, pc = self.call_ext(frame, entry, real_arity)
@@ -245,7 +245,7 @@ class Process:
 					self.program_counter = pc
 					return constant.STATE_TERMINATE
 				else:
-					if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING: 
+					if constant.PYRLANG_TRACING_MODE in (constant.TWO_STATE_TRACING, constant.PATTERN_MATCHING_TRACING): 
 						call_pc = pc
 					(cp, pc) = self.k_return(cp)
 					# try to trace RETURN instruction, too
@@ -489,7 +489,7 @@ class Process:
 				if not single:
                                     if not reduction:
 					break
-				if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
+				if constant.PYRLANG_TRACING_MODE in (constant.TWO_STATE_TRACING, constant.PATTERN_MATCHING_TRACING):
 					driver.can_enter_jit(pc = pc,
 							call_pc = call_pc,
 							cp = cp,

@@ -48,8 +48,8 @@ class CodeParser:
 		# mod_dict: module atom index => index in import_mods
 		(self.func_list, self.func_dict, self.import_header, self.import_mods, self.mod_dict) = self.import_BIF_and_module()
 		(self.labelTable, self.instrs, self.const_table) = self.preprocess(beam)
-		#print "\n".join([pretty_print.instr_str(self, instr) + ":  " + str(instr.__class__) for instr in self.instrs])
-		#exit()
+                #print "\n".join([pretty_print.instr_str(self, instr) + ":  " + str(instr.__class__) for instr in self.instrs])
+                #exit()
 		#print [v.intval for v in self.const_table]
 
 	def header_atom_preprocess(self, beam):
@@ -288,8 +288,9 @@ class CodeParser:
 	@jit.unroll_safe
 	def preprocess(self, beam):
 		(instrs, const_table) = self.buildInstrs(beam)
-		#for instr in instrs:
-			#print instr.__class__, opcodes.opnames[instr.opcode]
+                #for instr in instrs:
+                        #print instr.__class__, opcodes.opnames[instr.opcode]
+                #exit()
 		labelTable = []
 		i = 0
 		while i < len(instrs):
@@ -486,7 +487,7 @@ class CodeParser:
 			elif need_mark:
 				if instr_obj.opcode in opcodes.possible_pattern_matches:
 					if not self.check_error_label(next_label, instr_obj.args):
-						need_mark = False
+						#need_mark = False
 						if isinstance(instr_obj, ListInstruction):
 							instrs[i] = PatternMatchingListInstruction(instr_obj.opcode,
 									instr_obj.args[:], instr_obj.lst[:])
