@@ -166,6 +166,7 @@ possible_pattern_matches = (
 		IS_LIST,
 		IS_NONEMPTY_LIST,
 		IS_TUPLE,
+                TEST_ARITY,
 		SELECT_VAL,
 		SELECT_TUPLE_ARITY)
 

@@ -127,7 +127,8 @@ class Process:
 
 			elif instr == opcodes.CALL: # 4
 				(arity, label) = instr_obj.arg_values()
-				if constant.PYRLANG_TRACING_MODE in (constant.TWO_STATE_TRACING, constant.PATTERN_MATCHING_TRACING):
+                                if constant.PYRLANG_TRACING_MODE in (constant.TWO_STATE_TRACING, constant.PATTERN_MATCHING_TRACING):
+				#if constant.PYRLANG_TRACING_MODE == constant.TWO_STATE_TRACING:
 					call_pc = pc 
 				frame = (cp, pc)
 				pc = self.call(frame, arity, label)
@@ -148,7 +149,8 @@ class Process:
 				(tag, header_index) = args[1]
 				if (tag == opcodes.TAG_LITERAL):
 					entry = cp.import_header[header_index]
-					if constant.PYRLANG_TRACING_MODE in (constant.TWO_STATE_TRACING, constant.PATTERN_MATCHING_TRACING):
+                                        if constant.PYRLANG_TRACING_MODE in (constant.TWO_STATE_TRACING, constant.PATTERN_MATCHING_TRACING):
+                                        #if constant.PYRLANG_TRACING_MODE == constant.TWO_STATE_TRACING:
 						call_pc = pc
 					frame = (cp, pc)
 					cp, pc = self.call_ext(frame, entry, real_arity)
@@ -245,7 +247,8 @@ class Process:
 					self.program_counter = pc
 					return constant.STATE_TERMINATE
 				else:
-					if constant.PYRLANG_TRACING_MODE in (constant.TWO_STATE_TRACING, constant.PATTERN_MATCHING_TRACING): 
+                                        if constant.PYRLANG_TRACING_MODE in (constant.TWO_STATE_TRACING, constant.PATTERN_MATCHING_TRACING): 
+                                        #if constant.PYRLANG_TRACING_MODE == constant.TWO_STATE_TRACING: 
 						call_pc = pc
 					(cp, pc) = self.k_return(cp)
 					# try to trace RETURN instruction, too
@@ -342,16 +345,12 @@ class Process:
 				assert isinstance(instr_obj, ListInstruction)
 				(reg, (_, label)) = instr_obj.args
 				sl = instr_obj.lst
-				#if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
-					#call_pc = pc
 				pc = self.select_val(cp, reg, label, sl)
 
 			elif instr == opcodes.SELECT_TUPLE_ARITY: # 60
 				assert isinstance(instr_obj, ListInstruction)
 				(reg, (_, label)) = instr_obj.args
 				sl = instr_obj.lst
-				#if not constant.PYRLANG_TRACING_MODE == constant.NAIVE_TRACING:
-					#call_pc = pc
 				pc = self.select_tuple_arity(cp, reg, label, sl)
 
 			elif instr == opcodes.JUMP: # 61
