@@ -118,6 +118,9 @@ class Process:
 			else:
 				if isinstance(instr_obj, LoopInstruction):
 					should_enter = True
+			if constant.PYRLANG_TRACING_MODE in (constant.PATTERN_MATCHING_TRACING, constant.TWO_STATE_TRACING):
+				if isinstance(instr_obj, LoopInstruction):
+					call_pc = pc
 
 			instr = instr_obj.opcode
 			depth = -1
@@ -127,9 +130,6 @@ class Process:
 
 			elif instr == opcodes.CALL: # 4
 				(arity, label) = instr_obj.arg_values()
-                                if constant.PYRLANG_TRACING_MODE in (constant.TWO_STATE_TRACING, constant.PATTERN_MATCHING_TRACING):
-				#if constant.PYRLANG_TRACING_MODE == constant.TWO_STATE_TRACING:
-					call_pc = pc 
 				frame = (cp, pc)
 				pc = self.call(frame, arity, label)
                                 reduction -= 1
@@ -149,9 +149,6 @@ class Process:
 				(tag, header_index) = args[1]
 				if (tag == opcodes.TAG_LITERAL):
 					entry = cp.import_header[header_index]
-                                        if constant.PYRLANG_TRACING_MODE in (constant.TWO_STATE_TRACING, constant.PATTERN_MATCHING_TRACING):
-                                        #if constant.PYRLANG_TRACING_MODE == constant.TWO_STATE_TRACING:
-						call_pc = pc
 					frame = (cp, pc)
 					cp, pc = self.call_ext(frame, entry, real_arity)
                                         reduction -= 1
@@ -247,9 +244,6 @@ class Process:
 					self.program_counter = pc
 					return constant.STATE_TERMINATE
 				else:
-                                        if constant.PYRLANG_TRACING_MODE in (constant.TWO_STATE_TRACING, constant.PATTERN_MATCHING_TRACING): 
-                                        #if constant.PYRLANG_TRACING_MODE == constant.TWO_STATE_TRACING: 
-						call_pc = pc
 					(cp, pc) = self.k_return(cp)
 					# try to trace RETURN instruction, too
 					should_enter = True
