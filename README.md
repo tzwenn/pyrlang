@@ -1,4 +1,7 @@
-# README #
+
+### Original Project Side ###
+
+Forked from: https://bitbucket.org/hrc706/pyrlang/
 
 ### What is this repository for? ###
 
@@ -7,4 +10,4 @@
 ### How do I get set up? ###
 
 * rpython -Ojit targettest.py
-* the test demos (*.beam) can be found in test_beam directory.
+* the test demos (`*.beam`) can be found in test_beam directory.

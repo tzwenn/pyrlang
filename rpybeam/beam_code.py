@@ -13,8 +13,8 @@ import time
 class CodeParser:
 	_immutable_fields_ = ['file_name', 'instrs[*]', 'import_header[*]', 
 			'parent_cp', 'total_lines', 'labelTable[*]', 
-			'_import_header[*]', 'lit_table[*]', 'loc_table[*]', 'mod_dict[*]',
-			'fun_table[*]','import_mods[*]','func_list[*]', 'func_dict[*]', 'export_header[*]',
+			'_import_header[*]', 'lit_table[*]', 'loc_table[*]', 'mod_dict',
+			'fun_table[*]','import_mods[*]','func_list[*]', 'func_dict', 'export_header[*]',
 			'const_table[*]']
 
 	def __init__(self, beam, name, parent_cp = None):
